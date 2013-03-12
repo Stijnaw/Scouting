@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item 
+    android:id="@+id/menu_text"
+    android:showAsAction="always"
+    android:actionViewClass="android.widget.TextView"
+    android:title="@string/test" />
+    <item
+    android:id="@+id/set_spinner"
+    android:showAsAction="always"
+    android:actionViewClass="android.widget.Spinner"
+    android:title="@string/test" />
+</menu>
