@@ -1,4 +1,6 @@
-package com.example.testproj1;
+package com.example.scouting;
+
+import com.example.scouting.R;
 
 import android.app.Activity;
 import android.os.Bundle;

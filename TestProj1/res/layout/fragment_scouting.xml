@@ -106,7 +106,7 @@
             tools:ignore="NestedWeights" >
 
             <Button
-                android:id="@+id/btnActionService"
+                android:id="@+id/btnActionTypeService"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -115,7 +115,7 @@
                 android:onClick="btnScoutingOnClick" />
 
             <Button
-                android:id="@+id/btnActionReception"
+                android:id="@+id/btnActionTypeReception"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -124,7 +124,7 @@
                 android:onClick="btnScoutingOnClick" />
 
             <Button
-                android:id="@+id/btnActionDig"
+                android:id="@+id/btnActionTypeDig"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -139,7 +139,7 @@
             android:layout_weight="1" >
 
             <Button
-                android:id="@+id/btnActionAttack"
+                android:id="@+id/btnActionTypeAttack"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -148,16 +148,17 @@
                 android:onClick="btnScoutingOnClick" />
 
             <Button
-                android:id="@+id/btnActionBlock"
+                android:id="@+id/btnActionTypeBlock"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/Block"
-                android:onClick="btnScoutingOnClick" />
+                android:onClick="btnScoutingOnClick"
+                android:textColor="@android:color/holo_blue_bright" />
 
             <Button
-                android:id="@+id/btnActionPass"
+                android:id="@+id/btnActionTypePass"
                 style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -172,7 +173,7 @@
             android:layout_weight="1" >
 
             <Button
-                android:id="@+id/btnQualityMinusMinus"
+                android:id="@+id/btnActionScoreMinusMinus"
                 style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -182,7 +183,7 @@
                 android:onClick="btnScoutingOnClick" />
 
             <Button
-                android:id="@+id/btnQualityMinus"
+                android:id="@+id/btnActionScoreMinus"
                 style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -192,7 +193,7 @@
                 android:onClick="btnScoutingOnClick" />
 
             <Button
-                android:id="@+id/btnQualityNull"
+                android:id="@+id/btnActionScoreNull"
                 style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -202,7 +203,7 @@
                 android:onClick="btnScoutingOnClick" />
 
             <Button
-                android:id="@+id/btnQualityPlus"
+                android:id="@+id/btnActionScorePlus"
                 style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -212,7 +213,7 @@
                 android:onClick="btnScoutingOnClick" />
 
             <Button
-                android:id="@+id/btnQualityPlusPlus"
+                android:id="@+id/btnActionScorePlusPlus"
                 style="?android:attr/buttonStyle"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -233,7 +234,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/Apply" />
+                android:text="@string/Apply"
+                android:onClick="btnScoutingOnClick" />
 
             <Button
                 android:id="@+id/btnControlsReset"
