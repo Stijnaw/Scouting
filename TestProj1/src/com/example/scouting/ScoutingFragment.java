@@ -1,17 +1,22 @@
 package com.example.scouting;
 
-import com.example.scouting.R;
+import java.util.ArrayList;
 
+import com.example.scouting.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class ScoutingFragment extends Fragment {
+	
+	private ArrayList<Button> playerBtns = null;
+	private ArrayList<Button> actionTypeBtns = null;
+	private ArrayList<Button> actionScoreBtns = null;
 
-	@SuppressWarnings("unused")
 	private OnScoutingFragmentInteractionListener mListener;
 	
 	public ScoutingFragment() {
@@ -21,18 +26,92 @@ public class ScoutingFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		/*if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
-		}*/
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_scouting, container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
+        View V = inflater.inflate(R.layout.fragment_scouting, container, false);
+
+        /***********************************
+    	 * Get buttons
+    	 **********************************/
+        
+        Button button;
+        playerBtns = new ArrayList<Button>();
+        button = (Button) V.findViewById(R.id.btnPlayer1);
+        //button.setTag(player1);
+        playerBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnPlayer2);
+        //button.setTag(player2);
+        playerBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnPlayer3);
+        //button.setTag(player3);
+        playerBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnPlayer4);
+        //button.setTag(player4);
+        playerBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnPlayer5);
+        //button.setTag(player5);
+        playerBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnPlayer6);
+        //button.setTag(player6);
+        playerBtns.add(button);
+        
+        actionTypeBtns = new ArrayList<Button>();
+        button = (Button) V.findViewById(R.id.btnActionTypeService);
+        //button.setTag(ActionType.Service);
+        actionTypeBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionTypeReception);
+        //button.setTag(ActionType.Reception);
+        actionTypeBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionTypeDig);
+        //button.setTag(ActionType.Dig);
+        actionTypeBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionTypeAttack);
+        //button.setTag(ActionType.Attack);
+        actionTypeBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionTypeBlock);
+        //button.setTag(ActionType.Block);
+        actionTypeBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionTypePass);
+        //button.setTag(ActionType.Pass);
+        actionTypeBtns.add(button);        
+        
+        actionScoreBtns = new ArrayList<Button>();
+        button = (Button) V.findViewById(R.id.btnActionScoreMinusMinus);
+        //button.setTag(ActionScore.MinusMinus);
+        actionScoreBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionScoreMinus);
+        //button.setTag(ActionScore.Minus);
+        actionScoreBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionScoreNull);
+        //button.setTag(ActionScore.Null);
+        actionScoreBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionScorePlus);
+        //button.setTag(ActionScore.Plus);
+        actionScoreBtns.add(button);
+        
+        button = (Button) V.findViewById(R.id.btnActionScorePlusPlus);
+        //button.setTag(ActionScore.PlusPlus);
+        actionScoreBtns.add(button);
+        
+		mListener.onScoutingFragmentInteraction(playerBtns, actionTypeBtns, actionScoreBtns);
+        
+        return V;
 	}
 
 	@Override
@@ -63,7 +142,7 @@ public class ScoutingFragment extends Fragment {
 	 */
 	public interface OnScoutingFragmentInteractionListener {
 		// TODO: Update argument type and name
-		public void onScoutingFragmentInteraction();
+		public void onScoutingFragmentInteraction(ArrayList<Button> playerBtns, ArrayList<Button> actionTypeBtns, ArrayList<Button> actionScoreBtns);
 	}
 	
 	/*

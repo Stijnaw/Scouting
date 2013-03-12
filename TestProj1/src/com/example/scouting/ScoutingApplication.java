@@ -13,7 +13,6 @@ import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
 import com.example.scouting.src.Team;
 
-import android.R.color;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -46,13 +45,38 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	private Player player5;
 	private Player player6;
 	
-	private ArrayList<Button> playerBtns;
-	private ArrayList<Button> actionTypeBtns;
-	private ArrayList<Button> actionScoreBtns;
+	private ArrayList<Button> playerBtns = null;
+	private ArrayList<Button> actionTypeBtns = null;
+	private ArrayList<Button> actionScoreBtns = null;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+    	/***********************************
+    	 * Actionbar tabs
+    	 **********************************/
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayShowTitleEnabled(false);
+
+        Tab tab = actionBar.newTab()
+                .setText(R.string.TabScouting)
+                .setTabListener(new TabListener<ScoutingFragment>(
+                        this, "Scouting", ScoutingFragment.class));
+        actionBar.addTab(tab);
+        
+        tab = actionBar.newTab()
+                .setText(R.string.TabStatistics)
+                .setTabListener(new TabListener<StatisticsFragment>(
+                        this, "Statistics", StatisticsFragment.class));
+        actionBar.addTab(tab);
+        
+        tab = actionBar.newTab()
+                .setText(R.string.TabSettings)
+                .setTabListener(new TabListener<SettingsFragment>(
+                        this, "Settings", SettingsFragment.class));
+        actionBar.addTab(tab);
         
         /***********************************
     	 * Scouting Service
@@ -78,108 +102,6 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         testMatch = scoutingService.createNewMatch(team1, "Uikhoven");
         
         scoutingService.saveMatch(testMatch);
-        
-        /***********************************
-    	 * Get buttons
-    	 **********************************/
-        Button button;
-        
-        // TODO: Add players after longClick on buttons
-        playerBtns = new ArrayList<Button>();
-        button = (Button) findViewById(R.id.btnPlayer1);
-        button.setTag(player1);
-        playerBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnPlayer2);
-        button.setTag(player2);
-        playerBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnPlayer3);
-        button.setTag(player3);
-        playerBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnPlayer4);
-        button.setTag(player4);
-        playerBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnPlayer5);
-        button.setTag(player5);
-        playerBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnPlayer6);
-        button.setTag(player6);
-        playerBtns.add(button);
-        
-        actionTypeBtns = new ArrayList<Button>();
-        button = (Button) findViewById(R.id.btnActionTypeService);
-        button.setTag(ActionType.Service);
-        actionTypeBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionTypeReception);
-        button.setTag(ActionType.Reception);
-        actionTypeBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionTypeDig);
-        button.setTag(ActionType.Dig);
-        actionTypeBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionTypeAttack);
-        button.setTag(ActionType.Attack);
-        actionTypeBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionTypeBlock);
-        button.setTag(ActionType.Block);
-        actionTypeBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionTypePass);
-        button.setTag(ActionType.Pass);
-        actionTypeBtns.add(button);        
-        
-        actionScoreBtns = new ArrayList<Button>();
-        button = (Button) findViewById(R.id.btnActionScoreMinusMinus);
-        button.setTag(ActionScore.MinusMinus);
-        actionScoreBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionScoreMinus);
-        button.setTag(ActionScore.Minus);
-        actionScoreBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionScoreNull);
-        button.setTag(ActionScore.Null);
-        actionScoreBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionScorePlus);
-        button.setTag(ActionScore.Plus);
-        actionScoreBtns.add(button);
-        
-        button = (Button) findViewById(R.id.btnActionScorePlusPlus);
-        button.setTag(ActionScore.PlusPlus);
-        actionScoreBtns.add(button);
-    	
-    	/***********************************
-    	 * Actionbar tabs
-    	 **********************************/
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        Tab tab = actionBar.newTab()
-                .setText(R.string.TabScouting)
-                .setTabListener(new TabListener<ScoutingFragment>(
-                        this, "Scouting", ScoutingFragment.class));
-        actionBar.addTab(tab);
-        
-        tab = actionBar.newTab()
-                .setText(R.string.TabStatistics)
-                .setTabListener(new TabListener<StatisticsFragment>(
-                        this, "Statistics", StatisticsFragment.class));
-        actionBar.addTab(tab);
-        
-        tab = actionBar.newTab()
-                .setText(R.string.TabSettings)
-                .setTabListener(new TabListener<SettingsFragment>(
-                        this, "Settings", SettingsFragment.class));
-        actionBar.addTab(tab);
     }
     
 	/***********************************
@@ -225,18 +147,61 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         return true;
     }
     
+    private Button findButtonByPlayerTag(Player player){
+		for (Button button : playerBtns) {
+			if(button.getTag() == player){
+				return button;
+			}
+		}
+		return null;
+    }
+    
+    private Button findButtonByActionTypeTag(ActionType actionType){
+		for (Button button : actionTypeBtns) {
+			if(button.getTag() == actionType){
+				return button;
+			}
+		}
+		return null;
+    }
+    
+    private Button findButtonByActionScoreTag(ActionScore actionScore){
+		for (Button button : actionScoreBtns) {
+			if(button.getTag() == actionScore){
+				return button;
+			}
+		}
+		return null;
+    }
+    
 	/***********************************
-	 * Scouting button handler
+	 * Scouting control button handler
 	 **********************************/
-    public void btnScoutingOnClick(View view){
+    public void btnScoutingControlOnClick(View view){
 
-		switch (view.getId()) {
-			/***********************************
-			 * Controls
-			 **********************************/ 	
+		switch (view.getId()) {	
 			case R.id.btnControlsApply:
 				if(selectedPlayer != null && selectedActionType != null && selectedActionScore != null){
 					testMatch.addAction(new Action(selectedPlayer, selectedActionType, selectedActionScore));
+					
+			    	Button buttonPrev = findButtonByPlayerTag(selectedPlayer);
+			    	
+			    	if(buttonPrev != null){
+			    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+			    	}
+			    	
+			    	buttonPrev = findButtonByActionTypeTag(selectedActionType);
+			    	
+			    	if(buttonPrev != null){
+			    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+			    	}
+			    	
+			    	buttonPrev = findButtonByActionScoreTag(selectedActionScore);
+			    	
+			    	if(buttonPrev != null){
+			    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+			    	}
+			    	
 					selectedPlayer = null;
 					selectedActionType = null;
 					selectedActionScore = null;
@@ -260,10 +225,33 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 				// TODO: make undo function
 				Toast.makeText(getApplicationContext(), "Undo", Toast.LENGTH_SHORT).show();
 				break;
+				
+		}
+    }
+    
+	/***********************************
+	 * Scouting player button handler
+	 **********************************/
+    public void btnScoutingPlayerOnClick(View view){
     	
-			/***********************************
-			 * Players
-			 **********************************/
+    	Button buttonPrev = findButtonByPlayerTag(selectedPlayer);
+    	
+    	if(buttonPrev != null){
+    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+    	}
+    	
+    	Button button = (Button) findViewById(view.getId());
+    	
+    	if(button != buttonPrev){
+    		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
+    		selectedPlayer = (Player) button.getTag();
+    		Toast.makeText(getApplicationContext(), selectedPlayer.getName(), Toast.LENGTH_SHORT).show();
+    	}
+    	else{
+    		selectedPlayer = null;
+    	}
+    	
+    	/*
 			case R.id.btnPlayer1:
 				Toast.makeText(getApplicationContext(), "Player: 1", Toast.LENGTH_SHORT).show();
 				selectedPlayer = player1;
@@ -293,11 +281,33 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 				Toast.makeText(getApplicationContext(), "Player: 6", Toast.LENGTH_SHORT).show();
 				selectedPlayer = player6;
 				break;
+    		*/
     		
-    		
-    		/***********************************
-    		 * ActionType
-    		 **********************************/
+    }
+    
+	/***********************************
+	 * Scouting action type button handler
+	 **********************************/
+    public void btnScoutingActionTypeOnClick(View view){
+    	
+    	Button buttonPrev = findButtonByActionTypeTag(selectedActionType);
+    	
+    	if(buttonPrev != null){
+    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+    	}
+    	
+    	Button button = (Button) findViewById(view.getId());
+    	
+    	if(button != buttonPrev){
+    		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
+    		selectedActionType = (ActionType) button.getTag();
+    		Toast.makeText(getApplicationContext(), selectedActionType.toString(), Toast.LENGTH_SHORT).show();
+    	}
+    	else{
+    		selectedActionType = null;
+    	}
+    	
+    	/*
 			case R.id.btnActionTypeAttack:
 				Toast.makeText(getApplicationContext(), "Action: attack", Toast.LENGTH_SHORT).show();
 				selectedActionType = ActionType.Attack;
@@ -327,10 +337,33 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 				Toast.makeText(getApplicationContext(), "Action: service", Toast.LENGTH_SHORT).show();
 				selectedActionType = ActionType.Service;
 				break;
-				
-    		/***********************************
-    		 * ActionScore
-    		 **********************************/
+				*/
+    }
+    
+	/***********************************
+	 * Scouting action score button handler
+	 **********************************/
+    public void btnScoutingActionScoreOnClick(View view){
+    	
+    	Button buttonPrev = findButtonByActionScoreTag(selectedActionScore);
+    	
+    	if(buttonPrev != null){
+    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+    	}
+    	
+    	Button button = (Button) findViewById(view.getId());
+    	
+    	if(button != buttonPrev){
+    		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
+    		selectedActionScore = (ActionScore) button.getTag();
+    		Toast.makeText(getApplicationContext(), selectedActionScore.toString(), Toast.LENGTH_SHORT).show();
+    	}
+    	else{
+    		selectedActionScore = null;
+    	}
+    	
+    	
+    	/*
 			case R.id.btnActionScoreMinusMinus:
 				Toast.makeText(getApplicationContext(), "ActionScore: --", Toast.LENGTH_SHORT).show();
 				selectedActionScore = ActionScore.MinusMinus;
@@ -359,7 +392,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 				
 			default:
 			break;
-		}
+			*/
     }
     
 	/***********************************
@@ -431,9 +464,34 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
      * Use to communicate with scouting fragment
      */
 	@Override
-	public void onScoutingFragmentInteraction() {
-		// TODO Auto-generated method stub
+	public void onScoutingFragmentInteraction(ArrayList<Button> playerBtns, ArrayList<Button> actionTypeBtns, ArrayList<Button> actionScoreBtns) {
+		this.playerBtns = playerBtns;
+		this.actionTypeBtns = actionTypeBtns;
+		this.actionScoreBtns = actionScoreBtns;
 		
+		// TODO: Add players after longClick on buttons
+		// add players to button
+		playerBtns.get(0).setTag(player1);
+		playerBtns.get(1).setTag(player2);
+		playerBtns.get(2).setTag(player3);
+		playerBtns.get(3).setTag(player4);
+		playerBtns.get(4).setTag(player5);
+		playerBtns.get(5).setTag(player6);
+		
+		actionTypeBtns.get(0).setTag(ActionType.Service);
+		actionTypeBtns.get(1).setTag(ActionType.Reception);
+		actionTypeBtns.get(2).setTag(ActionType.Dig);
+		actionTypeBtns.get(3).setTag(ActionType.Attack);
+		actionTypeBtns.get(4).setTag(ActionType.Block);
+		actionTypeBtns.get(5).setTag(ActionType.Service);
+		
+		actionScoreBtns.get(0).setTag(ActionScore.MinusMinus);
+		actionScoreBtns.get(1).setTag(ActionScore.Minus);
+		actionScoreBtns.get(2).setTag(ActionScore.Null);
+		actionScoreBtns.get(3).setTag(ActionScore.Plus);
+		actionScoreBtns.get(4).setTag(ActionScore.PlusPlus);
+		
+		Toast.makeText(getApplicationContext(), "Scouting fragment", Toast.LENGTH_SHORT).show();
 	}
 	
 	/*
