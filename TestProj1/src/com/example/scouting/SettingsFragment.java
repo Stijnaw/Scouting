@@ -1,6 +1,6 @@
 package com.example.scouting;
 
-import com.example.scouting.R;
+import com.example.testproj1.R;
 
 import android.app.Activity;
 import android.net.Uri;

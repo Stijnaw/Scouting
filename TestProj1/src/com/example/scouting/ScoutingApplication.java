@@ -2,7 +2,6 @@ package com.example.scouting;
 
 import java.util.ArrayList;
 
-import com.example.scouting.R;
 import com.example.scouting.server.MatchLocalDB;
 import com.example.scouting.server.ScoutingImpl;
 import com.example.scouting.server.ScoutingService;
@@ -12,6 +11,7 @@ import com.example.scouting.src.ActionType;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
 import com.example.scouting.src.Team;
+import com.example.testproj1.R;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;

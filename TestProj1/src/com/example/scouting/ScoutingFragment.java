@@ -2,7 +2,8 @@ package com.example.scouting;
 
 import java.util.ArrayList;
 
-import com.example.scouting.R;
+import com.example.testproj1.R;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;

@@ -173,17 +173,16 @@
 
             <Button
                 android:id="@+id/btnActionScoreMinusMinus"
-                style="?android:attr/buttonStyle"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/MinusMinus"
-                android:textSize="@dimen/Large"
                 android:onClick="btnScoutingActionScoreOnClick" />
 
             <Button
                 android:id="@+id/btnActionScoreMinus"
-                style="?android:attr/buttonStyle"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -193,7 +192,7 @@
 
             <Button
                 android:id="@+id/btnActionScoreNull"
-                style="?android:attr/buttonStyle"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -203,7 +202,7 @@
 
             <Button
                 android:id="@+id/btnActionScorePlus"
-                style="?android:attr/buttonStyle"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -213,7 +212,7 @@
 
             <Button
                 android:id="@+id/btnActionScorePlusPlus"
-                style="?android:attr/buttonStyle"
+                style="@android:style/TextAppearance.Large"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
