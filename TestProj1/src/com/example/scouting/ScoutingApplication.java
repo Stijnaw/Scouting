@@ -10,6 +10,7 @@ import com.example.scouting.src.ActionScore;
 import com.example.scouting.src.ActionType;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
+import com.example.scouting.src.Set;
 import com.example.scouting.src.Team;
 import com.example.testproj1.R;
 
@@ -48,6 +49,8 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	private ArrayList<Button> playerBtns = null;
 	private ArrayList<Button> actionTypeBtns = null;
 	private ArrayList<Button> actionScoreBtns = null;
+	
+	private ArrayList<String> setList;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,13 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         // TODO: create match in settings
         testMatch = scoutingService.createNewMatch(team1, "Uikhoven");
         
+        testMatch.setPlayerActive(player1, 1);
+        testMatch.setPlayerActive(player2, 2);
+        testMatch.setPlayerActive(player3, 3);
+        testMatch.setPlayerActive(player4, 4);
+        testMatch.setPlayerActive(player5, 5);
+        testMatch.setPlayerActive(player6, 6);
+        
         scoutingService.saveMatch(testMatch);
     }
     
@@ -117,19 +127,24 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         MenuItem mSpinnerItem = menu.findItem(R.id.set_spinner);
         view = mSpinnerItem.getActionView();
         Spinner spinner = (Spinner) view;
+        
+        setList = new ArrayList<String>();
+        
+        for(Set set : testMatch.getSetList()) {
+			setList.add("Set " + testMatch.getSetNumber(set));
+		}
+        
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, setList);
+        
         // TODO: populate sets with real sets + add set option
-        spinner.setAdapter(
-        	ArrayAdapter.createFromResource(
-        		this,
-        		R.array.Sets,
-        		android.R.layout.simple_spinner_dropdown_item
-        	)
-        );
+        spinner.setAdapter(adapter);
         
         spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-            	Toast.makeText(getApplicationContext(), parentView.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show();
+            	testMatch.setCurrentSet(testMatch.getSetByNumber(position));
+            	
+            	Toast.makeText(getApplicationContext(), "Huidige set: " + testMatch.getCurrentSetNumber(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -147,9 +162,23 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         return true;
     }
     
-    private Button findButtonByPlayerTag(Player player){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.menu_new_set:
+            	setList.add("Set " + testMatch.getSetNumber(testMatch.newSet()));
+            	Spinner spinner = (Spinner) findViewById(R.id.set_spinner);
+            	spinner.setSelection(testMatch.getCurrentSetNumber()-1);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    
+    private Button findButtonByPlayerTag(Integer tag){
 		for (Button button : playerBtns) {
-			if(button.getTag() == player){
+			if(button.getTag() == tag){
 				return button;
 			}
 		}
@@ -184,7 +213,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 				if(selectedPlayer != null && selectedActionType != null && selectedActionScore != null){
 					testMatch.addAction(new Action(selectedPlayer, selectedActionType, selectedActionScore));
 					
-			    	Button buttonPrev = findButtonByPlayerTag(selectedPlayer);
+			    	Button buttonPrev = findButtonByPlayerTag(testMatch.getActivePositionByPlayer(selectedPlayer));
 			    	
 			    	if(buttonPrev != null){
 			    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
@@ -216,6 +245,24 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 			case R.id.btnControlsReset:
 				Toast.makeText(getApplicationContext(), "Reset", Toast.LENGTH_SHORT).show();
 				
+		    	Button buttonPrev = findButtonByPlayerTag(testMatch.getActivePositionByPlayer(selectedPlayer));
+		    	
+		    	if(buttonPrev != null){
+		    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+		    	}
+		    	
+		    	buttonPrev = findButtonByActionTypeTag(selectedActionType);
+		    	
+		    	if(buttonPrev != null){
+		    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+		    	}
+		    	
+		    	buttonPrev = findButtonByActionScoreTag(selectedActionScore);
+		    	
+		    	if(buttonPrev != null){
+		    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
+		    	}
+		    	
 				selectedPlayer = null;
 				selectedActionType = null;
 				selectedActionScore = null;
@@ -234,7 +281,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	 **********************************/
     public void btnScoutingPlayerOnClick(View view){
     	
-    	Button buttonPrev = findButtonByPlayerTag(selectedPlayer);
+    	Button buttonPrev = findButtonByPlayerTag(testMatch.getActivePositionByPlayer(selectedPlayer));
     	
     	if(buttonPrev != null){
     		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
@@ -243,46 +290,21 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
     	Button button = (Button) findViewById(view.getId());
     	
     	if(button != buttonPrev){
-    		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
-    		selectedPlayer = (Player) button.getTag();
-    		Toast.makeText(getApplicationContext(), selectedPlayer.getName(), Toast.LENGTH_SHORT).show();
+
+    		Player player = (Player) testMatch.getActivePlayerByPosition((Integer) button.getTag());
+    		
+    		if(player != null){
+    			button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
+    			selectedPlayer = player;
+        		Toast.makeText(getApplicationContext(), selectedPlayer.getName(), Toast.LENGTH_SHORT).show();
+    		}
+    		else{
+    			selectedPlayer = null;
+    		}
     	}
     	else{
     		selectedPlayer = null;
-    	}
-    	
-    	/*
-			case R.id.btnPlayer1:
-				Toast.makeText(getApplicationContext(), "Player: 1", Toast.LENGTH_SHORT).show();
-				selectedPlayer = player1;
-				break;
-				
-			case R.id.btnPlayer2:
-				Toast.makeText(getApplicationContext(), "Player: 2", Toast.LENGTH_SHORT).show();
-				selectedPlayer = player2;
-				break;
-				
-			case R.id.btnPlayer3:
-				Toast.makeText(getApplicationContext(), "Player: 3", Toast.LENGTH_SHORT).show();
-				selectedPlayer = player3;
-				break;
-				
-			case R.id.btnPlayer4:
-				Toast.makeText(getApplicationContext(), "Player: 4", Toast.LENGTH_SHORT).show();
-				selectedPlayer = player4;
-				break;
-				
-			case R.id.btnPlayer5:
-				Toast.makeText(getApplicationContext(), "Player: 5", Toast.LENGTH_SHORT).show();
-				selectedPlayer = player5;
-				break;
-				
-			case R.id.btnPlayer6:
-				Toast.makeText(getApplicationContext(), "Player: 6", Toast.LENGTH_SHORT).show();
-				selectedPlayer = player6;
-				break;
-    		*/
-    		
+    	}		
     }
     
 	/***********************************
@@ -301,43 +323,10 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
     	if(button != buttonPrev){
     		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
     		selectedActionType = (ActionType) button.getTag();
-    		Toast.makeText(getApplicationContext(), selectedActionType.toString(), Toast.LENGTH_SHORT).show();
     	}
     	else{
     		selectedActionType = null;
     	}
-    	
-    	/*
-			case R.id.btnActionTypeAttack:
-				Toast.makeText(getApplicationContext(), "Action: attack", Toast.LENGTH_SHORT).show();
-				selectedActionType = ActionType.Attack;
-				break;
-			
-			case R.id.btnActionTypeBlock:
-				Toast.makeText(getApplicationContext(), "Action: block", Toast.LENGTH_SHORT).show();
-				selectedActionType = ActionType.Block;
-				break;
-				
-			case R.id.btnActionTypeDig:
-				Toast.makeText(getApplicationContext(), "Action: dig", Toast.LENGTH_SHORT).show();
-				selectedActionType = ActionType.Dig;
-				break;
-				
-			case R.id.btnActionTypePass:
-				Toast.makeText(getApplicationContext(), "Action: pass", Toast.LENGTH_SHORT).show();
-				selectedActionType = ActionType.Pass;
-				break;
-			
-			case R.id.btnActionTypeReception:
-				Toast.makeText(getApplicationContext(), "Action: reception", Toast.LENGTH_SHORT).show();
-				selectedActionType = ActionType.Reception;
-				break;
-			
-			case R.id.btnActionTypeService:
-				Toast.makeText(getApplicationContext(), "Action: service", Toast.LENGTH_SHORT).show();
-				selectedActionType = ActionType.Service;
-				break;
-				*/
     }
     
 	/***********************************
@@ -356,61 +345,10 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
     	if(button != buttonPrev){
     		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
     		selectedActionScore = (ActionScore) button.getTag();
-    		Toast.makeText(getApplicationContext(), selectedActionScore.toString(), Toast.LENGTH_SHORT).show();
     	}
     	else{
     		selectedActionScore = null;
     	}
-    	
-    	
-    	/*
-			case R.id.btnActionScoreMinusMinus:
-				Toast.makeText(getApplicationContext(), "ActionScore: --", Toast.LENGTH_SHORT).show();
-				selectedActionScore = ActionScore.MinusMinus;
-				Button button = (Button) findViewById(R.id.btnActionScoreMinusMinus);
-				button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
-				break;
-				
-			case R.id.btnActionScoreMinus:
-				Toast.makeText(getApplicationContext(), "ActionScore: -", Toast.LENGTH_SHORT).show();
-				selectedActionScore = ActionScore.Minus;
-				break;
-				
-			case R.id.btnActionScoreNull:
-				Toast.makeText(getApplicationContext(), "ActionScore: 0", Toast.LENGTH_SHORT).show();
-				selectedActionScore = ActionScore.Null;
-				break;
-			case R.id.btnActionScorePlus:
-				Toast.makeText(getApplicationContext(), "ActionScore: +", Toast.LENGTH_SHORT).show();
-				selectedActionScore = ActionScore.Plus;
-				break;
-				
-			case R.id.btnActionScorePlusPlus:
-				Toast.makeText(getApplicationContext(), "ActionScore: ++", Toast.LENGTH_SHORT).show();
-				selectedActionScore = ActionScore.PlusPlus;
-				break;
-				
-			default:
-			break;
-			*/
-    }
-    
-	/***********************************
-	 * Scouting button handler
-	 **********************************/
-    public void btnMenuOnClick(View view){
-
-		switch (view.getId()) {
-			/***********************************
-			 * Sets
-			 **********************************/ 	
-			case R.id.set_spinner:
-				Toast.makeText(getApplicationContext(), "Sets!", Toast.LENGTH_SHORT).show();
-				break;
-				
-			default:
-			break;
-		}
     }
     
     /**************************************************************
@@ -468,29 +406,29 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 		this.playerBtns = playerBtns;
 		this.actionTypeBtns = actionTypeBtns;
 		this.actionScoreBtns = actionScoreBtns;
-		
+			
 		// TODO: Add players after longClick on buttons
 		// add players to button
-		playerBtns.get(0).setTag(player1);
-		playerBtns.get(1).setTag(player2);
-		playerBtns.get(2).setTag(player3);
-		playerBtns.get(3).setTag(player4);
-		playerBtns.get(4).setTag(player5);
-		playerBtns.get(5).setTag(player6);
+		playerBtns.get(0).setTag(1);
+		playerBtns.get(1).setTag(2);
+		playerBtns.get(2).setTag(3);
+		playerBtns.get(3).setTag(4);
+		playerBtns.get(4).setTag(5);
+		playerBtns.get(5).setTag(6);
 		
 		actionTypeBtns.get(0).setTag(ActionType.Service);
 		actionTypeBtns.get(1).setTag(ActionType.Reception);
 		actionTypeBtns.get(2).setTag(ActionType.Dig);
 		actionTypeBtns.get(3).setTag(ActionType.Attack);
 		actionTypeBtns.get(4).setTag(ActionType.Block);
-		actionTypeBtns.get(5).setTag(ActionType.Service);
+		actionTypeBtns.get(5).setTag(ActionType.Pass);
 		
 		actionScoreBtns.get(0).setTag(ActionScore.MinusMinus);
 		actionScoreBtns.get(1).setTag(ActionScore.Minus);
 		actionScoreBtns.get(2).setTag(ActionScore.Null);
 		actionScoreBtns.get(3).setTag(ActionScore.Plus);
 		actionScoreBtns.get(4).setTag(ActionScore.PlusPlus);
-		
+			
 		Toast.makeText(getApplicationContext(), "Scouting fragment", Toast.LENGTH_SHORT).show();
 	}
 	
