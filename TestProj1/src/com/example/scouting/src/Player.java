@@ -1,7 +1,10 @@
 package com.example.scouting.src;
 
-public class Player {
-    private String name;
+import java.io.Serializable;
+
+public class Player implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private String name;
     private int number;
     private String picture;
 
@@ -21,6 +24,10 @@ public class Player {
     public String getName() {
         return name;
     }
+    
+    public void setName(String name) {
+		this.name = name;
+	}
 
     /**
      * @return the number
@@ -28,6 +35,10 @@ public class Player {
     public int getNumber() {
         return number;
     }
+    
+    public void setNumber(int number) {
+		this.number = number;
+	}
     
     /**
      * @param picture the picture to set
@@ -41,5 +52,10 @@ public class Player {
      */
     public String getPicture() {
         return picture;
+    }
+    
+    @Override
+    public String toString(){
+    	return name;
     }
 }

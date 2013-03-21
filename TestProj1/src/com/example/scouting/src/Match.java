@@ -1,17 +1,23 @@
 package com.example.scouting.src;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Match {
-    private Team team;
+public class Match implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private Team team;
     private String opponent;
+    private Boolean visitor = false;;
+    
     private ArrayList<Set> sets;
+    
     private ArrayList<Player> activePlayers;
     private Set currentSet;
 
-    public Match(Team team, String opponent) {
+    public Match(Team team, String opponent, Boolean visitor) {
         this.team = team;
         this.opponent = opponent;
+        this.visitor = visitor;
         sets = new ArrayList<Set>();
         
         activePlayers = new ArrayList<Player>();
@@ -45,6 +51,18 @@ public class Match {
     public void setCurrentSet(Set set){
     	currentSet = set;
     }
+    
+    public void setVisitor(Boolean visitor) {
+		this.visitor = visitor;
+	}
+    
+    public void setTeam(Team team) {
+		this.team = team;
+	}
+    
+    public void setOpponent(String opponent) {
+		this.opponent = opponent;
+	}
     
     public ArrayList<Set> getSetList(){
     	return sets;
@@ -100,5 +118,19 @@ public class Match {
 
 	public String getOpponent() {
 		return opponent;
+	}
+	
+    @Override
+    public String toString(){
+    	if(visitor == false){
+    		return team.getName() + " - " + opponent;
+    	}
+    	else{
+    		return opponent + " - " + team.getName();
+    	}
+    }
+
+	public boolean isVisitor() {
+		return visitor;
 	}
 }

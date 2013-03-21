@@ -1,0 +1,31 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="Gegevens">
+	    <EditTextPreference
+	        android:title="Naam"
+	        android:key="Name"
+	        android:summary="De naam van het team"/>
+	</PreferenceCategory>
+	
+    <PreferenceCategory
+        android:title="Spelers"
+        android:key="Players">
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="Overige spelers"
+        android:key="OtherPlayers">
+    </PreferenceCategory>
+ 	
+    <PreferenceCategory android:title="Opties">
+	    <PreferenceScreen
+	        android:title="Save team"
+	        android:key="Save"
+	        android:dependency="Name">
+	    </PreferenceScreen>
+	    <PreferenceScreen
+	        android:title="Delete team"
+	        android:key="Delete"
+	        android:enabled="false" >
+	    </PreferenceScreen>
+	</PreferenceCategory>   
+</PreferenceScreen>

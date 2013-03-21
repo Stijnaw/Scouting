@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+	<ListPreference
+	    android:title="Selecteer match"
+	    android:key="SelectMatch" />
+	<PreferenceCategory
+	    android:title="Matchen"
+	    android:key="Matches">
+	    <PreferenceScreen
+	        android:title="Nieuwe match"
+	        android:key="NewMatch">   
+		</PreferenceScreen>
+	</PreferenceCategory>
+	
+	<PreferenceCategory
+	    android:title="Teams"
+	    android:key="Teams">
+	    <PreferenceScreen
+	        android:title="Nieuw team"
+	        android:key="NewTeam">   
+		</PreferenceScreen>
+	</PreferenceCategory>
+	
+	<PreferenceCategory
+	    android:title="Spelers"
+	    android:key="Players">
+	    <PreferenceScreen
+	        android:title="Nieuwe speler"
+	        android:key="NewPlayer">   
+		</PreferenceScreen>
+	</PreferenceCategory>
+	
+</PreferenceScreen>

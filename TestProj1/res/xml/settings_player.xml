@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+	    android:title="Gegevens">
+	    <EditTextPreference
+	        android:title="Naam"
+	        android:summary="De naam van de speler"
+	        android:key="Name"/>
+	    <EditTextPreference
+	        android:title="Nummer"
+	        android:summary="Het nummer van de speler"
+	        android:key="Number"
+	        android:inputType="number"
+	        android:dependency="Name" />
+	</PreferenceCategory>
+   	<PreferenceCategory
+    android:title="Opties">
+	    <PreferenceScreen
+	        android:title="Save speler"
+	        android:key="Save"
+	        android:dependency="Number" >
+	    </PreferenceScreen>
+	    <PreferenceScreen
+	        android:title="Delete speler"
+	        android:key="Delete"
+	        android:enabled="false" >
+	    </PreferenceScreen>
+    </PreferenceCategory>
+</PreferenceScreen>

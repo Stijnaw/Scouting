@@ -1,9 +1,11 @@
 package com.example.scouting.src;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Set {
-    private ArrayList<Action> actions;
+public class Set implements Serializable{
+	private static final long serialVersionUID = 1L;
+	private ArrayList<Action> actions;
 
     public Set() {
         actions = new ArrayList<Action>();

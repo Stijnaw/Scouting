@@ -1,0 +1,34 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="Gegevens">
+        <ListPreference 
+            android:title="Team"
+            android:summary="Selecteer het team"
+            android:key="TeamList" />
+        
+	    <EditTextPreference
+	        android:title="Tegenstander"
+	        android:key="Opponent"
+	        android:dependency="TeamList"
+	        android:summary="De naam van de tegenstander"/>
+	    
+	    <CheckBoxPreference
+	        android:title="Uitmatch"
+	        android:summaryOff="Dit is een thuismatch"
+	        android:summaryOn="Dit is een uitmatch"
+	        android:key="Visitor"
+	        android:dependency="Opponent" />
+	</PreferenceCategory>
+ 	
+    <PreferenceCategory android:title="Opties">
+	    <PreferenceScreen
+	        android:title="Save team"
+	        android:key="Save"
+	        android:dependency="Opponent">
+	    </PreferenceScreen>
+	    <PreferenceScreen
+	        android:title="Delete team"
+	        android:key="Delete"
+	        android:enabled="false" >
+	    </PreferenceScreen>
+	</PreferenceCategory>   
+</PreferenceScreen>

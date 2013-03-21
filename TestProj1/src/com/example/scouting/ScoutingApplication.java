@@ -2,18 +2,6 @@ package com.example.scouting;
 
 import java.util.ArrayList;
 
-import com.example.scouting.server.MatchLocalDB;
-import com.example.scouting.server.ScoutingImpl;
-import com.example.scouting.server.ScoutingService;
-import com.example.scouting.src.Action;
-import com.example.scouting.src.ActionScore;
-import com.example.scouting.src.ActionType;
-import com.example.scouting.src.Match;
-import com.example.scouting.src.Player;
-import com.example.scouting.src.Set;
-import com.example.scouting.src.Team;
-import com.example.testproj1.R;
-
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -26,138 +14,172 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.scouting.SettingsFragment.OnSettingsFragmentInteractionListener;
+import com.example.scouting.server.ScoutingImpl;
+import com.example.scouting.server.ScoutingLocalDB;
+import com.example.scouting.server.ScoutingService;
+import com.example.scouting.src.Match;
+import com.example.scouting.src.Player;
+import com.example.scouting.src.Set;
+import com.example.scouting.src.Team;
+import com.example.settings.SettingsNewMatch.OnSettingsNewMatchFragmentInteractionListener;
+import com.example.settings.SettingsNewPlayer.OnSettingsNewPlayerFragmentInteractionListener;
+import com.example.settings.SettingsNewTeam.OnSettingsNewTeamFragmentInteractionListener;
+import com.example.settings.SettingsOverview.OnSettingsOverviewFragmentInteractionListener;
+import com.example.testproj1.R;
 
-public class ScoutingApplication extends Activity implements ScoutingFragment.OnScoutingFragmentInteractionListener, StatisticsFragment.OnStatisticsFragmentInteractionListener, SettingsFragment.OnSettingsFragmentInteractionListener {
+
+public class ScoutingApplication extends Activity implements ScoutingFragment.OnScoutingFragmentInteractionListener, StatisticsFragment.OnStatisticsFragmentInteractionListener, OnSettingsFragmentInteractionListener, OnSettingsOverviewFragmentInteractionListener, OnSettingsNewPlayerFragmentInteractionListener, OnSettingsNewTeamFragmentInteractionListener, OnSettingsNewMatchFragmentInteractionListener {
 
 	private ScoutingService scoutingService;
-	private Player selectedPlayer = null;
-	private ActionType selectedActionType = null;
-	private ActionScore selectedActionScore = null;
-	private Match testMatch;
-	private Player player1;
-	private Player player2;
-	private Player player3;
-	private Player player4;
-	private Player player5;
-	private Player player6;
-	
-	private ArrayList<Button> playerBtns = null;
-	private ArrayList<Button> actionTypeBtns = null;
-	private ArrayList<Button> actionScoreBtns = null;
+	private ViewHelper viewHelper;
 	
 	private ArrayList<String> setList;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+                
+        /***********************************
+    	 * Scouting Service
+    	 **********************************/
+        if (savedInstanceState != null) {
+            scoutingService = (ScoutingService) savedInstanceState.getSerializable("scoutingService");
+            viewHelper = (ViewHelper) savedInstanceState.getSerializable("viewHelper");            
+        }
+        else{
+        	scoutingService = new ScoutingImpl(new ScoutingLocalDB());
+        	viewHelper = new ViewHelper();
+        	
+			Player player1 = scoutingService.createNewPlayer("Player 1", 1);
+			Player player2 = scoutingService.createNewPlayer("Player 2", 2);
+			Player player3 = scoutingService.createNewPlayer("Player 3", 3);
+			Player player4 = scoutingService.createNewPlayer("Player 4", 4);
+			Player player5 = scoutingService.createNewPlayer("Player 5", 5);
+			Player player6 = scoutingService.createNewPlayer("Player 6", 6);
+	
+	        Team team1 = scoutingService.createNewTeam("VC Overpelt");
+	        team1.addPlayer(player1);
+	        team1.addPlayer(player2);
+	        team1.addPlayer(player3);
+	        team1.addPlayer(player4);
+	        team1.addPlayer(player5);
+	        team1.addPlayer(player6);
+	        
+	        // TODO: create match in settings
+	        Match testMatch = scoutingService.createNewMatch(team1, "Uikhoven", true);
+	        
+	        testMatch.setPlayerActive(player1, 1);
+	        testMatch.setPlayerActive(player2, 2);
+	        testMatch.setPlayerActive(player3, 3);
+	        testMatch.setPlayerActive(player4, 4);
+	        testMatch.setPlayerActive(player5, 5);
+	        testMatch.setPlayerActive(player6, 6);
+	        
+	        scoutingService.saveMatch(testMatch);
+        }
         
     	/***********************************
     	 * Actionbar tabs
     	 **********************************/
+        
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
+        
+        ScoutingFragment scoutingFragment = new ScoutingFragment();
+        scoutingFragment.setScoutingService(scoutingService);
+        scoutingFragment.setViewHelper(viewHelper);
+        
+        StatisticsFragment statisticsFragment = new StatisticsFragment();
+        statisticsFragment.setViewHelper(viewHelper);
+        
+        SettingsFragment settingsFragment = new SettingsFragment();
+        settingsFragment.setScoutingService(scoutingService);
+        settingsFragment.setViewHelper(viewHelper);
 
-        Tab tab = actionBar.newTab()
+        ActionBar.Tab scoutingTab = actionBar.newTab()
                 .setText(R.string.TabScouting)
-                .setTabListener(new TabListener<ScoutingFragment>(
-                        this, "Scouting", ScoutingFragment.class));
-        actionBar.addTab(tab);
+                .setTabListener(new MyTabListener(scoutingFragment, "Scouting"));
         
-        tab = actionBar.newTab()
+        ActionBar.Tab statisticsTab = actionBar.newTab()
                 .setText(R.string.TabStatistics)
-                .setTabListener(new TabListener<StatisticsFragment>(
-                        this, "Statistics", StatisticsFragment.class));
-        actionBar.addTab(tab);
+                .setTabListener(new MyTabListener(statisticsFragment, "Statistics"));        
         
-        tab = actionBar.newTab()
+        ActionBar.Tab settingsTab = actionBar.newTab()
                 .setText(R.string.TabSettings)
-                .setTabListener(new TabListener<SettingsFragment>(
-                        this, "Settings", SettingsFragment.class));
-        actionBar.addTab(tab);
+                .setTabListener(new MyTabListener(settingsFragment, "Settings"));
         
-        /***********************************
-    	 * Scouting Service
-    	 **********************************/
-		scoutingService = new ScoutingImpl(new MatchLocalDB());
-		
-		player1 = new Player("Player 1", 1);
-		player2 = new Player("Player 2", 2);
-		player3 = new Player("Player 3", 3);
-		player4 = new Player("Player 4", 4);
-		player5 = new Player("Player 5", 5);
-		player6 = new Player("Player 6", 6);
-
-        Team team1 = new Team("VC Overpelt");
-        team1.addPlayer(player1);
-        team1.addPlayer(player2);
-        team1.addPlayer(player3);
-        team1.addPlayer(player4);
-        team1.addPlayer(player5);
-        team1.addPlayer(player6);
+        actionBar.addTab(scoutingTab);
+        actionBar.addTab(statisticsTab);
+        actionBar.addTab(settingsTab);
         
-        // TODO: create match in settings
-        testMatch = scoutingService.createNewMatch(team1, "Uikhoven");
-        
-        testMatch.setPlayerActive(player1, 1);
-        testMatch.setPlayerActive(player2, 2);
-        testMatch.setPlayerActive(player3, 3);
-        testMatch.setPlayerActive(player4, 4);
-        testMatch.setPlayerActive(player5, 5);
-        testMatch.setPlayerActive(player6, 6);
-        
-        scoutingService.saveMatch(testMatch);
+        if(viewHelper.getSelectedTab() != null){
+        	actionBar.setSelectedNavigationItem(viewHelper.getSelectedTab());
+        }
     }
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putSerializable("scoutingService", scoutingService);
+        savedInstanceState.putSerializable("viewHelper", viewHelper);
+        
+        viewHelper.setSelectedTab(getActionBar().getSelectedNavigationIndex());
+        //super.onSaveInstanceState(savedInstanceState);
+    }
+	
     
 	/***********************************
 	 * Actionbar menu + text
 	 **********************************/
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        View view;
-        
+    	
     	getMenuInflater().inflate(R.menu.main, menu);
     	getMenuInflater().inflate(R.menu.menu, menu);
     	
-        MenuItem mSpinnerItem = menu.findItem(R.id.set_spinner);
-        view = mSpinnerItem.getActionView();
-        Spinner spinner = (Spinner) view;
-        
-        setList = new ArrayList<String>();
-        
-        for(Set set : testMatch.getSetList()) {
-			setList.add("Set " + testMatch.getSetNumber(set));
-		}
-        
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, setList);
-        
-        // TODO: populate sets with real sets + add set option
-        spinner.setAdapter(adapter);
-        
-        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-            	testMatch.setCurrentSet(testMatch.getSetByNumber(position));
-            	
-            	Toast.makeText(getApplicationContext(), "Huidige set: " + testMatch.getCurrentSetNumber(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-            	Toast.makeText(getApplicationContext(), "Sets Nothing", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-            	
-    	MenuItem mTextViewItem = menu.findItem(R.id.menu_text);
-        view = mTextViewItem.getActionView();
-        TextView text = (TextView) view;
-        text.setText(testMatch.getTeam().getName() + " - " + testMatch.getOpponent());
+    	MenuItem menuSpinner = (MenuItem) menu.findItem(R.id.set_spinner);
+    	Spinner spinner = (Spinner) menuSpinner.getActionView();
+    	MenuItem newSet = (MenuItem) menu.findItem(R.id.menu_new_set);
+    	TextView text;
+    	
+    	if(viewHelper.getSelectedMatch() != null){
+	        setList = new ArrayList<String>();
+	        for(Set set : viewHelper.getSelectedMatch().getSetList()) {
+				setList.add("Set " + viewHelper.getSelectedMatch().getSetNumber(set));
+			}
+	        
+	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, setList);
+	        
+	        spinner.setAdapter(adapter);
+	        spinner.setSelection(viewHelper.getSelectedMatch().getCurrentSetNumber()-1);
+	        
+	        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+	            @Override
+	            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+	            	viewHelper.getSelectedMatch().setCurrentSet(viewHelper.getSelectedMatch().getSetByNumber(position));
+	            	Toast.makeText(getApplicationContext(), "Huidige set: " + viewHelper.getSelectedMatch().getCurrentSetNumber(), Toast.LENGTH_SHORT).show();
+	            }
+	
+	            @Override
+	            public void onNothingSelected(AdapterView<?> parentView) {
+	            }
+	
+	        });
+	        
+	        menuSpinner.setVisible(true);
+	        newSet.setVisible(true);
+	        
+	        text = (TextView) menu.findItem(R.id.selected_match).getActionView();
+	        text.setText(viewHelper.getSelectedMatch().toString());
+    	}
+    	else{
+	        text = (TextView) menu.findItem(R.id.selected_match).getActionView();
+	        text.setText("Selecteer eerst een match ");
+    	}
         
         return true;
     }
@@ -167,229 +189,35 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_new_set:
-            	setList.add("Set " + testMatch.getSetNumber(testMatch.newSet()));
+            	setList.add("Set " + viewHelper.getSelectedMatch().getSetNumber(viewHelper.getSelectedMatch().newSet()));
             	Spinner spinner = (Spinner) findViewById(R.id.set_spinner);
-            	spinner.setSelection(testMatch.getCurrentSetNumber()-1);
+            	spinner.setSelection(viewHelper.getSelectedMatch().getCurrentSetNumber()-1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
     
-    private Button findButtonByPlayerTag(Integer tag){
-		for (Button button : playerBtns) {
-			if(button.getTag() == tag){
-				return button;
-			}
-		}
-		return null;
-    }
-    
-    private Button findButtonByActionTypeTag(ActionType actionType){
-		for (Button button : actionTypeBtns) {
-			if(button.getTag() == actionType){
-				return button;
-			}
-		}
-		return null;
-    }
-    
-    private Button findButtonByActionScoreTag(ActionScore actionScore){
-		for (Button button : actionScoreBtns) {
-			if(button.getTag() == actionScore){
-				return button;
-			}
-		}
-		return null;
-    }
-    
-	/***********************************
-	 * Scouting control button handler
-	 **********************************/
-    public void btnScoutingControlOnClick(View view){
-
-		switch (view.getId()) {	
-			case R.id.btnControlsApply:
-				if(selectedPlayer != null && selectedActionType != null && selectedActionScore != null){
-					testMatch.addAction(new Action(selectedPlayer, selectedActionType, selectedActionScore));
-					
-			    	Button buttonPrev = findButtonByPlayerTag(testMatch.getActivePositionByPlayer(selectedPlayer));
-			    	
-			    	if(buttonPrev != null){
-			    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-			    	}
-			    	
-			    	buttonPrev = findButtonByActionTypeTag(selectedActionType);
-			    	
-			    	if(buttonPrev != null){
-			    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-			    	}
-			    	
-			    	buttonPrev = findButtonByActionScoreTag(selectedActionScore);
-			    	
-			    	if(buttonPrev != null){
-			    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-			    	}
-			    	
-					selectedPlayer = null;
-					selectedActionType = null;
-					selectedActionScore = null;
-					
-					Toast.makeText(getApplicationContext(), "Action applied", Toast.LENGTH_SHORT).show();
-				}
-				else{
-					Toast.makeText(getApplicationContext(), "Action not applied", Toast.LENGTH_SHORT).show();
-				}
-				break;
-				
-			case R.id.btnControlsReset:
-				Toast.makeText(getApplicationContext(), "Reset", Toast.LENGTH_SHORT).show();
-				
-		    	Button buttonPrev = findButtonByPlayerTag(testMatch.getActivePositionByPlayer(selectedPlayer));
-		    	
-		    	if(buttonPrev != null){
-		    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-		    	}
-		    	
-		    	buttonPrev = findButtonByActionTypeTag(selectedActionType);
-		    	
-		    	if(buttonPrev != null){
-		    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-		    	}
-		    	
-		    	buttonPrev = findButtonByActionScoreTag(selectedActionScore);
-		    	
-		    	if(buttonPrev != null){
-		    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-		    	}
-		    	
-				selectedPlayer = null;
-				selectedActionType = null;
-				selectedActionScore = null;
-				break;
-				
-			case R.id.btnControlsUndo:
-				// TODO: make undo function
-				Toast.makeText(getApplicationContext(), "Undo", Toast.LENGTH_SHORT).show();
-				break;
-				
-		}
-    }
-    
-	/***********************************
-	 * Scouting player button handler
-	 **********************************/
-    public void btnScoutingPlayerOnClick(View view){
-    	
-    	Button buttonPrev = findButtonByPlayerTag(testMatch.getActivePositionByPlayer(selectedPlayer));
-    	
-    	if(buttonPrev != null){
-    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-    	}
-    	
-    	Button button = (Button) findViewById(view.getId());
-    	
-    	if(button != buttonPrev){
-
-    		Player player = (Player) testMatch.getActivePlayerByPosition((Integer) button.getTag());
-    		
-    		if(player != null){
-    			button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
-    			selectedPlayer = player;
-        		Toast.makeText(getApplicationContext(), selectedPlayer.getName(), Toast.LENGTH_SHORT).show();
-    		}
-    		else{
-    			selectedPlayer = null;
-    		}
-    	}
-    	else{
-    		selectedPlayer = null;
-    	}		
-    }
-    
-	/***********************************
-	 * Scouting action type button handler
-	 **********************************/
-    public void btnScoutingActionTypeOnClick(View view){
-    	
-    	Button buttonPrev = findButtonByActionTypeTag(selectedActionType);
-    	
-    	if(buttonPrev != null){
-    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-    	}
-    	
-    	Button button = (Button) findViewById(view.getId());
-    	
-    	if(button != buttonPrev){
-    		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
-    		selectedActionType = (ActionType) button.getTag();
-    	}
-    	else{
-    		selectedActionType = null;
-    	}
-    }
-    
-	/***********************************
-	 * Scouting action score button handler
-	 **********************************/
-    public void btnScoutingActionScoreOnClick(View view){
-    	
-    	Button buttonPrev = findButtonByActionScoreTag(selectedActionScore);
-    	
-    	if(buttonPrev != null){
-    		buttonPrev.setTextColor(getApplication().getResources().getColor(android.R.color.primary_text_dark));
-    	}
-    	
-    	Button button = (Button) findViewById(view.getId());
-    	
-    	if(button != buttonPrev){
-    		button.setTextColor(getApplication().getResources().getColor(android.R.color.holo_blue_light));
-    		selectedActionScore = (ActionScore) button.getTag();
-    	}
-    	else{
-    		selectedActionScore = null;
-    	}
-    }
-    
     /**************************************************************
      * Tab Listener
      **************************************************************/
-    public static class TabListener<T extends Fragment> implements ActionBar.TabListener {
+    public class MyTabListener implements ActionBar.TabListener {
         private Fragment mFragment;
-        private final Activity mActivity;
         private final String mTag;
-        private final Class<T> mClass;
-
-        /** Constructor used each time a new tab is created.
-          * @param activity  The host Activity, used to instantiate the fragment
-          * @param tag  The identifier tag for the fragment
-          * @param clz  The fragment's Class, used to instantiate the fragment
-          */
-        public TabListener(Activity activity, String tag, Class<T> clz) {
-            mActivity = activity;
-            mTag = tag;
-            mClass = clz;
+        
+        public MyTabListener(Fragment fragment, String tag){
+        	this.mFragment = fragment;
+        	this.mTag = tag;
         }
 
         /* The following are each of the ActionBar.TabListener callbacks */
 
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
-            // Check if the fragment is already initialized
-            if (mFragment == null) {
-                // If not, instantiate and add it to the activity
-                mFragment = Fragment.instantiate(mActivity, mClass.getName());
-                ft.add(android.R.id.content, mFragment, mTag);
-            } else {
-                // If it exists, simply attach it in order to show it
-                ft.attach(mFragment);
-            }
+            ft.replace(android.R.id.content, mFragment, mTag);
         }
 
         public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-            if (mFragment != null) {
-                // Detach the fragment, because another one is being attached
-                ft.detach(mFragment);
-            }
+            ft.remove(mFragment);
         }
 
         public void onTabReselected(Tab tab, FragmentTransaction ft) {
@@ -402,34 +230,8 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
      * Use to communicate with scouting fragment
      */
 	@Override
-	public void onScoutingFragmentInteraction(ArrayList<Button> playerBtns, ArrayList<Button> actionTypeBtns, ArrayList<Button> actionScoreBtns) {
-		this.playerBtns = playerBtns;
-		this.actionTypeBtns = actionTypeBtns;
-		this.actionScoreBtns = actionScoreBtns;
-			
-		// TODO: Add players after longClick on buttons
-		// add players to button
-		playerBtns.get(0).setTag(1);
-		playerBtns.get(1).setTag(2);
-		playerBtns.get(2).setTag(3);
-		playerBtns.get(3).setTag(4);
-		playerBtns.get(4).setTag(5);
-		playerBtns.get(5).setTag(6);
-		
-		actionTypeBtns.get(0).setTag(ActionType.Service);
-		actionTypeBtns.get(1).setTag(ActionType.Reception);
-		actionTypeBtns.get(2).setTag(ActionType.Dig);
-		actionTypeBtns.get(3).setTag(ActionType.Attack);
-		actionTypeBtns.get(4).setTag(ActionType.Block);
-		actionTypeBtns.get(5).setTag(ActionType.Pass);
-		
-		actionScoreBtns.get(0).setTag(ActionScore.MinusMinus);
-		actionScoreBtns.get(1).setTag(ActionScore.Minus);
-		actionScoreBtns.get(2).setTag(ActionScore.Null);
-		actionScoreBtns.get(3).setTag(ActionScore.Plus);
-		actionScoreBtns.get(4).setTag(ActionScore.PlusPlus);
-			
-		Toast.makeText(getApplicationContext(), "Scouting fragment", Toast.LENGTH_SHORT).show();
+	public void onScoutingFragmentInteraction(View v) {
+
 	}
 	
 	/*
@@ -447,6 +249,29 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
      */
 	@Override
 	public void onSettingsFragmentInteraction() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void onSettingsOverviewFragmentInteraction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSettingsNewPlayerFragmentInteraction() {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void onSettingsNewTeamFragmentInteraction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onSettingsNewMatchFragmentInteraction() {
 		// TODO Auto-generated method stub
 		
 	}

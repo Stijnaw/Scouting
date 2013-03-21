@@ -1,7 +1,10 @@
 package com.example.scouting.src;
 
-public class Action {
-    private Player player;
+import java.io.Serializable;
+
+public class Action implements Serializable  {
+	private static final long serialVersionUID = 1L;
+	private Player player;
     private ActionType actionType;
     private ActionScore actionScore;
     

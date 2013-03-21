@@ -17,4 +17,11 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="PlayerButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">0.5</item>
+        <item name="android:gravity">bottom|center</item>
+    </style>
+
 </resources>
