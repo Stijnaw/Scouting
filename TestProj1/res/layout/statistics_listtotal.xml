@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:paddingBottom="5dp">
+    
+    <View style="@style/DividerHorizontal"/>
+	
+	<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:weightSum="19.5" >
+	
+	    <TextView
+	        android:id="@+id/stats_number"
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:gravity="center_vertical"
+	        android:layout_weight="1" />
+	    
+	    <View style="@style/DividerVertical"/>
+	
+	    <TextView
+	        android:id="@+id/stats_name"
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="5"
+	        android:gravity="center_vertical"
+	        android:paddingLeft="3dp" />
+	    
+	    <View style="@style/DividerVertical"/>
+	    
+	    <TextView
+	        android:id="@+id/stats_totalPoints"
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1.5"
+	        android:gravity="center" />
+	    
+	    <View style="@style/DividerVertical"/>
+	
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:layout_weight="3"
+	        android:weightSum="3" >
+	
+	        <TextView
+	            android:id="@+id/stats_serveAmount"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	
+	        <TextView
+	            android:id="@+id/stats_servePP"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	        
+	        <TextView
+	            android:id="@+id/stats_serveMM"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	    </LinearLayout>
+	    
+	    <View style="@style/DividerVertical"/>
+	    
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:orientation="horizontal"
+	        android:layout_weight="3"
+	        android:weightSum="3" >
+	
+	        <TextView
+	            android:id="@+id/stats_receptionAmount"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	
+	        <TextView
+	            android:id="@+id/stats_receptionPP"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	        
+	        <TextView
+	            android:id="@+id/stats_receptionMM"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	    </LinearLayout>
+	    
+	    <View style="@style/DividerVertical"/>
+	    
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:orientation="horizontal"
+	        android:layout_weight="3"
+	        android:weightSum="3" >
+	
+	        <TextView
+	            android:id="@+id/stats_attackAmount"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	
+	        <TextView
+	            android:id="@+id/stats_attackPP"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	        
+	        <TextView
+	            android:id="@+id/stats_attackMM"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	    </LinearLayout>
+	    
+	    <View style="@style/DividerVertical"/>
+	    
+	    <LinearLayout
+	        android:layout_width="0dp"
+	        android:layout_height="match_parent"
+	        android:orientation="horizontal"
+	        android:layout_weight="3"
+	        android:weightSum="3" >
+	
+	        <TextView
+	            android:id="@+id/stats_blockAmount"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	
+	        <TextView
+	            android:id="@+id/stats_blockPP"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	        
+	        <View style="@style/DividerVertical"/>
+	        
+	        <TextView
+	            android:id="@+id/stats_blockMM"
+	            android:layout_width="0dp"
+	            android:layout_height="match_parent"
+	            android:layout_weight="1"
+	            android:gravity="center" />
+	    </LinearLayout>
+	</LinearLayout>
+</LinearLayout>

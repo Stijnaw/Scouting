@@ -63,59 +63,64 @@ public class StatisticsFragment extends Fragment {
         	Collections.sort(stats, new Comparator<Stats>() {
 				@Override
 				public int compare(Stats s1, Stats s2) {
-					return s2.getPoints().compareTo(s1.getPoints());
+					Integer points = s2.getPoints().compareTo(s1.getPoints());
+					Integer service = s2.getCount(ActionType.Service).compareTo(s1.getCount(ActionType.Service));
+					Integer reception = s2.getCount(ActionType.Reception).compareTo(s1.getCount(ActionType.Reception));
+					Integer attack = s2.getCount(ActionType.Attack).compareTo(s1.getCount(ActionType.Attack));
+					Integer block = s2.getCount(ActionType.Block).compareTo(s1.getCount(ActionType.Block));
+					return (points == 0 ? (service == 0 ? (reception == 0 ? (attack == 0 ? block : attack) : reception) : service) : points);
 				}
         	});
 			
 			StatisticsArrayAdapter adapter = new StatisticsArrayAdapter(getActivity(), stats);
 			
-			View header = inflater.inflate(R.layout.statistics_listrow, null);
+			//View header = inflater.inflate(R.layout.statistics_listrow, null);
 			
             TextView tv;
             
-            tv = (TextView) header.findViewById(R.id.stats_name);
+            tv = (TextView) V.findViewById(R.id.stats_name);
             tv.setText("Totaal");
             
-            tv = (TextView) header.findViewById(R.id.stats_totalPoints);
+            tv = (TextView) V.findViewById(R.id.stats_totalPoints);
             tv.setText(Integer.toString(total.getPoints()));
 
-            tv = (TextView) header.findViewById(R.id.stats_receptionAmount);
+            tv = (TextView) V.findViewById(R.id.stats_receptionAmount);
             tv.setText(Integer.toString(total.getCount(ActionType.Reception)));
             
-            tv = (TextView) header.findViewById(R.id.stats_receptionPP);
+            tv = (TextView) V.findViewById(R.id.stats_receptionPP);
             tv.setText(Integer.toString(total.getCount(ActionType.Reception, ActionScore.PlusPlus)+total.getCount(ActionType.Dig, ActionScore.PlusPlus)));
             
-            tv = (TextView) header.findViewById(R.id.stats_receptionMM);
+            tv = (TextView) V.findViewById(R.id.stats_receptionMM);
             tv.setText(Integer.toString(total.getCount(ActionType.Reception, ActionScore.MinusMinus)+total.getCount(ActionType.Dig, ActionScore.MinusMinus)));
             
-            tv = (TextView) header.findViewById(R.id.stats_attackAmount);
+            tv = (TextView) V.findViewById(R.id.stats_attackAmount);
             tv.setText(Integer.toString(total.getCount(ActionType.Attack)));
             
-            tv = (TextView) header.findViewById(R.id.stats_attackPP);
+            tv = (TextView) V.findViewById(R.id.stats_attackPP);
             tv.setText(Integer.toString(total.getCount(ActionType.Attack, ActionScore.PlusPlus)));	
             
-            tv = (TextView) header.findViewById(R.id.stats_attackMM);
+            tv = (TextView) V.findViewById(R.id.stats_attackMM);
             tv.setText(Integer.toString(total.getCount(ActionType.Attack, ActionScore.MinusMinus)));
             
-            tv = (TextView) header.findViewById(R.id.stats_serveAmount);
+            tv = (TextView) V.findViewById(R.id.stats_serveAmount);
             tv.setText(Integer.toString(total.getCount(ActionType.Service)));
             
-            tv = (TextView) header.findViewById(R.id.stats_servePP);
+            tv = (TextView) V.findViewById(R.id.stats_servePP);
             tv.setText(Integer.toString(total.getCount(ActionType.Service, ActionScore.PlusPlus)));
             
-            tv = (TextView) header.findViewById(R.id.stats_serveMM);
+            tv = (TextView) V.findViewById(R.id.stats_serveMM);
             tv.setText(Integer.toString(total.getCount(ActionType.Service, ActionScore.MinusMinus)));
             
-            tv = (TextView) header.findViewById(R.id.stats_blockAmount);
+            tv = (TextView) V.findViewById(R.id.stats_blockAmount);
             tv.setText(Integer.toString(total.getCount(ActionType.Block)));
             
-            tv = (TextView) header.findViewById(R.id.stats_blockPP);
+            tv = (TextView) V.findViewById(R.id.stats_blockPP);
             tv.setText(Integer.toString(total.getCount(ActionType.Block, ActionScore.PlusPlus)));
             
-            tv = (TextView) header.findViewById(R.id.stats_blockMM);
+            tv = (TextView) V.findViewById(R.id.stats_blockMM);
             tv.setText(Integer.toString(total.getCount(ActionType.Block, ActionScore.MinusMinus)));
 
-	        listView.addFooterView(header);
+	        //listView.addFooterView(header);
 	
 			listView.setAdapter(adapter);
 		}

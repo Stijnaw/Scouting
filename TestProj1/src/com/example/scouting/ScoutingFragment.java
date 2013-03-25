@@ -1,6 +1,8 @@
 package com.example.scouting;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
@@ -23,6 +25,7 @@ import com.example.scouting.src.Action;
 import com.example.scouting.src.ActionScore;
 import com.example.scouting.src.ActionType;
 import com.example.scouting.src.Player;
+import com.example.scouting.src.Stats;
 import com.example.testproj1.R;
 
 public class ScoutingFragment extends Fragment {
@@ -239,15 +242,16 @@ public class ScoutingFragment extends Fragment {
 			button.setEnabled(false);
 		}
         
+        /*
         button = (Button) V.findViewById(R.id.btnControlsReset);
         button.setOnClickListener(controlOnClickListener); 
         if(viewHelper.getSelectedMatch() == null){
 			button.setEnabled(false);
-		}
+		}*/
         
         button = (Button) V.findViewById(R.id.btnControlsUndo);
         button.setOnClickListener(controlOnClickListener); 
-        if(viewHelper.getSelectedMatch() == null){
+        if(viewHelper.getSelectedMatch() == null || viewHelper.getSelectedMatch().getCurrentSet().getActions().size() == 0){
 			button.setEnabled(false);
 		}
         
@@ -305,6 +309,15 @@ public class ScoutingFragment extends Fragment {
 			    	
 					viewHelper.resetSelected();
 					
+			        Button button = (Button) getView().findViewById(R.id.btnControlsUndo);
+			        
+			        if(viewHelper.getSelectedMatch().getCurrentSet().getActions().size() == 0){
+						button.setEnabled(false);
+					}
+			        else{
+			        	button.setEnabled(true);
+			        }
+					
 					if(scoutingFileDB != null){
 						scoutingFileDB.saveScouting(scoutingService);
 					}
@@ -313,7 +326,7 @@ public class ScoutingFragment extends Fragment {
 					Toast.makeText(getActivity(), "Action not applied", Toast.LENGTH_SHORT).show();
 				}
 				break;
-				
+			/*
 			case R.id.btnControlsReset:
 				
 				Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
@@ -340,15 +353,26 @@ public class ScoutingFragment extends Fragment {
 				viewHelper.resetSelected();
 				
 				break;
+				*/
 				
 			case R.id.btnControlsUndo:
 				Action action = viewHelper.getSelectedMatch().undoAction();
+				
 				if(action != null){
 					Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
 				}
 				else{
 					Toast.makeText(getActivity(), "Er zijn geen acties in deze set", Toast.LENGTH_SHORT).show();
 				}
+				
+		        Button button = (Button) getView().findViewById(R.id.btnControlsUndo);
+		        
+		        if(viewHelper.getSelectedMatch().getCurrentSet().getActions().size() == 0){
+					button.setEnabled(false);
+				}
+		        else{
+		        	button.setEnabled(true);
+		        }
 				break;
 				
 			}
@@ -400,10 +424,20 @@ public class ScoutingFragment extends Fragment {
 			final List<Player> players = new ArrayList<Player>(viewHelper.getSelectedMatch().getTeam().getPlayers());
 			List<Player> activePlayers = viewHelper.getSelectedMatch().getActivePlayers();
 			players.removeAll(activePlayers);
+			
+			Collections.sort(players, new Comparator<Player>() {
+
+				@Override
+				public int compare(Player p1, Player p2) {
+					return p1.getNumber().compareTo(p2.getNumber());
+				}
+
+			});
+			
 			final String entries[] = new String[players.size()+1];
 			
 	        for (Player player: players) {
-	            entries[i] = player.getName();
+	            entries[i] = player.getNumber() + ". " + player.getName();
 	            i++;
 	        }
 	        

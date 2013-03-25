@@ -10,10 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/statistics_listheader" />
-
+    
     <ListView
         android:id="@+id/stats_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        layout="@layout/statistics_listtotal" />
+    
 </LinearLayout>

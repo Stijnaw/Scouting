@@ -7,7 +7,6 @@ public class Player implements Serializable {
 	private String name;
     private int number;
     private String picture;
-    private long id;
 
     /**
      *
@@ -39,7 +38,7 @@ public class Player implements Serializable {
     /**
      * @return the number
      */
-    public int getNumber() {
+    public Integer getNumber() {
         return number;
     }
     
