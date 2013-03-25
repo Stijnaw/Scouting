@@ -7,7 +7,8 @@ public class Match implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private Team team;
     private String opponent;
-    private Boolean visitor = false;;
+    private Boolean visitor = false;
+    private long id;
     
     private ArrayList<Set> sets;
     
@@ -37,7 +38,7 @@ public class Match implements Serializable {
     }
     
     public Set getSetByNumber(int set){
-    	return sets.get(set);
+    	return sets.get(set-1);
     }
     
     public int getSetNumber(Set set){
@@ -46,6 +47,10 @@ public class Match implements Serializable {
     
     public int getCurrentSetNumber(){
         return sets.indexOf(currentSet)+1;
+    }
+    
+    public Set getCurrentSet(){
+    	return currentSet;
     }
     
     public void setCurrentSet(Set set){
@@ -132,5 +137,14 @@ public class Match implements Serializable {
 
 	public boolean isVisitor() {
 		return visitor;
+	}
+
+	public Action undoAction() {
+		if(getCurrentSet() != null){
+			return getCurrentSet().undoAction();
+		}
+		else{
+			return null;
+		}
 	}
 }

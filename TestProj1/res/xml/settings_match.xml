@@ -21,12 +21,12 @@
  	
     <PreferenceCategory android:title="Opties">
 	    <PreferenceScreen
-	        android:title="Save team"
+	        android:title="Save match"
 	        android:key="Save"
 	        android:dependency="Opponent">
 	    </PreferenceScreen>
 	    <PreferenceScreen
-	        android:title="Delete team"
+	        android:title="Delete match"
 	        android:key="Delete"
 	        android:enabled="false" >
 	    </PreferenceScreen>

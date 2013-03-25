@@ -7,6 +7,7 @@ public class Player implements Serializable {
 	private String name;
     private int number;
     private String picture;
+    private long id;
 
     /**
      *
@@ -16,6 +17,12 @@ public class Player implements Serializable {
     public Player(String name, int number){
         this.name = name;
         this.number = number;
+    }
+    
+    public Player(Player player){
+    	this.name = player.getName();
+    	this.number = player.getNumber();
+    	this.picture = player.getPicture();
     }
 
     /**

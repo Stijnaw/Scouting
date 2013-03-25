@@ -37,4 +37,9 @@ public class Action implements Serializable  {
     public ActionScore getActionScore() {
 		return actionScore;
 	}
+    
+    @Override
+    public String toString() {
+    	return player.getName() + ": " + actionType.toString() + " - " + actionScore.toString();
+    }
 }

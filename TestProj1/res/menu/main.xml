@@ -4,4 +4,10 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:visible="false" />
+    
+    <item android:id="@+id/menu_sava_file"
+        android:title="Export scouting"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:visible="true" />
 </menu>

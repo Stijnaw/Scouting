@@ -5,20 +5,21 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="horizontal"
-    tools:context=".SettingsFragment" >
+    tools:context=".SettingsFragment"
+    android:weightSum="1.0" >
 
     <LinearLayout
         android:id="@+id/frameSettingsOverview"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1.5" >
+        android:layout_weight="0.35" >
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/frameSettingsDetail"
-        android:layout_width="fill_parent"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="0.65"
         android:orientation="horizontal" >
     </LinearLayout>
 

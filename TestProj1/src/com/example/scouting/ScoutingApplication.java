@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,16 +20,14 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.scouting.SettingsFragment.OnSettingsFragmentInteractionListener;
+import com.example.scouting.server.ScoutingDB4O;
+import com.example.scouting.server.ScoutingFileDB;
 import com.example.scouting.server.ScoutingImpl;
 import com.example.scouting.server.ScoutingLocalDB;
 import com.example.scouting.server.ScoutingService;
-import com.example.scouting.src.Match;
-import com.example.scouting.src.Player;
 import com.example.scouting.src.Set;
-import com.example.scouting.src.Team;
 import com.example.settings.SettingsNewMatch.OnSettingsNewMatchFragmentInteractionListener;
 import com.example.settings.SettingsNewPlayer.OnSettingsNewPlayerFragmentInteractionListener;
 import com.example.settings.SettingsNewTeam.OnSettingsNewTeamFragmentInteractionListener;
@@ -39,10 +41,13 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	private ViewHelper viewHelper;
 	
 	private ArrayList<String> setList;
+	private ScoutingFileDB scoutingFileDB;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        scoutingFileDB = new ScoutingFileDB(this);
                 
         /***********************************
     	 * Scouting Service
@@ -52,9 +57,14 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
             viewHelper = (ViewHelper) savedInstanceState.getSerializable("viewHelper");            
         }
         else{
-        	scoutingService = new ScoutingImpl(new ScoutingLocalDB());
-        	viewHelper = new ViewHelper();
+        	scoutingService = scoutingFileDB.getScouting();
         	
+        	if(scoutingService == null){
+        		scoutingService = new ScoutingImpl(new ScoutingLocalDB());
+        	}
+        	
+        	viewHelper = new ViewHelper();
+        	/*
 			Player player1 = scoutingService.createNewPlayer("Player 1", 1);
 			Player player2 = scoutingService.createNewPlayer("Player 2", 2);
 			Player player3 = scoutingService.createNewPlayer("Player 3", 3);
@@ -81,6 +91,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	        testMatch.setPlayerActive(player6, 6);
 	        
 	        scoutingService.saveMatch(testMatch);
+	        */
         }
         
     	/***********************************
@@ -96,6 +107,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         scoutingFragment.setViewHelper(viewHelper);
         
         StatisticsFragment statisticsFragment = new StatisticsFragment();
+        statisticsFragment.setScoutingService(scoutingService);
         statisticsFragment.setViewHelper(viewHelper);
         
         SettingsFragment settingsFragment = new SettingsFragment();
@@ -122,6 +134,31 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         	actionBar.setSelectedNavigationItem(viewHelper.getSelectedTab());
         }
     }
+	
+	@Override
+	protected void onPause(){
+		scoutingFileDB.saveScouting(scoutingService);
+		super.onPause();
+	}
+	
+	@Override
+	public void onBackPressed() {
+	    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+	    alertDialog.setPositiveButton("Ja", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+	            finish();
+			}
+		});
+
+	    alertDialog.setNegativeButton("Nee", null);
+
+	    alertDialog.setMessage("Wil je stoppen met scouten?");
+	    alertDialog.setTitle("Afsluiten?");
+	    alertDialog.show();
+	}
 	
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -160,8 +197,17 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 	            @Override
 	            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-	            	viewHelper.getSelectedMatch().setCurrentSet(viewHelper.getSelectedMatch().getSetByNumber(position));
-	            	Toast.makeText(getApplicationContext(), "Huidige set: " + viewHelper.getSelectedMatch().getCurrentSetNumber(), Toast.LENGTH_SHORT).show();
+	            	viewHelper.getSelectedMatch().setCurrentSet(viewHelper.getSelectedMatch().getSetByNumber(position+1));
+	            	
+	            	if(findViewById(R.id.stats_fragment) != null){
+		            	FragmentManager fragMan = getFragmentManager();
+						FragmentTransaction transaction = fragMan.beginTransaction();
+				        StatisticsFragment statisticsFragment = new StatisticsFragment();
+				        statisticsFragment.setScoutingService(scoutingService);
+				        statisticsFragment.setViewHelper(viewHelper);
+						transaction.replace(android.R.id.content, statisticsFragment, "Statistics");
+						transaction.commit();
+	            	}
 	            }
 	
 	            @Override
@@ -193,6 +239,9 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
             	Spinner spinner = (Spinner) findViewById(R.id.set_spinner);
             	spinner.setSelection(viewHelper.getSelectedMatch().getCurrentSetNumber()-1);
                 return true;
+            case R.id.menu_sava_file:
+            	scoutingFileDB.saveScoutingExtern(scoutingService);
+            	return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

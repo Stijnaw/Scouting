@@ -18,4 +18,13 @@ public class Set implements Serializable{
     public ArrayList<Action> getActions() {
         return actions;
     }
+
+	public Action undoAction() {
+		if(actions.size() >= 1){
+			return actions.remove(actions.size()-1);
+		}
+		else{
+			return null;
+		}
+	}
 }

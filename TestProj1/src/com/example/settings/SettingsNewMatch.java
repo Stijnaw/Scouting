@@ -2,6 +2,7 @@ package com.example.settings;
 
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
+import android.widget.TabHost;
 
 import com.example.scouting.ViewHelper;
 import com.example.scouting.server.ScoutingService;
@@ -21,6 +23,7 @@ import com.example.testproj1.R;
 
 public class SettingsNewMatch extends PreferenceFragment {
 
+	@SuppressWarnings("unused")
 	private OnSettingsNewMatchFragmentInteractionListener mListener;
 	private ScoutingService scoutingService;
 	private Match match;
@@ -77,16 +80,19 @@ public class SettingsNewMatch extends PreferenceFragment {
 				CheckBoxPreference visitor = (CheckBoxPreference) findPreference("Visitor");
 				
 				if(match == null){
-					scoutingService.createNewMatch(scoutingService.findTeamById(Integer.parseInt(teamList.getValue())), opponent.getText(), visitor.isChecked());
+					viewHelper.setSelectedMatch(scoutingService.createNewMatch(scoutingService.findTeamById(Integer.parseInt(teamList.getValue())), opponent.getText(), visitor.isChecked()));
 				}
 				else{
 					match.setTeam(scoutingService.findTeamById(Integer.parseInt(teamList.getValue())));
 					match.setOpponent(opponent.getText());
 					match.setVisitor(visitor.isChecked());
+					viewHelper.setSelectedMatch(match);
 				}
 				
+				getActivity().invalidateOptionsMenu();
+				
 				// Refresh the settings overview after edit
-				SettingsOverview settingsOverview = new SettingsOverview();
+				/*SettingsOverview settingsOverview = new SettingsOverview();
 				settingsOverview.setScoutingService(scoutingService);
 				settingsOverview.setViewHelper(viewHelper);
 				
@@ -94,7 +100,10 @@ public class SettingsNewMatch extends PreferenceFragment {
 				FragmentTransaction transaction = fragMan.beginTransaction();
 				transaction.remove(fragMan.findFragmentByTag("SettingsNewMatch"));
 				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.commit();
+				transaction.commit();*/
+				
+				ActionBar actionBar = getActivity().getActionBar();
+				actionBar.setSelectedNavigationItem(0);
 				
 				return false;
 			}
@@ -104,6 +113,11 @@ public class SettingsNewMatch extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				scoutingService.removeMatch(match);
+				
+				if(viewHelper.getSelectedMatch() == match){
+					viewHelper = null;
+					getActivity().invalidateOptionsMenu();
+				}
 				
 				// Refresh the settings overview after edit
 				SettingsOverview settingsOverview = new SettingsOverview();

@@ -1,14 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/stats_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".StatisticsFragment" >
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <TextView
+    <include
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/test" />
+        android:layout_height="wrap_content"
+        layout="@layout/statistics_listheader" />
 
-</FrameLayout>
+    <ListView
+        android:id="@+id/stats_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

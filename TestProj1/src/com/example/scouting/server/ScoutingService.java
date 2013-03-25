@@ -3,8 +3,6 @@ package com.example.scouting.server;
 import java.io.Serializable;
 import java.util.List;
 
-import com.example.scouting.src.ActionScore;
-import com.example.scouting.src.ActionType;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
 import com.example.scouting.src.Team;

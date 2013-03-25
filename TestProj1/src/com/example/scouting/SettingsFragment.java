@@ -1,23 +1,20 @@
 package com.example.scouting;
 
-import com.example.scouting.server.ScoutingService;
-import com.example.scouting.src.Match;
-import com.example.settings.SettingsOverview;
-import com.example.testproj1.R;
-
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import com.example.scouting.server.ScoutingService;
+import com.example.settings.SettingsOverview;
+import com.example.testproj1.R;
 
 public class SettingsFragment extends Fragment {
 
+	@SuppressWarnings("unused")
 	private OnSettingsFragmentInteractionListener mListener;
 	private ScoutingService scoutingService;
 	private ViewHelper viewHelper;

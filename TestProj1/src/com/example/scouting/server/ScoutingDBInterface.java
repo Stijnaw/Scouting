@@ -20,4 +20,7 @@ public interface ScoutingDBInterface extends Serializable{
 	void removeMatch(Match match);
 	void removeTeam(Team team);
 	void removePlayer(Player player);
+	Match createNewMatch(Match match);
+	Team createNewTeam(Team team);
+	Player createNewPlayer(Player player);
 }

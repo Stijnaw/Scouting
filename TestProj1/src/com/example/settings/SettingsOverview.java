@@ -1,18 +1,18 @@
 package com.example.settings;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.ListPreference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -20,17 +20,11 @@ import android.preference.PreferenceScreen;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemSelectedListener;
 
 import com.example.scouting.ViewHelper;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
-import com.example.scouting.src.Set;
 import com.example.scouting.src.Team;
 import com.example.testproj1.R;
 
@@ -73,8 +67,10 @@ public class SettingsOverview extends PreferenceFragment {
 		matchList.setEntryValues(entryValues);
 		
 		if(viewHelper.getSelectedMatch() != null){
-			Toast.makeText(getActivity(), "Test", Toast.LENGTH_SHORT).show();
-			matchList.setValueIndex(matches.indexOf(viewHelper.getSelectedMatch()));
+			// ------------------- ArrayIndexOutOfBoundsException length=3 index=-1 in ListPreference.setValueIndex
+			if(matches.indexOf(viewHelper.getSelectedMatch()) != -1){
+				matchList.setValueIndex(matches.indexOf(viewHelper.getSelectedMatch()));
+			}
 		}
 		
 		matchList.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {    
@@ -88,14 +84,18 @@ public class SettingsOverview extends PreferenceFragment {
 				getActivity().invalidateOptionsMenu();
 				
 				// Refresh the settings overview after edit
-				SettingsOverview settingsOverview = new SettingsOverview();
+				/*SettingsOverview settingsOverview = new SettingsOverview();
 				settingsOverview.setScoutingService(scoutingService);
 				settingsOverview.setViewHelper(viewHelper);
 				
 				FragmentManager fragMan = getFragmentManager();
 				FragmentTransaction transaction = fragMan.beginTransaction();
 				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.commit();
+				transaction.commit();*/
+				
+				ActionBar actionBar = getActivity().getActionBar();
+				actionBar.setSelectedNavigationItem(0);
+				
 		        return false;
 		    }
 		});

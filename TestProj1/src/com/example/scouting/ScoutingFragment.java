@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.scouting.server.ScoutingFileDB;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Action;
 import com.example.scouting.src.ActionScore;
@@ -26,8 +27,10 @@ import com.example.testproj1.R;
 
 public class ScoutingFragment extends Fragment {
 
+	@SuppressWarnings("unused")
 	private OnScoutingFragmentInteractionListener mListener;
 	private ViewHelper viewHelper;
+	private ScoutingFileDB scoutingFileDB;
 	
 	public ScoutingFragment() {
 		// Required empty public constructor
@@ -118,6 +121,7 @@ public class ScoutingFragment extends Fragment {
         
         button = (Button) V.findViewById(R.id.btnPlayer5);
         button.setTag(5);
+        button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
         if(viewHelper.getSelectedMatch() == null){
 			button.setEnabled(false);
@@ -134,6 +138,7 @@ public class ScoutingFragment extends Fragment {
         
         button = (Button) V.findViewById(R.id.btnPlayer6);
         button.setTag(6);
+        button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
         if(viewHelper.getSelectedMatch() == null){
 			button.setEnabled(false);
@@ -249,17 +254,20 @@ public class ScoutingFragment extends Fragment {
         // Restore previous selections
 		if(viewHelper.getSelectedPlayer() != null){
 			button = (Button) V.findViewWithTag(viewHelper.getSelectedPlayer());
-			button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
+			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
+			//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 		}
 		
 		
 		if(viewHelper.getSelectedActionType() != null){
 			button = (Button) V.findViewWithTag(viewHelper.getSelectedActionType());
-			button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
+			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
+			//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 		}
 		
 		if(viewHelper.getSelectedActionScore() != null){
 			button = (Button) V.findViewWithTag(viewHelper.getSelectedActionScore());
+			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
 			button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 		}
 		
@@ -277,24 +285,29 @@ public class ScoutingFragment extends Fragment {
 			    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
 			    	
 			    	if(buttonPrev != null){
-			    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+			    		buttonPrev.getBackground().clearColorFilter();
+			    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 			    	}
 			    	
 			    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
 			    	
 			    	if(buttonPrev != null){
-			    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+			    		buttonPrev.getBackground().clearColorFilter();
+			    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 			    	}
 			    	
 			    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionScore());
 			    	
 			    	if(buttonPrev != null){
-			    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+			    		buttonPrev.getBackground().clearColorFilter();
+			    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 			    	}
 			    	
 					viewHelper.resetSelected();
 					
-					Toast.makeText(getActivity(), "Action applied", Toast.LENGTH_SHORT).show();
+					if(scoutingFileDB != null){
+						scoutingFileDB.saveScouting(scoutingService);
+					}
 				}
 				else{
 					Toast.makeText(getActivity(), "Action not applied", Toast.LENGTH_SHORT).show();
@@ -302,24 +315,26 @@ public class ScoutingFragment extends Fragment {
 				break;
 				
 			case R.id.btnControlsReset:
-				Toast.makeText(getActivity(), "Reset", Toast.LENGTH_SHORT).show();
 				
 				Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
 		    	
 		    	if(buttonPrev != null){
-		    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+		    		buttonPrev.getBackground().clearColorFilter();
+		    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 		    	}
 		    	
 		    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
 		    	
 		    	if(buttonPrev != null){
-		    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+		    		buttonPrev.getBackground().clearColorFilter();
+		    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 		    	}
 		    	
 		    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionScore());
 		    	
 		    	if(buttonPrev != null){
-		    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+		    		buttonPrev.getBackground().clearColorFilter();
+		    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 		    	}
 		    	
 				viewHelper.resetSelected();
@@ -327,8 +342,13 @@ public class ScoutingFragment extends Fragment {
 				break;
 				
 			case R.id.btnControlsUndo:
-				// TODO: make undo function
-				Toast.makeText(getActivity(), "Todo: undo", Toast.LENGTH_SHORT).show();
+				Action action = viewHelper.getSelectedMatch().undoAction();
+				if(action != null){
+					Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
+				}
+				else{
+					Toast.makeText(getActivity(), "Er zijn geen acties in deze set", Toast.LENGTH_SHORT).show();
+				}
 				break;
 				
 			}
@@ -342,7 +362,8 @@ public class ScoutingFragment extends Fragment {
 	    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
 	    	
 	    	if(buttonPrev != null){
-	    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+	    		buttonPrev.getBackground().clearColorFilter();
+	    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 	    	}
 	    	
 	    	Button button = (Button) getActivity().findViewById(v.getId());
@@ -353,7 +374,8 @@ public class ScoutingFragment extends Fragment {
 	    		Player player = (Player) viewHelper.getSelectedMatch().getActivePlayerByPosition(position);
 	    		
 	    		if(player != null){
-	    			button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
+	    			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
+	    			//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 	    			viewHelper.setSelectedPlayer(position);
 	    		}
 	    		else{
@@ -395,6 +417,7 @@ public class ScoutingFragment extends Fragment {
 			   public void onClick(DialogInterface dialog, int item) {
 				   if(item == (entries.length-1)){
 					   viewHelper.getSelectedMatch().setPlayerActive(null, position);
+					   viewHelper.setSelectedPlayer(null);
 					   button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
 					   button.setText("");
 				   }
@@ -421,13 +444,15 @@ public class ScoutingFragment extends Fragment {
 	    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
 	    	
 	    	if(buttonPrev != null){
-	    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+	    		buttonPrev.getBackground().clearColorFilter();
+	    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 	    	}
 	    	
 	    	Button button = (Button) getActivity().findViewById(v.getId());
 	    	
 	    	if(button != buttonPrev){
-	    		button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
+	    		button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
+	    		//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 	    		viewHelper.setSelectedActionType((ActionType) button.getTag());
 	    	}
 	    	else{
@@ -442,13 +467,15 @@ public class ScoutingFragment extends Fragment {
 	    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionScore());
 	    	
 	    	if(buttonPrev != null){
-	    		buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
+	    		buttonPrev.getBackground().clearColorFilter();
+	    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 	    	}
 	    	
 	    	Button button = (Button) getActivity().findViewById(v.getId());
 	    	
 	    	if(button != buttonPrev){
-	    		button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
+	    		button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
+	    		//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 	    		viewHelper.setSelectedActionScore((ActionScore) button.getTag());
 	    	}
 	    	else{
@@ -486,5 +513,9 @@ public class ScoutingFragment extends Fragment {
 
 	public void setScoutingService(ScoutingService scoutingService) {
 		this.scoutingService = scoutingService;
+	}
+	
+	public void setScoutingFileDB(ScoutingFileDB scoutingFileDB) {
+		this.scoutingFileDB = scoutingFileDB;
 	}
 }

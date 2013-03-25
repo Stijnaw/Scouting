@@ -21,10 +21,6 @@ public class ScoutingLocalDB implements ScoutingDBInterface, Serializable{
 
 	@Override
 	public Match saveMatch(Match match) {
-		if(matchesDB.contains(match) == false){
-			matchesDB.add(match);
-		}
-		
 		return match;
 	}
 
@@ -35,10 +31,6 @@ public class ScoutingLocalDB implements ScoutingDBInterface, Serializable{
 
 	@Override
 	public Team saveTeam(Team team) {
-		if(teamsDB.contains(team) == false){
-			teamsDB.add(team);
-		}
-		
 		return team;
 	}
 
@@ -49,10 +41,6 @@ public class ScoutingLocalDB implements ScoutingDBInterface, Serializable{
 
 	@Override
 	public Player savePlayer(Player player) {
-		if(playersDB.contains(player) == false){
-			playersDB.add(player);
-		}
-		
 		return player;
 	}
 
@@ -84,5 +72,23 @@ public class ScoutingLocalDB implements ScoutingDBInterface, Serializable{
 	@Override
 	public void removePlayer(Player player) {
 		playersDB.remove(player);
+	}
+
+	@Override
+	public Match createNewMatch(Match match) {
+		matchesDB.add(match);
+		return match;
+	}
+
+	@Override
+	public Team createNewTeam(Team team) {
+		teamsDB.add(team);
+		return team;
+	}
+
+	@Override
+	public Player createNewPlayer(Player player) {
+		playersDB.add(player);
+		return player;
 	}
 }

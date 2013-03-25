@@ -8,11 +8,10 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
-import android.widget.Toast;
 
 import com.example.scouting.ViewHelper;
 import com.example.scouting.server.ScoutingService;
@@ -22,6 +21,7 @@ import com.example.testproj1.R;
 
 public class SettingsNewTeam extends PreferenceFragment {
 
+	@SuppressWarnings("unused")
 	private OnSettingsNewTeamFragmentInteractionListener mListener;
 	private ScoutingService scoutingService;
 	private Team team = null;

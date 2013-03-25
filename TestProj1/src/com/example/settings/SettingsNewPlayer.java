@@ -1,14 +1,13 @@
 package com.example.settings;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
-import android.app.FragmentManager;
-import android.widget.Toast;
 
 import com.example.scouting.ViewHelper;
 import com.example.scouting.server.ScoutingService;
@@ -17,6 +16,7 @@ import com.example.testproj1.R;
 
 public class SettingsNewPlayer extends PreferenceFragment {
 
+	@SuppressWarnings("unused")
 	private OnSettingsNewPlayerFragmentInteractionListener mListener;
 	private ScoutingService scoutingService;
 	private Player player = null;

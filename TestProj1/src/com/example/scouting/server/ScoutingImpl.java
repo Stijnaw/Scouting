@@ -3,8 +3,6 @@ package com.example.scouting.server;
 import java.io.Serializable;
 import java.util.List;
 
-import com.example.scouting.src.ActionScore;
-import com.example.scouting.src.ActionType;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
 import com.example.scouting.src.Team;
@@ -29,7 +27,7 @@ public class ScoutingImpl implements ScoutingService, Serializable {
 
 	@Override
 	public Match createNewMatch(Team team, String opponent, Boolean visitor) {
-		return scoutingDBInterface.saveMatch(new Match(team, opponent, visitor));
+		return scoutingDBInterface.createNewMatch(new Match(team, opponent, visitor));
 	}
 
 	@Override
@@ -54,7 +52,7 @@ public class ScoutingImpl implements ScoutingService, Serializable {
 
 	@Override
 	public Team createNewTeam(String name) {
-		return scoutingDBInterface.saveTeam(new Team(name));
+		return scoutingDBInterface.createNewTeam(new Team(name));
 	}
 	
 	@Override
@@ -74,7 +72,7 @@ public class ScoutingImpl implements ScoutingService, Serializable {
 
 	@Override
 	public Player createNewPlayer(String name, int number) {
-		return scoutingDBInterface.savePlayer(new Player(name, number));
+		return scoutingDBInterface.createNewPlayer(new Player(name, number));
 	}
 
 	@Override
