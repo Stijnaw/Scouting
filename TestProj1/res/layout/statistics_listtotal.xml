@@ -2,10 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:paddingBottom="5dp">
+    android:orientation="vertical">
     
     <View style="@style/DividerHorizontal"/>
 	
@@ -13,14 +10,15 @@
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal"
-	    android:weightSum="19.5" >
+	    android:weightSum="20" >
 	
 	    <TextView
 	        android:id="@+id/stats_number"
 	        android:layout_width="0dp"
 	        android:layout_height="match_parent"
 	        android:gravity="center_vertical"
-	        android:layout_weight="1" />
+	        android:layout_weight="1"
+	        android:paddingRight="5dp" />
 	    
 	    <View style="@style/DividerVertical"/>
 	
@@ -38,7 +36,7 @@
 	        android:id="@+id/stats_totalPoints"
 	        android:layout_width="0dp"
 	        android:layout_height="match_parent"
-	        android:layout_weight="1.5"
+	        android:layout_weight="2"
 	        android:gravity="center" />
 	    
 	    <View style="@style/DividerVertical"/>

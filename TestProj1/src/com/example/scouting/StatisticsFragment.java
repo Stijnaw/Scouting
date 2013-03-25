@@ -6,18 +6,21 @@ import java.util.Comparator;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Action;
 import com.example.scouting.src.ActionScore;
 import com.example.scouting.src.ActionType;
+import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
 import com.example.scouting.src.Stats;
 import com.example.testproj1.R;
@@ -26,8 +29,8 @@ public class StatisticsFragment extends Fragment {
 
 	@SuppressWarnings("unused")
 	private OnStatisticsFragmentInteractionListener mListener;
-	private ViewHelper viewHelper;
-	private ScoutingService scoutingService;
+	private static ViewHelper viewHelper;
+	private static ScoutingService scoutingService;
 
 	public StatisticsFragment() {
 		// Required empty public constructor
@@ -36,17 +39,25 @@ public class StatisticsFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		StatisticsDetail statisticsDetail = new StatisticsDetail();
+		statisticsDetail.setScoutingService(scoutingService);
+		statisticsDetail.setViewHelper(viewHelper);
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View V = inflater.inflate(R.layout.fragment_statistics, container, false);
 		
-		if(viewHelper.getSelectedMatch() != null){
+		Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+		View V;
+		
+		if(match != null){
+			V = inflater.inflate(R.layout.fragment_statistics, container, false);
+			
 			ListView listView = (ListView) V.findViewById(R.id.stats_listview);
 			
-			ArrayList<Stats> stats = new ArrayList<Stats>();
-			ArrayList<Player> players = viewHelper.getSelectedMatch().getTeam().getPlayers();
+			final ArrayList<Stats> stats = new ArrayList<Stats>();
+			ArrayList<Player> players = match.getTeam().getPlayers();
 			
 			Stats total = new Stats(null);
 			
@@ -54,7 +65,7 @@ public class StatisticsFragment extends Fragment {
 				stats.add(new Stats(player));
 			}
 			
-			for(Action action: viewHelper.getSelectedMatch().getCurrentSet().getActions()){
+			for(Action action: match.getCurrentSet().getActions()){
 				stats.get(players.indexOf(action.getPlayer())).add(action.getActionType(), action.getActionScore());
 				
 				total.add(action.getActionType(), action.getActionScore());
@@ -73,8 +84,6 @@ public class StatisticsFragment extends Fragment {
         	});
 			
 			StatisticsArrayAdapter adapter = new StatisticsArrayAdapter(getActivity(), stats);
-			
-			//View header = inflater.inflate(R.layout.statistics_listrow, null);
 			
             TextView tv;
             
@@ -120,9 +129,21 @@ public class StatisticsFragment extends Fragment {
             tv = (TextView) V.findViewById(R.id.stats_blockMM);
             tv.setText(Integer.toString(total.getCount(ActionType.Block, ActionScore.MinusMinus)));
 
-	        //listView.addFooterView(header);
-	
 			listView.setAdapter(adapter);
+			listView.setOnItemClickListener(new OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
+					StatisticsDetail statisticsDetail = new StatisticsDetail();
+					statisticsDetail.setStats((Stats) v.getTag());
+
+					FragmentTransaction transaction = getFragmentManager().beginTransaction();
+					transaction.replace(R.id.stats_fragment, statisticsDetail, "StatisticsDetail");
+					transaction.commit();
+				}
+			});
+		}
+		else{
+			V = new View(getActivity());
 		}
 		
 		return V;
@@ -151,11 +172,11 @@ public class StatisticsFragment extends Fragment {
 	}
 
 	public void setViewHelper(ViewHelper viewHelper) {
-		this.viewHelper = viewHelper;
+		StatisticsFragment.viewHelper = viewHelper;
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		this.scoutingService = scoutingService;
+		StatisticsFragment.scoutingService = scoutingService;
 	}
 
 }

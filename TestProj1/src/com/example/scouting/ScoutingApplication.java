@@ -22,11 +22,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.scouting.SettingsFragment.OnSettingsFragmentInteractionListener;
-import com.example.scouting.server.ScoutingDB4O;
+import com.example.scouting.StatisticsDetail.OnStatisticsDetailFragmentInteractionListener;
 import com.example.scouting.server.ScoutingFileDB;
 import com.example.scouting.server.ScoutingImpl;
 import com.example.scouting.server.ScoutingLocalDB;
 import com.example.scouting.server.ScoutingService;
+import com.example.scouting.src.Match;
 import com.example.scouting.src.Set;
 import com.example.settings.SettingsNewMatch.OnSettingsNewMatchFragmentInteractionListener;
 import com.example.settings.SettingsNewPlayer.OnSettingsNewPlayerFragmentInteractionListener;
@@ -35,7 +36,7 @@ import com.example.settings.SettingsOverview.OnSettingsOverviewFragmentInteracti
 import com.example.testproj1.R;
 
 
-public class ScoutingApplication extends Activity implements ScoutingFragment.OnScoutingFragmentInteractionListener, StatisticsFragment.OnStatisticsFragmentInteractionListener, OnSettingsFragmentInteractionListener, OnSettingsOverviewFragmentInteractionListener, OnSettingsNewPlayerFragmentInteractionListener, OnSettingsNewTeamFragmentInteractionListener, OnSettingsNewMatchFragmentInteractionListener {
+public class ScoutingApplication extends Activity implements ScoutingFragment.OnScoutingFragmentInteractionListener, StatisticsFragment.OnStatisticsFragmentInteractionListener, OnStatisticsDetailFragmentInteractionListener, OnSettingsFragmentInteractionListener, OnSettingsOverviewFragmentInteractionListener, OnSettingsNewPlayerFragmentInteractionListener, OnSettingsNewTeamFragmentInteractionListener, OnSettingsNewMatchFragmentInteractionListener {
 
 	private ScoutingService scoutingService;
 	private ViewHelper viewHelper;
@@ -105,6 +106,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         ScoutingFragment scoutingFragment = new ScoutingFragment();
         scoutingFragment.setScoutingService(scoutingService);
         scoutingFragment.setViewHelper(viewHelper);
+        scoutingFragment.setScoutingFileDB(scoutingFileDB);
         
         StatisticsFragment statisticsFragment = new StatisticsFragment();
         statisticsFragment.setScoutingService(scoutingService);
@@ -183,28 +185,29 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
     	MenuItem newSet = (MenuItem) menu.findItem(R.id.menu_new_set);
     	TextView text;
     	
-    	if(viewHelper.getSelectedMatch() != null){
+    	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+    	if(match != null){
 	        setList = new ArrayList<String>();
-	        for(Set set : viewHelper.getSelectedMatch().getSetList()) {
-				setList.add("Set " + viewHelper.getSelectedMatch().getSetNumber(set));
+	        for(Set set : match.getSetList()) {
+				setList.add("Set " + match.getSetNumber(set));
 			}
 	        
 	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, setList);
 	        
 	        spinner.setAdapter(adapter);
-	        spinner.setSelection(viewHelper.getSelectedMatch().getCurrentSetNumber()-1);
+	        spinner.setSelection(match.getCurrentSetNumber()-1);
 	        
 	        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 	            @Override
 	            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-	            	viewHelper.getSelectedMatch().setCurrentSet(viewHelper.getSelectedMatch().getSetByNumber(position+1));
+	            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+	            	
+	            	match.setCurrentSet(match.getSetByNumber(position+1));
 	            	
 	            	if(findViewById(R.id.stats_fragment) != null){
 		            	FragmentManager fragMan = getFragmentManager();
 						FragmentTransaction transaction = fragMan.beginTransaction();
 				        StatisticsFragment statisticsFragment = new StatisticsFragment();
-				        statisticsFragment.setScoutingService(scoutingService);
-				        statisticsFragment.setViewHelper(viewHelper);
 						transaction.replace(android.R.id.content, statisticsFragment, "Statistics");
 						transaction.commit();
 	            	}
@@ -220,7 +223,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	        newSet.setVisible(true);
 	        
 	        text = (TextView) menu.findItem(R.id.selected_match).getActionView();
-	        text.setText(viewHelper.getSelectedMatch().toString());
+	        text.setText(match.toString());
     	}
     	else{
 	        text = (TextView) menu.findItem(R.id.selected_match).getActionView();
@@ -235,9 +238,10 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.menu_new_set:
-            	setList.add("Set " + viewHelper.getSelectedMatch().getSetNumber(viewHelper.getSelectedMatch().newSet()));
+            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+            	setList.add("Set " + match.getSetNumber(match.newSet()));
             	Spinner spinner = (Spinner) findViewById(R.id.set_spinner);
-            	spinner.setSelection(viewHelper.getSelectedMatch().getCurrentSetNumber()-1);
+            	spinner.setSelection(match.getCurrentSetNumber()-1);
                 return true;
             case R.id.menu_sava_file:
             	scoutingFileDB.saveScoutingExtern(scoutingService);
@@ -321,6 +325,12 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 
 	@Override
 	public void onSettingsNewMatchFragmentInteraction() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStatisticsDetailFragmentInteraction() {
 		// TODO Auto-generated method stub
 		
 	}

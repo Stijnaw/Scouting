@@ -1,8 +1,11 @@
 package com.example.settings;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -18,9 +21,9 @@ public class SettingsNewPlayer extends PreferenceFragment {
 
 	@SuppressWarnings("unused")
 	private OnSettingsNewPlayerFragmentInteractionListener mListener;
-	private ScoutingService scoutingService;
+	private static ScoutingService scoutingService;
 	private Player player = null;
-	private ViewHelper viewHelper;
+	private static ViewHelper viewHelper;
 
 	public SettingsNewPlayer() {
 		// Required empty public constructor
@@ -64,8 +67,6 @@ public class SettingsNewPlayer extends PreferenceFragment {
 				
 				// Refresh the settings overview after edit
 				SettingsOverview settingsOverview = new SettingsOverview();
-				settingsOverview.setScoutingService(scoutingService);
-				settingsOverview.setViewHelper(viewHelper);
 				
 				FragmentManager fragMan = getFragmentManager();
 				FragmentTransaction transaction = fragMan.beginTransaction();
@@ -80,18 +81,31 @@ public class SettingsNewPlayer extends PreferenceFragment {
 		delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				scoutingService.removePlayer(player);
 				
-				// Refresh the settings overview after edit
-				SettingsOverview settingsOverview = new SettingsOverview();
-				settingsOverview.setScoutingService(scoutingService);
-				settingsOverview.setViewHelper(viewHelper);
-				
-				FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-				transaction.remove(fragMan.findFragmentByTag("SettingsNewPlayer"));
-				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.commit();
+			    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+			    
+			    alertDialog.setNegativeButton("Nee", null);
+
+			    alertDialog.setMessage("Wil je deze speler verwijderen?");
+			    alertDialog.setTitle("Verwijderen?");
+
+			    alertDialog.setPositiveButton("Ja", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						scoutingService.removePlayer(player);
+						
+						// Refresh the settings overview after edit
+						SettingsOverview settingsOverview = new SettingsOverview();
+						
+						FragmentManager fragMan = getFragmentManager();
+						FragmentTransaction transaction = fragMan.beginTransaction();
+						transaction.remove(fragMan.findFragmentByTag("SettingsNewPlayer"));
+						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+						transaction.commit();
+					}
+				});
+
+			    alertDialog.show();
 				
 				return false;
 			}
@@ -121,7 +135,7 @@ public class SettingsNewPlayer extends PreferenceFragment {
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		this.scoutingService = scoutingService;
+		SettingsNewPlayer.scoutingService = scoutingService;
 	}
 
 	public void setPlayer(Player player) {
@@ -129,6 +143,6 @@ public class SettingsNewPlayer extends PreferenceFragment {
 	}
 
 	public void setViewHelper(ViewHelper viewHelper) {
-		this.viewHelper = viewHelper;
+		SettingsNewPlayer.viewHelper = viewHelper;
 	}
 }

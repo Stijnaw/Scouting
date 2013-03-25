@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -30,9 +29,10 @@ import com.example.testproj1.R;
 
 public class SettingsOverview extends PreferenceFragment {
 
+	@SuppressWarnings("unused")
 	private OnSettingsOverviewFragmentInteractionListener mListener;
-	private ScoutingService scoutingService;
-	private ViewHelper viewHelper;
+	private static ScoutingService scoutingService;
+	private static ViewHelper viewHelper;
 
 	public SettingsOverview() {
 		// Required empty public constructor
@@ -48,6 +48,18 @@ public class SettingsOverview extends PreferenceFragment {
 		editor.commit();
 		
 		addPreferencesFromResource(R.xml.settings_overview);
+		
+		SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
+		settingsNewMatch.setScoutingService(scoutingService);
+		settingsNewMatch.setViewHelper(viewHelper);
+		
+		SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
+		settingsNewTeam.setScoutingService(scoutingService);
+		settingsNewTeam.setViewHelper(viewHelper);
+
+		SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
+		settingsNewPlayer.setScoutingService(scoutingService);
+		settingsNewPlayer.setViewHelper(viewHelper);
 		
 		ListPreference matchList = (ListPreference) findPreference("SelectMatch");
 		
@@ -66,10 +78,12 @@ public class SettingsOverview extends PreferenceFragment {
         matchList.setEntries(entries);
 		matchList.setEntryValues(entryValues);
 		
-		if(viewHelper.getSelectedMatch() != null){
+		Match myMatch = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+		
+		if(myMatch != null){
 			// ------------------- ArrayIndexOutOfBoundsException length=3 index=-1 in ListPreference.setValueIndex
-			if(matches.indexOf(viewHelper.getSelectedMatch()) != -1){
-				matchList.setValueIndex(matches.indexOf(viewHelper.getSelectedMatch()));
+			if(entries.length > matches.indexOf(myMatch) && matches.indexOf(myMatch) >= 0){
+				matchList.setValueIndex(matches.indexOf(myMatch));
 			}
 		}
 		
@@ -79,19 +93,9 @@ public class SettingsOverview extends PreferenceFragment {
 		    	
 		    	Match match = scoutingService.findMatchById(Integer.parseInt((String) newValue));
 		    	
-				viewHelper.setSelectedMatch(match);
+				viewHelper.setSelectedMatch(scoutingService.getAllMatches().indexOf(match));
 				
 				getActivity().invalidateOptionsMenu();
-				
-				// Refresh the settings overview after edit
-				/*SettingsOverview settingsOverview = new SettingsOverview();
-				settingsOverview.setScoutingService(scoutingService);
-				settingsOverview.setViewHelper(viewHelper);
-				
-				FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.commit();*/
 				
 				ActionBar actionBar = getActivity().getActionBar();
 				actionBar.setSelectedNavigationItem(0);
@@ -106,8 +110,6 @@ public class SettingsOverview extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
-				settingsNewMatch.setScoutingService(scoutingService);
-				settingsNewMatch.setViewHelper(viewHelper);
 
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(R.id.frameSettingsDetail, settingsNewMatch, "SettingsNewMatch");
@@ -145,8 +147,6 @@ public class SettingsOverview extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
-				settingsNewTeam.setScoutingService(scoutingService);
-				settingsNewTeam.setViewHelper(viewHelper);
 
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(R.id.frameSettingsDetail, settingsNewTeam, "SettingsNewTeam");
@@ -173,8 +173,6 @@ public class SettingsOverview extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
-				settingsNewPlayer.setScoutingService(scoutingService);
-				settingsNewPlayer.setViewHelper(viewHelper);
 
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(R.id.frameSettingsDetail, settingsNewPlayer, "SettingsNewPlayer");
@@ -200,8 +198,6 @@ public class SettingsOverview extends PreferenceFragment {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
 			SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
-			settingsNewMatch.setScoutingService(scoutingService);
-			settingsNewMatch.setViewHelper(viewHelper);
 			settingsNewMatch.setMatch(scoutingService.findMatchById(Integer.parseInt(preference.getKey())));
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -215,8 +211,6 @@ public class SettingsOverview extends PreferenceFragment {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
 			SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
-			settingsNewTeam.setScoutingService(scoutingService);
-			settingsNewTeam.setViewHelper(viewHelper);
 			settingsNewTeam.setTeam(scoutingService.findTeamById(Integer.parseInt(preference.getKey())));
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -230,8 +224,6 @@ public class SettingsOverview extends PreferenceFragment {
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
 			SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
-			settingsNewPlayer.setScoutingService(scoutingService);
-			settingsNewPlayer.setViewHelper(viewHelper);
 			settingsNewPlayer.setPlayer(scoutingService.findPlayerById(Integer.parseInt(preference.getKey())));
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -269,10 +261,10 @@ public class SettingsOverview extends PreferenceFragment {
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		this.scoutingService = scoutingService;
+		SettingsOverview.scoutingService = scoutingService;
 	}
 
 	public void setViewHelper(ViewHelper viewHelper) {
-		this.viewHelper = viewHelper;
+		SettingsOverview.viewHelper = viewHelper;
 	}
 }

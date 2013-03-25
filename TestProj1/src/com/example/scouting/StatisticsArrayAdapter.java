@@ -34,6 +34,7 @@ public class StatisticsArrayAdapter extends ArrayAdapter<Stats> {
             }
             
         	Stats stat = stats.get(position);
+        	v.setTag(stat);
         
             TextView tv;
             tv = (TextView) v.findViewById(R.id.stats_number);

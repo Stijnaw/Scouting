@@ -12,7 +12,7 @@ public class ViewHelper implements Serializable {
 	private ActionType selectedActionType = null;
 	private ActionScore selectedActionScore = null;
 	private Integer selectedTab = null;
-	private Match selectedMatch = null;
+	private Integer selectedMatch = null;
 	
 	public Integer getSelectedPlayer() {
 		return selectedPlayer;
@@ -48,11 +48,11 @@ public class ViewHelper implements Serializable {
 		return selectedTab;
 	}
 	
-	public void setSelectedMatch(Match selectedMatch) {
+	public void setSelectedMatch(Integer selectedMatch) {
 		this.selectedMatch = selectedMatch;
 	}
 	
-	public Match getSelectedMatch() {
+	public Integer getSelectedMatch() {
 		return selectedMatch;
 	}
 }

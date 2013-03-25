@@ -8,7 +8,6 @@ public class Match implements Serializable {
 	private Team team;
     private String opponent;
     private Boolean visitor = false;
-    private long id;
     
     private ArrayList<Set> sets;
     

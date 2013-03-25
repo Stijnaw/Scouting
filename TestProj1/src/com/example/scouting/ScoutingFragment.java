@@ -24,16 +24,17 @@ import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Action;
 import com.example.scouting.src.ActionScore;
 import com.example.scouting.src.ActionType;
+import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
-import com.example.scouting.src.Stats;
 import com.example.testproj1.R;
 
 public class ScoutingFragment extends Fragment {
 
 	@SuppressWarnings("unused")
 	private OnScoutingFragmentInteractionListener mListener;
-	private ViewHelper viewHelper;
-	private ScoutingFileDB scoutingFileDB;
+	static private ViewHelper viewHelper;
+	static private ScoutingFileDB scoutingFileDB;
+	static private ScoutingService scoutingService;
 	
 	public ScoutingFragment() {
 		// Required empty public constructor
@@ -57,12 +58,15 @@ public class ScoutingFragment extends Fragment {
         button.setTag(1);
         button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
+        
         Player player;
-        if(viewHelper.getSelectedMatch() == null){
+        Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+        
+        if(match == null){
 			button.setEnabled(false);
 		}
         else{
-        	player = viewHelper.getSelectedMatch().getActivePlayers().get(0);
+        	player = match.getActivePlayers().get(0);
         	if(player != null){
         		button.setText(player.getName());
         	}
@@ -75,11 +79,12 @@ public class ScoutingFragment extends Fragment {
         button.setTag(2);
         button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        
+        if(match == null){
 			button.setEnabled(false);
 		}
         else{
-        	player = viewHelper.getSelectedMatch().getActivePlayers().get(1);
+        	player = match.getActivePlayers().get(1);
         	if(player != null){
         		button.setText(player.getName());
         	}
@@ -92,11 +97,12 @@ public class ScoutingFragment extends Fragment {
         button.setTag(3);
         button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        
+        if(match == null){
 			button.setEnabled(false);
 		}
         else{
-        	player = viewHelper.getSelectedMatch().getActivePlayers().get(2);
+        	player = match.getActivePlayers().get(2);
         	if(player != null){
         		button.setText(player.getName());
         	}
@@ -109,11 +115,11 @@ public class ScoutingFragment extends Fragment {
         button.setTag(4);
         button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         else{
-        	player = viewHelper.getSelectedMatch().getActivePlayers().get(3);
+        	player = match.getActivePlayers().get(3);
         	if(player != null){
         		button.setText(player.getName());
         	}
@@ -126,11 +132,11 @@ public class ScoutingFragment extends Fragment {
         button.setTag(5);
         button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         else{
-        	player = viewHelper.getSelectedMatch().getActivePlayers().get(4);
+        	player = match.getActivePlayers().get(4);
         	if(player != null){
         		button.setText(player.getName());
         	}
@@ -143,11 +149,11 @@ public class ScoutingFragment extends Fragment {
         button.setTag(6);
         button.setOnClickListener(playerOnClickListener);
         button.setOnLongClickListener(playerOnLongClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         else{
-        	player = viewHelper.getSelectedMatch().getActivePlayers().get(5);
+        	player = match.getActivePlayers().get(5);
         	if(player != null){
         		button.setText(player.getName());
         	}
@@ -160,42 +166,42 @@ public class ScoutingFragment extends Fragment {
         button = (Button) V.findViewById(R.id.btnActionTypeService);
         button.setTag(ActionType.Service);
         button.setOnClickListener(actionTypeOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionTypeReception);
         button.setTag(ActionType.Reception);
         button.setOnClickListener(actionTypeOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionTypeDig);
         button.setTag(ActionType.Dig);
         button.setOnClickListener(actionTypeOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionTypeAttack);
         button.setTag(ActionType.Attack);
         button.setOnClickListener(actionTypeOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionTypeBlock);
         button.setTag(ActionType.Block);
         button.setOnClickListener(actionTypeOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionTypePass);
         button.setTag(ActionType.Pass);
         button.setOnClickListener(actionTypeOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
@@ -203,55 +209,55 @@ public class ScoutingFragment extends Fragment {
         button = (Button) V.findViewById(R.id.btnActionScoreMinusMinus);
         button.setTag(ActionScore.MinusMinus);
         button.setOnClickListener(actionScoreOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionScoreMinus);
         button.setTag(ActionScore.Minus);
         button.setOnClickListener(actionScoreOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionScoreNull);
         button.setTag(ActionScore.Null);
         button.setOnClickListener(actionScoreOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionScorePlus);
         button.setTag(ActionScore.Plus);
         button.setOnClickListener(actionScoreOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         button = (Button) V.findViewById(R.id.btnActionScorePlusPlus);
         button.setTag(ActionScore.PlusPlus);
         button.setOnClickListener(actionScoreOnClickListener);
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         
         button = (Button) V.findViewById(R.id.btnControlsApply);
         button.setOnClickListener(controlOnClickListener); 
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}
         
         /*
         button = (Button) V.findViewById(R.id.btnControlsReset);
         button.setOnClickListener(controlOnClickListener); 
-        if(viewHelper.getSelectedMatch() == null){
+        if(match == null){
 			button.setEnabled(false);
 		}*/
         
         button = (Button) V.findViewById(R.id.btnControlsUndo);
         button.setOnClickListener(controlOnClickListener); 
-        if(viewHelper.getSelectedMatch() == null || viewHelper.getSelectedMatch().getCurrentSet().getActions().size() == 0){
+        if(match == null || match.getCurrentSet().getActions().size() == 0){
 			button.setEnabled(false);
 		}
         
@@ -259,14 +265,12 @@ public class ScoutingFragment extends Fragment {
 		if(viewHelper.getSelectedPlayer() != null){
 			button = (Button) V.findViewWithTag(viewHelper.getSelectedPlayer());
 			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
-			//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 		}
 		
 		
 		if(viewHelper.getSelectedActionType() != null){
 			button = (Button) V.findViewWithTag(viewHelper.getSelectedActionType());
 			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
-			//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 		}
 		
 		if(viewHelper.getSelectedActionScore() != null){
@@ -284,34 +288,34 @@ public class ScoutingFragment extends Fragment {
 			switch (v.getId()) {	
 			case R.id.btnControlsApply:
 				if(viewHelper.getSelectedPlayer() != null && viewHelper.getSelectedActionType() != null && viewHelper.getSelectedActionScore() != null){
-					viewHelper.getSelectedMatch().addAction(new Action(viewHelper.getSelectedMatch().getActivePlayerByPosition(viewHelper.getSelectedPlayer()), viewHelper.getSelectedActionType(), viewHelper.getSelectedActionScore()));
+					
+					Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+					
+					match.addAction(new Action(match.getActivePlayerByPosition(viewHelper.getSelectedPlayer()), viewHelper.getSelectedActionType(), viewHelper.getSelectedActionScore()));
 					
 			    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
 			    	
 			    	if(buttonPrev != null){
 			    		buttonPrev.getBackground().clearColorFilter();
-			    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 			    	}
 			    	
 			    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
 			    	
 			    	if(buttonPrev != null){
 			    		buttonPrev.getBackground().clearColorFilter();
-			    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 			    	}
 			    	
 			    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionScore());
 			    	
 			    	if(buttonPrev != null){
 			    		buttonPrev.getBackground().clearColorFilter();
-			    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 			    	}
 			    	
 					viewHelper.resetSelected();
 					
 			        Button button = (Button) getView().findViewById(R.id.btnControlsUndo);
 			        
-			        if(viewHelper.getSelectedMatch().getCurrentSet().getActions().size() == 0){
+			        if(match.getCurrentSet().getActions().size() == 0){
 						button.setEnabled(false);
 					}
 			        else{
@@ -356,7 +360,8 @@ public class ScoutingFragment extends Fragment {
 				*/
 				
 			case R.id.btnControlsUndo:
-				Action action = viewHelper.getSelectedMatch().undoAction();
+				Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+				Action action = match.undoAction();
 				
 				if(action != null){
 					Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
@@ -367,7 +372,7 @@ public class ScoutingFragment extends Fragment {
 				
 		        Button button = (Button) getView().findViewById(R.id.btnControlsUndo);
 		        
-		        if(viewHelper.getSelectedMatch().getCurrentSet().getActions().size() == 0){
+		        if(match.getCurrentSet().getActions().size() == 0){
 					button.setEnabled(false);
 				}
 		        else{
@@ -387,7 +392,6 @@ public class ScoutingFragment extends Fragment {
 	    	
 	    	if(buttonPrev != null){
 	    		buttonPrev.getBackground().clearColorFilter();
-	    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 	    	}
 	    	
 	    	Button button = (Button) getActivity().findViewById(v.getId());
@@ -395,11 +399,11 @@ public class ScoutingFragment extends Fragment {
 	    	if(button != buttonPrev){
 
 	    		Integer position = (Integer) button.getTag();
-	    		Player player = (Player) viewHelper.getSelectedMatch().getActivePlayerByPosition(position);
+	    		Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+	    		Player player = (Player) match.getActivePlayerByPosition(position);
 	    		
 	    		if(player != null){
 	    			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
-	    			//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 	    			viewHelper.setSelectedPlayer(position);
 	    		}
 	    		else{
@@ -421,8 +425,9 @@ public class ScoutingFragment extends Fragment {
 
 			// Populate teamList
 			int i = 0;
-			final List<Player> players = new ArrayList<Player>(viewHelper.getSelectedMatch().getTeam().getPlayers());
-			List<Player> activePlayers = viewHelper.getSelectedMatch().getActivePlayers();
+			Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+			final List<Player> players = new ArrayList<Player>(match.getTeam().getPlayers());
+			List<Player> activePlayers = match.getActivePlayers();
 			players.removeAll(activePlayers);
 			
 			Collections.sort(players, new Comparator<Player>() {
@@ -449,14 +454,15 @@ public class ScoutingFragment extends Fragment {
 			builder.setItems(entries, new DialogInterface.OnClickListener() {
 
 			   public void onClick(DialogInterface dialog, int item) {
+				   Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 				   if(item == (entries.length-1)){
-					   viewHelper.getSelectedMatch().setPlayerActive(null, position);
+					   match.setPlayerActive(null, position);
 					   viewHelper.setSelectedPlayer(null);
 					   button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
 					   button.setText("");
 				   }
 				   else{
-					   viewHelper.getSelectedMatch().setPlayerActive(players.get(item), position);
+					   match.setPlayerActive(players.get(item), position);
 					   button.setText(entries[item]);
 					   button.getBackground().clearColorFilter();
 				   }
@@ -479,14 +485,12 @@ public class ScoutingFragment extends Fragment {
 	    	
 	    	if(buttonPrev != null){
 	    		buttonPrev.getBackground().clearColorFilter();
-	    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 	    	}
 	    	
 	    	Button button = (Button) getActivity().findViewById(v.getId());
 	    	
 	    	if(button != buttonPrev){
 	    		button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
-	    		//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 	    		viewHelper.setSelectedActionType((ActionType) button.getTag());
 	    	}
 	    	else{
@@ -502,14 +506,12 @@ public class ScoutingFragment extends Fragment {
 	    	
 	    	if(buttonPrev != null){
 	    		buttonPrev.getBackground().clearColorFilter();
-	    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
 	    	}
 	    	
 	    	Button button = (Button) getActivity().findViewById(v.getId());
 	    	
 	    	if(button != buttonPrev){
 	    		button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
-	    		//button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 	    		viewHelper.setSelectedActionScore((ActionScore) button.getTag());
 	    	}
 	    	else{
@@ -517,7 +519,6 @@ public class ScoutingFragment extends Fragment {
 	    	}
 		}
 	};
-	private ScoutingService scoutingService;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -537,19 +538,18 @@ public class ScoutingFragment extends Fragment {
 	}
 
 	public interface OnScoutingFragmentInteractionListener {
-		// TODO: Update argument type and name
 		public void onScoutingFragmentInteraction(View v);
 	}
 
 	public void setViewHelper(ViewHelper viewHelper) {
-		this.viewHelper = viewHelper;
+		ScoutingFragment.viewHelper = viewHelper;
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		this.scoutingService = scoutingService;
+		ScoutingFragment.scoutingService = scoutingService;
 	}
 	
 	public void setScoutingFileDB(ScoutingFileDB scoutingFileDB) {
-		this.scoutingFileDB = scoutingFileDB;
+		ScoutingFragment.scoutingFileDB = scoutingFileDB;
 	}
 }

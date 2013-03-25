@@ -4,8 +4,11 @@ import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
@@ -13,7 +16,6 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
-import android.widget.TabHost;
 
 import com.example.scouting.ViewHelper;
 import com.example.scouting.server.ScoutingService;
@@ -25,9 +27,9 @@ public class SettingsNewMatch extends PreferenceFragment {
 
 	@SuppressWarnings("unused")
 	private OnSettingsNewMatchFragmentInteractionListener mListener;
-	private ScoutingService scoutingService;
+	private static ScoutingService scoutingService;
 	private Match match;
-	private ViewHelper viewHelper;
+	private static ViewHelper viewHelper;
 
 	public SettingsNewMatch() {
 		// Required empty public constructor
@@ -80,27 +82,17 @@ public class SettingsNewMatch extends PreferenceFragment {
 				CheckBoxPreference visitor = (CheckBoxPreference) findPreference("Visitor");
 				
 				if(match == null){
-					viewHelper.setSelectedMatch(scoutingService.createNewMatch(scoutingService.findTeamById(Integer.parseInt(teamList.getValue())), opponent.getText(), visitor.isChecked()));
+					Match myMatch = scoutingService.createNewMatch(scoutingService.findTeamById(Integer.parseInt(teamList.getValue())), opponent.getText(), visitor.isChecked());
+					viewHelper.setSelectedMatch(scoutingService.getAllMatches().indexOf(myMatch));
 				}
 				else{
 					match.setTeam(scoutingService.findTeamById(Integer.parseInt(teamList.getValue())));
 					match.setOpponent(opponent.getText());
 					match.setVisitor(visitor.isChecked());
-					viewHelper.setSelectedMatch(match);
+					viewHelper.setSelectedMatch(scoutingService.getAllMatches().indexOf(match));
 				}
 				
 				getActivity().invalidateOptionsMenu();
-				
-				// Refresh the settings overview after edit
-				/*SettingsOverview settingsOverview = new SettingsOverview();
-				settingsOverview.setScoutingService(scoutingService);
-				settingsOverview.setViewHelper(viewHelper);
-				
-				FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-				transaction.remove(fragMan.findFragmentByTag("SettingsNewMatch"));
-				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.commit();*/
 				
 				ActionBar actionBar = getActivity().getActionBar();
 				actionBar.setSelectedNavigationItem(0);
@@ -112,23 +104,38 @@ public class SettingsNewMatch extends PreferenceFragment {
 		delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				scoutingService.removeMatch(match);
 				
-				if(viewHelper.getSelectedMatch() == match){
-					viewHelper = null;
-					getActivity().invalidateOptionsMenu();
-				}
-				
-				// Refresh the settings overview after edit
-				SettingsOverview settingsOverview = new SettingsOverview();
-				settingsOverview.setScoutingService(scoutingService);
-				settingsOverview.setViewHelper(viewHelper);
-				
-				FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-				transaction.remove(fragMan.findFragmentByTag("SettingsNewMatch"));
-				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.commit();
+			    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+			    
+			    alertDialog.setNegativeButton("Nee", null);
+
+			    alertDialog.setMessage("Wil je deze match verwijderen?");
+			    alertDialog.setTitle("Verwijderen?");
+
+			    alertDialog.setPositiveButton("Ja", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						scoutingService.removeMatch(match);
+						
+						Match myMatch = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+						
+						if(match == myMatch){
+							viewHelper = null;
+							getActivity().invalidateOptionsMenu();
+						}
+						
+						// Refresh the settings overview after edit
+						SettingsOverview settingsOverview = new SettingsOverview();
+						
+						FragmentManager fragMan = getFragmentManager();
+						FragmentTransaction transaction = fragMan.beginTransaction();
+						transaction.remove(fragMan.findFragmentByTag("SettingsNewMatch"));
+						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+						transaction.commit();
+					}
+				});
+
+			    alertDialog.show();
 				
 				return false;
 			}
@@ -158,7 +165,7 @@ public class SettingsNewMatch extends PreferenceFragment {
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		this.scoutingService = scoutingService;
+		SettingsNewMatch.scoutingService = scoutingService;
 	}
 	
 	public void setMatch(Match match){
@@ -166,6 +173,6 @@ public class SettingsNewMatch extends PreferenceFragment {
 	}
 
 	public void setViewHelper(ViewHelper viewHelper) {
-		this.viewHelper = viewHelper;
+		SettingsNewMatch.viewHelper = viewHelper;
 	}
 }

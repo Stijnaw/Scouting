@@ -46,17 +46,32 @@ public class ScoutingLocalDB implements ScoutingDBInterface, Serializable{
 
 	@Override
 	public Match findMatchById(Integer id) {
-		return matchesDB.get(id);
+		if(id != null && id >= 0 && id < matchesDB.size()){
+			return matchesDB.get(id);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override
 	public Player findPlayerById(Integer id) {
-		return playersDB.get(id);
+		if(id != null && id >= 0 && id < playersDB.size()){
+			return playersDB.get(id);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override
 	public Team findTeamById(Integer id) {
-		return teamsDB.get(id);
+		if(id != null && id >= 0 && id < teamsDB.size()){
+			return teamsDB.get(id);
+		}
+		else{
+			return null;
+		}
 	}
 
 	@Override

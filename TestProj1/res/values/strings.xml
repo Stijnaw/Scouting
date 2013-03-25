@@ -9,8 +9,8 @@
     <string name="Null">0</string>
     <string name="Minus">-</string>
     <string name="MinusMinus">--</string>
-    <string name="Reception">Receptie (opslag)</string>
-    <string name="Dig">Receptie</string>
+    <string name="Reception">Receptie</string>
+    <string name="Dig">Verdediging</string>
     <string name="Attack">Aanval</string>
     <string name="Block">Block</string>
     <string name="Pass">Pas</string>

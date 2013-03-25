@@ -16,8 +16,8 @@ public class SettingsFragment extends Fragment {
 
 	@SuppressWarnings("unused")
 	private OnSettingsFragmentInteractionListener mListener;
-	private ScoutingService scoutingService;
-	private ViewHelper viewHelper;
+	private static ScoutingService scoutingService;
+	private static ViewHelper viewHelper;
 
 	public SettingsFragment() {
 		// Required empty public constructor
@@ -61,7 +61,7 @@ public class SettingsFragment extends Fragment {
 	}
 	
 	public void setScoutingService(ScoutingService scoutingService) {
-		this.scoutingService = scoutingService;
+		SettingsFragment.scoutingService = scoutingService;
 	}
 	
 	public interface OnSettingsFragmentInteractionListener {
@@ -70,6 +70,6 @@ public class SettingsFragment extends Fragment {
 	}
 
 	public void setViewHelper(ViewHelper viewHelper) {
-		this.viewHelper = viewHelper;
+		SettingsFragment.viewHelper = viewHelper;
 	}
 }

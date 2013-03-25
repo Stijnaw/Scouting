@@ -15,6 +15,8 @@
         android:layout_weight="0.35" >
     </LinearLayout>
 
+    <View style="@style/DividerVertical"/>
+    
     <LinearLayout
         android:id="@+id/frameSettingsDetail"
         android:layout_width="0dp"

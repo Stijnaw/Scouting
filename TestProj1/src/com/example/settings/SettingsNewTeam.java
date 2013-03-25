@@ -3,8 +3,11 @@ package com.example.settings;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
@@ -23,7 +26,8 @@ public class SettingsNewTeam extends PreferenceFragment {
 
 	@SuppressWarnings("unused")
 	private OnSettingsNewTeamFragmentInteractionListener mListener;
-	private ScoutingService scoutingService;
+	private static ScoutingService scoutingService;
+	private static ViewHelper viewHelper;
 	private Team team = null;
 	private Team teamCopy = null;
 
@@ -95,8 +99,6 @@ public class SettingsNewTeam extends PreferenceFragment {
 				
 				// Refresh the settings overview after edit
 				SettingsOverview settingsOverview = new SettingsOverview();
-				settingsOverview.setScoutingService(scoutingService);
-				settingsOverview.setViewHelper(viewHelper);
 				
 				FragmentManager fragMan = getFragmentManager();
 				FragmentTransaction transaction = fragMan.beginTransaction();
@@ -111,18 +113,32 @@ public class SettingsNewTeam extends PreferenceFragment {
 		delete.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				scoutingService.removeTeam(team);
 				
-				// Refresh the settings overview after edit
-				SettingsOverview settingsOverview = new SettingsOverview();
-				settingsOverview.setScoutingService(scoutingService);
-				settingsOverview.setViewHelper(viewHelper);
+			    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+			    
+			    alertDialog.setNegativeButton("Nee", null);
+
+			    alertDialog.setMessage("Wil je team verwijderen?");
+			    alertDialog.setTitle("Verwijderen?");
+
+			    alertDialog.setPositiveButton("Ja", new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						scoutingService.removeTeam(team);
+						
+						// Refresh the settings overview after edit
+						SettingsOverview settingsOverview = new SettingsOverview();
+						
+						FragmentManager fragMan = getFragmentManager();
+						FragmentTransaction transaction = fragMan.beginTransaction();
+						transaction.remove(fragMan.findFragmentByTag("SettingsNewTeam"));
+						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+						transaction.commit();
+					}
+				});
+
+			    alertDialog.show();
 				
-				FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-				transaction.remove(fragMan.findFragmentByTag("SettingsNewTeam"));
-				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.commit();
 				return false;
 			}
         });
@@ -135,8 +151,6 @@ public class SettingsNewTeam extends PreferenceFragment {
 			teamCopy.setName(((EditTextPreference) findPreference("Name")).getText());
 			
 			SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
-			settingsNewTeam.setScoutingService(scoutingService);
-			settingsNewTeam.setViewHelper(viewHelper);
 			settingsNewTeam.setTeam(team, teamCopy);
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -153,8 +167,6 @@ public class SettingsNewTeam extends PreferenceFragment {
 			teamCopy.setName(((EditTextPreference) findPreference("Name")).getText());
 			
 			SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
-			settingsNewTeam.setScoutingService(scoutingService);
-			settingsNewTeam.setViewHelper(viewHelper);
 			settingsNewTeam.setTeam(team, teamCopy);
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -163,8 +175,6 @@ public class SettingsNewTeam extends PreferenceFragment {
 			return false;
 		}
 	};
-	private ViewHelper viewHelper;
-	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -189,7 +199,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		this.scoutingService = scoutingService;
+		SettingsNewTeam.scoutingService = scoutingService;
 	}
 
 	public void setTeam(Team team) {
@@ -203,6 +213,6 @@ public class SettingsNewTeam extends PreferenceFragment {
 	}
 
 	public void setViewHelper(ViewHelper viewHelper) {
-		this.viewHelper = viewHelper;
+		SettingsNewTeam.viewHelper = viewHelper;
 	}
 }
