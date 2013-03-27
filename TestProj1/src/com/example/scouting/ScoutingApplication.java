@@ -11,6 +11,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.scouting.SettingsFragment.OnSettingsFragmentInteractionListener;
 import com.example.scouting.StatisticsDetail.OnStatisticsDetailFragmentInteractionListener;
@@ -43,6 +46,8 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	
 	private ArrayList<String> setList;
 	private ScoutingFileDB scoutingFileDB;
+	
+	private static final int SELECT_TEXT_DIALOG = 1;
 
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,12 +248,35 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
             	Spinner spinner = (Spinner) findViewById(R.id.set_spinner);
             	spinner.setSelection(match.getCurrentSetNumber()-1);
                 return true;
-            case R.id.menu_sava_file:
+            case R.id.menu_export_file:
             	scoutingFileDB.saveScoutingExtern(scoutingService);
+            	return true;
+            case R.id.menu_import_file:
+            	Intent intent = new Intent();
+            	intent.setType("text/*");
+            	intent.setAction(Intent.ACTION_GET_CONTENT);
+            	startActivityForResult(Intent.createChooser(intent, "Select Text"), SELECT_TEXT_DIALOG);
             	return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+    
+    public void onActivityResult(int requestCode, int resultCode, Intent result) {
+	    if (resultCode == RESULT_OK) {
+	        if (requestCode == SELECT_TEXT_DIALOG) {
+	            Uri data = result.getData();
+	
+	            if(data.getLastPathSegment().endsWith("txt")){
+	            	scoutingService = scoutingFileDB.importScoutingFromExtern(data.getPath());
+	            	
+	            	Toast.makeText(this, "Herstart de applicatie om de wijzigingen toe te passen.", Toast.LENGTH_LONG).show();
+	            } 
+	            else {
+	                Toast.makeText(this, "Invalid file type", Toast.LENGTH_SHORT).show();   
+	            }               
+	        }
+	    }
     }
     
     /**************************************************************

@@ -13,9 +13,10 @@ public class Player implements Serializable {
      * @param name the name
      * @param number the number
      */
-    public Player(String name, int number){
+    public Player(String name, int number, String picture){
         this.name = name;
         this.number = number;
+        this.picture = picture;
     }
     
     public Player(Player player){

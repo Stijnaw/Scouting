@@ -10,6 +10,8 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.LightingColorFilter;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.scouting.server.ScoutingFileDB;
@@ -54,111 +58,137 @@ public class ScoutingFragment extends Fragment {
     	 * Get buttons
     	 **********************************/
         Button button;
-        button = (Button) V.findViewById(R.id.btnPlayer1);
-        button.setTag(1);
-        button.setOnClickListener(playerOnClickListener);
-        button.setOnLongClickListener(playerOnLongClickListener);
+        TextView text;
+        ImageButton imgButton;
+        imgButton = (ImageButton) V.findViewById(R.id.btnPlayer1);
+        text = (TextView) V.findViewById(R.id.txtPlayer1);
+        imgButton.setTag(1);
+        text.setTag(10);
+        imgButton.setOnClickListener(playerOnClickListener);
+        imgButton.setOnLongClickListener(playerOnLongClickListener);
         
         Player player;
         Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
         
         if(match == null){
-			button.setEnabled(false);
+			imgButton.setEnabled(false);
 		}
         else{
         	player = match.getActivePlayers().get(0);
         	if(player != null){
-        		button.setText(player.getName());
+                BitmapDrawable d = new BitmapDrawable(getResources(), player.getPicture());
+                imgButton.setImageDrawable(d);
+        		text.setText(player.getNumber() + ". " + player.getName());
         	}
         	else{
-        		button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
+        		imgButton.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
         	}
         }
         
-        button = (Button) V.findViewById(R.id.btnPlayer2);
-        button.setTag(2);
-        button.setOnClickListener(playerOnClickListener);
-        button.setOnLongClickListener(playerOnLongClickListener);
+        imgButton = (ImageButton) V.findViewById(R.id.btnPlayer2);
+        text = (TextView) V.findViewById(R.id.txtPlayer2);
+        imgButton.setTag(2);
+        text.setTag(20);
+        imgButton.setOnClickListener(playerOnClickListener);
+        imgButton.setOnLongClickListener(playerOnLongClickListener);
         
         if(match == null){
-			button.setEnabled(false);
+			imgButton.setEnabled(false);
 		}
         else{
         	player = match.getActivePlayers().get(1);
         	if(player != null){
-        		button.setText(player.getName());
+                BitmapDrawable d = new BitmapDrawable(getResources(), player.getPicture());
+                imgButton.setImageDrawable(d);
+        		text.setText(player.getNumber() + ". " + player.getName());
         	}
         	else{
-        		button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
+        		imgButton.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
         	}
         }
         
-        button = (Button) V.findViewById(R.id.btnPlayer3);
-        button.setTag(3);
-        button.setOnClickListener(playerOnClickListener);
-        button.setOnLongClickListener(playerOnLongClickListener);
+        imgButton = (ImageButton) V.findViewById(R.id.btnPlayer3);
+        text = (TextView) V.findViewById(R.id.txtPlayer3);
+        imgButton.setTag(3);
+        text.setTag(30);
+        imgButton.setOnClickListener(playerOnClickListener);
+        imgButton.setOnLongClickListener(playerOnLongClickListener);
         
         if(match == null){
-			button.setEnabled(false);
+			imgButton.setEnabled(false);
 		}
         else{
         	player = match.getActivePlayers().get(2);
         	if(player != null){
-        		button.setText(player.getName());
+                BitmapDrawable d = new BitmapDrawable(getResources(), player.getPicture());
+                imgButton.setImageDrawable(d);
+        		text.setText(player.getNumber() + ". " + player.getName());
         	}
         	else{
-        		button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
+        		imgButton.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
         	}
         }
         
-        button = (Button) V.findViewById(R.id.btnPlayer4);
-        button.setTag(4);
-        button.setOnClickListener(playerOnClickListener);
-        button.setOnLongClickListener(playerOnLongClickListener);
+        imgButton = (ImageButton) V.findViewById(R.id.btnPlayer4);
+        text = (TextView) V.findViewById(R.id.txtPlayer4);
+        imgButton.setTag(4);
+        text.setTag(40);
+        imgButton.setOnClickListener(playerOnClickListener);
+        imgButton.setOnLongClickListener(playerOnLongClickListener);
         if(match == null){
-			button.setEnabled(false);
+			imgButton.setEnabled(false);
 		}
         else{
         	player = match.getActivePlayers().get(3);
         	if(player != null){
-        		button.setText(player.getName());
+                BitmapDrawable d = new BitmapDrawable(getResources(), player.getPicture());
+                imgButton.setImageDrawable(d);
+        		text.setText(player.getNumber() + ". " + player.getName());
         	}
         	else{
-        		button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
+        		imgButton.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
         	}
         }
         
-        button = (Button) V.findViewById(R.id.btnPlayer5);
-        button.setTag(5);
-        button.setOnClickListener(playerOnClickListener);
-        button.setOnLongClickListener(playerOnLongClickListener);
+        imgButton = (ImageButton) V.findViewById(R.id.btnPlayer5);
+        text = (TextView) V.findViewById(R.id.txtPlayer5);
+        imgButton.setTag(5);
+        text.setTag(50);
+        imgButton.setOnClickListener(playerOnClickListener);
+        imgButton.setOnLongClickListener(playerOnLongClickListener);
         if(match == null){
-			button.setEnabled(false);
+			imgButton.setEnabled(false);
 		}
         else{
         	player = match.getActivePlayers().get(4);
         	if(player != null){
-        		button.setText(player.getName());
+                BitmapDrawable d = new BitmapDrawable(getResources(), player.getPicture());
+                imgButton.setImageDrawable(d);
+        		text.setText(player.getNumber() + ". " + player.getName());
         	}
         	else{
-        		button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
+        		imgButton.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
         	}
         }
         
-        button = (Button) V.findViewById(R.id.btnPlayer6);
-        button.setTag(6);
-        button.setOnClickListener(playerOnClickListener);
-        button.setOnLongClickListener(playerOnLongClickListener);
+        imgButton = (ImageButton) V.findViewById(R.id.btnPlayer6);
+        text = (TextView) V.findViewById(R.id.txtPlayer6);
+        imgButton.setTag(6);
+        text.setTag(60);
+        imgButton.setOnClickListener(playerOnClickListener);
+        imgButton.setOnLongClickListener(playerOnLongClickListener);
         if(match == null){
-			button.setEnabled(false);
+			imgButton.setEnabled(false);
 		}
         else{
         	player = match.getActivePlayers().get(5);
         	if(player != null){
-        		button.setText(player.getName());
+                BitmapDrawable d = new BitmapDrawable(getResources(), player.getPicture());
+                imgButton.setImageDrawable(d);
+        		text.setText(player.getNumber() + ". " + player.getName());
         	}
         	else{
-        		button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
+        		imgButton.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
         	}
         }
         
@@ -263,8 +293,8 @@ public class ScoutingFragment extends Fragment {
         
         // Restore previous selections
 		if(viewHelper.getSelectedPlayer() != null){
-			button = (Button) V.findViewWithTag(viewHelper.getSelectedPlayer());
-			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
+			imgButton = (ImageButton) V.findViewWithTag(viewHelper.getSelectedPlayer());
+			imgButton.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
 		}
 		
 		
@@ -293,13 +323,13 @@ public class ScoutingFragment extends Fragment {
 					
 					match.addAction(new Action(match.getActivePlayerByPosition(viewHelper.getSelectedPlayer()), viewHelper.getSelectedActionType(), viewHelper.getSelectedActionScore()));
 					
-			    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
+			    	ImageButton imgButtonPrev = (ImageButton) getView().findViewWithTag(viewHelper.getSelectedPlayer());
 			    	
-			    	if(buttonPrev != null){
-			    		buttonPrev.getBackground().clearColorFilter();
+			    	if(imgButtonPrev != null){
+			    		imgButtonPrev.getBackground().clearColorFilter();
 			    	}
 			    	
-			    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
+			    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
 			    	
 			    	if(buttonPrev != null){
 			    		buttonPrev.getBackground().clearColorFilter();
@@ -388,13 +418,13 @@ public class ScoutingFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			
-	    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
+	    	ImageButton buttonPrev = (ImageButton) getView().findViewWithTag(viewHelper.getSelectedPlayer());
 	    	
 	    	if(buttonPrev != null){
 	    		buttonPrev.getBackground().clearColorFilter();
 	    	}
 	    	
-	    	Button button = (Button) getActivity().findViewById(v.getId());
+	    	ImageButton button = (ImageButton) getActivity().findViewById(v.getId());
 	    	
 	    	if(button != buttonPrev){
 
@@ -420,7 +450,8 @@ public class ScoutingFragment extends Fragment {
 		@Override
 		public boolean onLongClick(View v) {
 			
-			final Button button = (Button) getActivity().findViewById(v.getId());
+			final ImageButton button = (ImageButton) getActivity().findViewById(v.getId());
+			final TextView text = (TextView) getView().findViewWithTag((Integer) button.getTag()*10);
     		final Integer position = (Integer) button.getTag();
 
 			// Populate teamList
@@ -458,13 +489,16 @@ public class ScoutingFragment extends Fragment {
 				   if(item == (entries.length-1)){
 					   match.setPlayerActive(null, position);
 					   viewHelper.setSelectedPlayer(null);
+					   button.setImageDrawable(null);
 					   button.getBackground().setColorFilter(new LightingColorFilter(0xFFFFFFFF, 0xF0F0F0F0));
-					   button.setText("");
+					   text.setText("");
 				   }
 				   else{
 					   match.setPlayerActive(players.get(item), position);
-					   button.setText(entries[item]);
+					   text.setText(entries[item]);
 					   button.getBackground().clearColorFilter();
+		               BitmapDrawable d = new BitmapDrawable(getResources(), players.get(item).getPicture());
+		               button.setImageDrawable(d);
 				   }
 			   }
 

@@ -71,8 +71,8 @@ public class ScoutingImpl implements ScoutingService, Serializable {
 	}
 
 	@Override
-	public Player createNewPlayer(String name, int number) {
-		return scoutingDBInterface.createNewPlayer(new Player(name, number));
+	public Player createNewPlayer(String name, int number, String picture) {
+		return scoutingDBInterface.createNewPlayer(new Player(name, number, picture));
 	}
 
 	@Override

@@ -75,24 +75,27 @@ public class ScoutingFileDB{
 		} catch (IOException e) {
 			Toast.makeText(ctx, "IOException", Toast.LENGTH_SHORT).show();
 		}
-		/*try {
-			File root = Environment.getExternalStorageDirectory(); 
-
-			File dir = new File (root.getAbsolutePath() + "/scouting");
-			dir.mkdirs();
-			File file = new File(dir, "scouting.txt");
-            
-            FileOutputStream fOut = new FileOutputStream(file);
-            
-	        ObjectOutputStream oos = new ObjectOutputStream(fOut);
-	        oos.writeObject(scoutingService);
-	        oos.close();
-            fOut.close();
-	    } catch (IOException e) {
-	        e.printStackTrace();
-	        return null;
-	    }*/
 		
 		return scoutingService;
+	}
+
+	public ScoutingService importScoutingFromExtern(String fileName) {
+	    try {
+	    	File file = new File(fileName);
+	    	FileInputStream fis = new FileInputStream(file);
+	        ObjectInputStream is = new ObjectInputStream(fis);
+	        Object readObject = is.readObject();
+	        is.close();
+
+	        if(readObject != null && readObject instanceof ScoutingService) {
+	            return (ScoutingService) readObject;
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+		
+		return null;
 	}
 }

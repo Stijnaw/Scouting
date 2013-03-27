@@ -12,6 +12,12 @@
 	        android:key="Number"
 	        android:inputType="number"
 	        android:dependency="Name" />
+	    <PreferenceScreen
+	        android:title="Afbeelding"
+	        android:summary="De afbeelding van de speler"
+	        android:key="Image"
+	        android:dependency="Name" >
+	    </PreferenceScreen>
 	</PreferenceCategory>
    	<PreferenceCategory
     android:title="Opties">

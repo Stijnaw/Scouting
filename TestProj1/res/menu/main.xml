@@ -5,8 +5,14 @@
         android:showAsAction="never"
         android:visible="false" />
     
-    <item android:id="@+id/menu_sava_file"
+    <item android:id="@+id/menu_export_file"
         android:title="Export scouting"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:visible="true" />
+    
+    <item android:id="@+id/menu_import_file"
+        android:title="Import scouting"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:visible="true" />

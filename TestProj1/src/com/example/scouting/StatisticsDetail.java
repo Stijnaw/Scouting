@@ -6,10 +6,12 @@ import java.util.Comparator;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -48,6 +50,10 @@ public class StatisticsDetail extends Fragment {
 		
 		if(stats != null){
             TextView tv;
+            
+            ImageView imageView = (ImageView) V.findViewById(R.id.stats_picture);
+            BitmapDrawable d = new BitmapDrawable(getResources(), stats.getPlayer().getPicture());
+            imageView.setImageDrawable(d);
             
             tv = (TextView) V.findViewById(R.id.stats_name);
             tv.setText(stats.getPlayer().getName());
