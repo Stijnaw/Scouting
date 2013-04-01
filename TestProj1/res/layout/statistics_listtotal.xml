@@ -28,7 +28,8 @@
 	        android:layout_height="match_parent"
 	        android:layout_weight="5"
 	        android:gravity="center_vertical"
-	        android:paddingLeft="3dp" />
+	        android:paddingLeft="3dp"
+	        android:clickable="true" />
 	    
 	    <View style="@style/DividerVertical"/>
 	    

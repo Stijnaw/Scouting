@@ -28,6 +28,8 @@ public class SettingsNewTeam extends PreferenceFragment {
 	private OnSettingsNewTeamFragmentInteractionListener mListener;
 	private static ScoutingService scoutingService;
 	private static ViewHelper viewHelper;
+	private static String tag;
+	private static int fragmentId;
 	private Team team = null;
 	private Team teamCopy = null;
 
@@ -51,6 +53,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 		}
 		
 		if(teamCopy.getName() != ""){
+			name.setTitle(teamCopy.getName());
 			delete.setEnabled(true);
 		}
 		
@@ -104,6 +107,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 				FragmentTransaction transaction = fragMan.beginTransaction();
 				transaction.remove(fragMan.findFragmentByTag("SettingsNewTeam"));
 				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+				transaction.addToBackStack(null);
 				transaction.commit();
 				
 				return false;
@@ -133,6 +137,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 						FragmentTransaction transaction = fragMan.beginTransaction();
 						transaction.remove(fragMan.findFragmentByTag("SettingsNewTeam"));
 						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+						transaction.addToBackStack(null);
 						transaction.commit();
 					}
 				});
@@ -155,6 +160,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			transaction.replace(R.id.frameSettingsDetail, settingsNewTeam, "SettingsNewTeam");
+			transaction.addToBackStack(null);
 			transaction.commit();
 			return false;
 		}
@@ -171,6 +177,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
 			transaction.replace(R.id.frameSettingsDetail, settingsNewTeam, "SettingsNewTeam");
+			transaction.addToBackStack(null);
 			transaction.commit();
 			return false;
 		}
@@ -214,5 +221,21 @@ public class SettingsNewTeam extends PreferenceFragment {
 
 	public void setViewHelper(ViewHelper viewHelper) {
 		SettingsNewTeam.viewHelper = viewHelper;
+	}
+	
+	public void setFragmentTag(String tag) {
+		SettingsNewTeam.tag = tag;
+	}
+	
+	public String getFragmentTag(){
+		return tag;
+	}
+
+	public void setFragmentId(int fragmentId) {
+		SettingsNewTeam.fragmentId = fragmentId;
+	}
+	
+	public int getFragmentId(){
+		return fragmentId;
 	}
 }

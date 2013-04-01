@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -43,10 +44,10 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 
 	private ScoutingService scoutingService;
 	private ViewHelper viewHelper;
-	
+
 	private ArrayList<String> setList;
 	private ScoutingFileDB scoutingFileDB;
-	
+
 	private static final int SELECT_TEXT_DIALOG = 1;
 
 	@Override
@@ -64,40 +65,15 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         }
         else{
         	scoutingService = scoutingFileDB.getScouting();
+        	viewHelper = scoutingFileDB.getView();
         	
         	if(scoutingService == null){
         		scoutingService = new ScoutingImpl(new ScoutingLocalDB());
         	}
         	
-        	viewHelper = new ViewHelper();
-        	/*
-			Player player1 = scoutingService.createNewPlayer("Player 1", 1);
-			Player player2 = scoutingService.createNewPlayer("Player 2", 2);
-			Player player3 = scoutingService.createNewPlayer("Player 3", 3);
-			Player player4 = scoutingService.createNewPlayer("Player 4", 4);
-			Player player5 = scoutingService.createNewPlayer("Player 5", 5);
-			Player player6 = scoutingService.createNewPlayer("Player 6", 6);
-	
-	        Team team1 = scoutingService.createNewTeam("VC Overpelt");
-	        team1.addPlayer(player1);
-	        team1.addPlayer(player2);
-	        team1.addPlayer(player3);
-	        team1.addPlayer(player4);
-	        team1.addPlayer(player5);
-	        team1.addPlayer(player6);
-	        
-	        // TODO: create match in settings
-	        Match testMatch = scoutingService.createNewMatch(team1, "Uikhoven", true);
-	        
-	        testMatch.setPlayerActive(player1, 1);
-	        testMatch.setPlayerActive(player2, 2);
-	        testMatch.setPlayerActive(player3, 3);
-	        testMatch.setPlayerActive(player4, 4);
-	        testMatch.setPlayerActive(player5, 5);
-	        testMatch.setPlayerActive(player6, 6);
-	        
-	        scoutingService.saveMatch(testMatch);
-	        */
+        	if(viewHelper == null){
+        		viewHelper = new ViewHelper();
+        	}
         }
         
     	/***********************************
@@ -107,6 +83,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         
         ScoutingFragment scoutingFragment = new ScoutingFragment();
         scoutingFragment.setScoutingService(scoutingService);
@@ -115,7 +92,6 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         
         StatisticsFragment statisticsFragment = new StatisticsFragment();
         statisticsFragment.setScoutingService(scoutingService);
-        statisticsFragment.setViewHelper(viewHelper);
         
         SettingsFragment settingsFragment = new SettingsFragment();
         settingsFragment.setScoutingService(scoutingService);
@@ -141,32 +117,41 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         	actionBar.setSelectedNavigationItem(viewHelper.getSelectedTab());
         }
     }
-	
+
 	@Override
 	protected void onPause(){
 		scoutingFileDB.saveScouting(scoutingService);
+		scoutingFileDB.saveView(viewHelper);
 		super.onPause();
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-	    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-	    alertDialog.setPositiveButton("Ja", new OnClickListener() {
-			
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-	            finish();
-			}
-		});
-
-	    alertDialog.setNegativeButton("Nee", null);
-
-	    alertDialog.setMessage("Wil je stoppen met scouten?");
-	    alertDialog.setTitle("Afsluiten?");
-	    alertDialog.show();
-	}
+		
+		viewHelper.setSelectedFragment(null);
+		
+		if(getFragmentManager().getBackStackEntryCount() == 0){
+		    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 	
+		    alertDialog.setPositiveButton("Ja", new OnClickListener() {
+	
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+		            finish();
+				}
+			});
+	
+		    alertDialog.setNegativeButton("Nee", null);
+	
+		    alertDialog.setMessage("Wil je stoppen met scouten?");
+		    alertDialog.setTitle("Afsluiten?");
+		    alertDialog.show();
+		}
+		else{
+			super.onBackPressed();
+		}
+	}
+
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable("scoutingService", scoutingService);
@@ -175,7 +160,6 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         viewHelper.setSelectedTab(getActionBar().getSelectedNavigationIndex());
         //super.onSaveInstanceState(savedInstanceState);
     }
-	
     
 	/***********************************
 	 * Actionbar menu + text
@@ -190,25 +174,25 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
     	MenuItem newSet = (MenuItem) menu.findItem(R.id.menu_new_set);
     	TextView text;
     	
-    	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+    	final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
     	if(match != null){
 	        setList = new ArrayList<String>();
 	        for(Set set : match.getSetList()) {
 				setList.add("Set " + match.getSetNumber(set));
 			}
-	        
+
 	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, setList);
-	        
+
 	        spinner.setAdapter(adapter);
 	        spinner.setSelection(match.getCurrentSetNumber()-1);
-	        
+
 	        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 	            @Override
 	            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 	            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
-	            	
+
 	            	match.setCurrentSet(match.getSetByNumber(position+1));
-	            	
+
 	            	if(findViewById(R.id.stats_fragment) != null){
 		            	FragmentManager fragMan = getFragmentManager();
 						FragmentTransaction transaction = fragMan.beginTransaction();
@@ -216,17 +200,34 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 						transaction.replace(android.R.id.content, statisticsFragment, "Statistics");
 						transaction.commit();
 	            	}
+	            	else if(findViewById(R.id.scouting_fragment) != null){
+		            	FragmentManager fragMan = getFragmentManager();
+						FragmentTransaction transaction = fragMan.beginTransaction();
+				        ScoutingFragment scoutingFragment = new ScoutingFragment();
+						transaction.replace(android.R.id.content, scoutingFragment, "Statistics");
+						transaction.commit();
+	            	}
 	            }
-	
+
 	            @Override
 	            public void onNothingSelected(AdapterView<?> parentView) {
 	            }
-	
+
 	        });
 	        
+	        spinner.setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+
+					dialog();
+				    
+					return false;
+				}
+			});
+
 	        menuSpinner.setVisible(true);
 	        newSet.setVisible(true);
-	        
+
 	        text = (TextView) menu.findItem(R.id.selected_match).getActionView();
 	        text.setText(match.toString());
     	}
@@ -236,6 +237,28 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
     	}
         
         return true;
+    }
+    
+    public void dialog(){
+    	final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+    	
+	    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+	    alertDialog.setPositiveButton("Ja", new OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+	            match.removeSetByNumber(match.getCurrentSetNumber());
+	            invalidateOptionsMenu();
+			}
+		});
+
+	    alertDialog.setNegativeButton("Nee", null);
+
+	    alertDialog.setMessage("Wil je deze set verwijderen?");
+	    alertDialog.setTitle("Verwijderen?");
+	    alertDialog.show();
+	    Toast.makeText(getApplication(), getApplication().toString(), Toast.LENGTH_SHORT).show(); 
     }
     
     @Override
@@ -257,6 +280,9 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
             	intent.setAction(Intent.ACTION_GET_CONTENT);
             	startActivityForResult(Intent.createChooser(intent, "Select Text"), SELECT_TEXT_DIALOG);
             	return true;
+            case android.R.id.home:
+            	onBackPressed();
+            	return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -266,10 +292,10 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	    if (resultCode == RESULT_OK) {
 	        if (requestCode == SELECT_TEXT_DIALOG) {
 	            Uri data = result.getData();
-	
+
 	            if(data.getLastPathSegment().endsWith("txt")){
 	            	scoutingService = scoutingFileDB.importScoutingFromExtern(data.getPath());
-	            	
+
 	            	Toast.makeText(this, "Herstart de applicatie om de wijzigingen toe te passen.", Toast.LENGTH_LONG).show();
 	            } 
 	            else {
@@ -306,7 +332,6 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         }
     }
 
-
     /*
      * Use to communicate with scouting fragment
      */
@@ -314,30 +339,30 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	public void onScoutingFragmentInteraction(View v) {
 
 	}
-	
+
 	/*
      * Use to communicate with statistics fragment
      */
 	@Override
 	public void onStatisticsFragmentInteraction() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
-	
+
+
 	/*
      * Use to communicate with settings fragment
      */
 	@Override
 	public void onSettingsFragmentInteraction() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public void onSettingsOverviewFragmentInteraction() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -348,18 +373,18 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	@Override
 	public void onSettingsNewTeamFragmentInteraction() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onSettingsNewMatchFragmentInteraction() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onStatisticsDetailFragmentInteraction() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

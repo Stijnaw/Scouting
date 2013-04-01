@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="6" >
+        android:weightSum="6.4" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:weightSum="3" >
 
             <RelativeLayout
@@ -101,7 +101,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:weightSum="3" >
 
             <RelativeLayout
@@ -187,7 +187,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:weightSum="3"
+            android:weightSum="2"
             tools:ignore="NestedWeights" >
 
             <Button
@@ -205,21 +205,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/Reception" />
-
-            <Button
-                android:id="@+id/btnActionTypeDig"
-                style="?android:attr/buttonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/Dig" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:weightSum="3" >
+            android:weightSum="2" >
 
             <Button
                 android:id="@+id/btnActionTypeAttack"
@@ -236,14 +228,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/Block" />
-
-            <Button
-                android:id="@+id/btnActionTypePass"
-                style="?android:attr/buttonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/Pass" />
         </LinearLayout>
 
         <LinearLayout
@@ -311,13 +295,33 @@
                 android:layout_weight="1"
                 android:text="@string/Apply" />
 
-            <Button
-                android:id="@+id/btnControlsUndo"
-                style="?android:attr/buttonStyle"
+            <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/Undo" />
+                android:layout_weight="1" >
+
+                <Button
+                    android:id="@+id/btnControlsUndo"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/Undo" />
+                
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:padding="4dp" >
+
+                    <LinearLayout style="@style/playerBanner" >
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txtUndo"
+                        style="@style/playerButtonText" />
+                </FrameLayout>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 

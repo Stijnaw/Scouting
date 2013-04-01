@@ -10,11 +10,13 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Action;
@@ -22,6 +24,7 @@ import com.example.scouting.src.ActionScore;
 import com.example.scouting.src.ActionType;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
+import com.example.scouting.src.Set;
 import com.example.scouting.src.Stats;
 import com.example.testproj1.R;
 
@@ -29,6 +32,7 @@ public class StatisticsFragment extends Fragment {
 
 	@SuppressWarnings("unused")
 	private OnStatisticsFragmentInteractionListener mListener;
+	private boolean totalOverview = false;
 	private static ViewHelper viewHelper;
 	private static ScoutingService scoutingService;
 
@@ -40,9 +44,18 @@ public class StatisticsFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		viewHelper = new ViewHelper();
+		
 		StatisticsDetail statisticsDetail = new StatisticsDetail();
 		statisticsDetail.setScoutingService(scoutingService);
 		statisticsDetail.setViewHelper(viewHelper);
+
+		if(viewHelper.getSelectedFragment() != null && statisticsDetail.isStatsSet() == true){
+			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+			transaction.replace(android.R.id.content, statisticsDetail);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 	}
 	
 	@Override
@@ -52,7 +65,7 @@ public class StatisticsFragment extends Fragment {
 		View V;
 		
 		if(match != null){
-			V = inflater.inflate(R.layout.fragment_statistics, container, false);
+			V = inflater.inflate(R.layout.fragment_statistics, null);
 			
 			ListView listView = (ListView) V.findViewById(R.id.stats_listview);
 			
@@ -65,16 +78,29 @@ public class StatisticsFragment extends Fragment {
 				stats.add(new Stats(player));
 			}
 			
-			for(Action action: match.getCurrentSet().getActions()){
-				stats.get(players.indexOf(action.getPlayer())).add(action.getActionType(), action.getActionScore());
-				
-				total.add(action.getActionType(), action.getActionScore());
-        	}
+			if(totalOverview == true){
+				for(Set set: match.getSets()){
+					for(Action action: set.getActions()){
+						stats.get(players.indexOf(action.getPlayer())).add(action.getActionType(), action.getActionScore());
+						
+						total.add(action.getActionType(), action.getActionScore());
+		        	}
+		        	
+				}
+			}
+			else{
+				for(Action action: match.getCurrentSet().getActions()){
+					stats.get(players.indexOf(action.getPlayer())).add(action.getActionType(), action.getActionScore());
+					
+					total.add(action.getActionType(), action.getActionScore());
+	        	}
+			}
         	
+			
         	Collections.sort(stats, new Comparator<Stats>() {
 				@Override
 				public int compare(Stats s1, Stats s2) {
-					Integer points = s2.getPoints().compareTo(s1.getPoints());
+					Integer points = s2.getComparePoints().compareTo(s1.getComparePoints());
 					Integer service = s2.getCount(ActionType.Service).compareTo(s1.getCount(ActionType.Service));
 					Integer reception = s2.getCount(ActionType.Reception).compareTo(s1.getCount(ActionType.Reception));
 					Integer attack = s2.getCount(ActionType.Attack).compareTo(s1.getCount(ActionType.Attack));
@@ -89,6 +115,18 @@ public class StatisticsFragment extends Fragment {
             
             tv = (TextView) V.findViewById(R.id.stats_name);
             tv.setText("Totaal");
+            tv.setOnClickListener(new OnClickListener() {
+				
+            	@Override
+				public void onClick(View v) {
+            		StatisticsFragment fragment = new StatisticsFragment();
+            		fragment.setTotal(true);
+        			FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        			transaction.replace(android.R.id.content, fragment);
+        			transaction.addToBackStack(null);
+        			transaction.commit();
+				}
+			});
             
             tv = (TextView) V.findViewById(R.id.stats_totalPoints);
             tv.setText(Integer.toString(total.getPoints()));
@@ -137,8 +175,11 @@ public class StatisticsFragment extends Fragment {
 					statisticsDetail.setStats((Stats) v.getTag());
 
 					FragmentTransaction transaction = getFragmentManager().beginTransaction();
-					transaction.replace(R.id.stats_fragment, statisticsDetail, "StatisticsDetail");
+					transaction.replace(android.R.id.content, statisticsDetail);
+					transaction.addToBackStack(null);
 					transaction.commit();
+					
+					viewHelper.setSelectedFragment(1);
 				}
 			});
 		}
@@ -147,6 +188,10 @@ public class StatisticsFragment extends Fragment {
 		}
 		
 		return V;
+	}
+
+	protected void setTotal(boolean total) {
+		this.totalOverview  = total;
 	}
 
 	@Override
@@ -170,11 +215,7 @@ public class StatisticsFragment extends Fragment {
 		// TODO: Update argument type and name
 		public void onStatisticsFragmentInteraction();
 	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		StatisticsFragment.viewHelper = viewHelper;
-	}
-
+	
 	public void setScoutingService(ScoutingService scoutingService) {
 		StatisticsFragment.scoutingService = scoutingService;
 	}

@@ -30,6 +30,8 @@ public class SettingsNewPlayer extends PreferenceFragment {
 	private static ViewHelper viewHelper;
 	private static final int SELECT_PHOTO = 100;
 	private String picture = null;
+	private static String tag;
+	private static int fragmentId;
 
 	public SettingsNewPlayer() {
 		// Required empty public constructor
@@ -49,7 +51,9 @@ public class SettingsNewPlayer extends PreferenceFragment {
 		EditTextPreference number = (EditTextPreference) findPreference("Number");
 		
 		if(player != null){
+			name.setTitle(player.getName());
 			name.setText(player.getName());
+			number.setTitle("Nummer: " + Integer.toString(player.getNumber()));
 			number.setText(Integer.toString(player.getNumber()));
 			delete.setEnabled(true);
 		}
@@ -92,6 +96,7 @@ public class SettingsNewPlayer extends PreferenceFragment {
 				FragmentTransaction transaction = fragMan.beginTransaction();
 				transaction.remove(fragMan.findFragmentByTag("SettingsNewPlayer"));
 				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+				transaction.addToBackStack(null);
 				transaction.commit();
 				
 				return false;
@@ -121,6 +126,7 @@ public class SettingsNewPlayer extends PreferenceFragment {
 						FragmentTransaction transaction = fragMan.beginTransaction();
 						transaction.remove(fragMan.findFragmentByTag("SettingsNewPlayer"));
 						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+						transaction.addToBackStack(null);
 						transaction.commit();
 					}
 				});
@@ -186,5 +192,21 @@ public class SettingsNewPlayer extends PreferenceFragment {
 
 	public void setViewHelper(ViewHelper viewHelper) {
 		SettingsNewPlayer.viewHelper = viewHelper;
+	}
+	
+	public void setFragmentTag(String tag) {
+		SettingsNewPlayer.tag = tag;
+	}
+	
+	public String getFragmentTag(){
+		return tag;
+	}
+
+	public void setFragmentId(int fragmentId) {
+		SettingsNewPlayer.fragmentId = fragmentId;
+	}
+	
+	public int getFragmentId(){
+		return fragmentId;
 	}
 }

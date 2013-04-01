@@ -386,11 +386,9 @@
             <View style="@style/DividerVertical" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7" >
-        </LinearLayout>
+        <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -410,7 +408,7 @@
 
                 <TextView
                     style="@style/StatsHead"
-                    android:text="Verdediging" />
+                    android:text="Block" />
 
                 <View style="@style/DividerHorizontal" />
 
@@ -500,7 +498,7 @@
                     android:weightSum="6" >
 
                     <TextView
-                        android:id="@+id/stats_digAmount"
+                        android:id="@+id/stats_blockAmount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -510,7 +508,7 @@
                     <View style="@style/DividerVertical" />
 
                     <TextView
-                        android:id="@+id/stats_digPP"
+                        android:id="@+id/stats_blockPP"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -520,7 +518,7 @@
                     <View style="@style/DividerVertical" />
 
                     <TextView
-                        android:id="@+id/stats_digP"
+                        android:id="@+id/stats_blockP"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -530,7 +528,7 @@
                     <View style="@style/DividerVertical" />
 
                     <TextView
-                        android:id="@+id/stats_digN"
+                        android:id="@+id/stats_blockN"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -540,7 +538,7 @@
                     <View style="@style/DividerVertical" />
 
                     <TextView
-                        android:id="@+id/stats_digM"
+                        android:id="@+id/stats_blockM"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -550,7 +548,7 @@
                     <View style="@style/DividerVertical" />
 
                     <TextView
-                        android:id="@+id/stats_digMM"
+                        android:id="@+id/stats_blockMM"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -721,192 +719,6 @@
 
                     <TextView
                         android:id="@+id/stats_attackMM"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
-
-                <View style="@style/DividerHorizontal" />
-            </LinearLayout>
-
-            <View style="@style/DividerVertical" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7" >
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1" >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="0.25"
-                android:orientation="vertical" >
-            </LinearLayout>
-
-            <View style="@style/DividerVertical" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
-                android:orientation="vertical"
-                android:weightSum="3" >
-
-                <View style="@style/DividerHorizontal" />
-
-                <TextView
-                    style="@style/StatsHead"
-                    android:text="Block" />
-
-                <View style="@style/DividerHorizontal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:weightSum="6" >
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="#"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="++"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="+"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="0"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="-"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="--"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <View style="@style/DividerHorizontal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:weightSum="6" >
-
-                    <TextView
-                        android:id="@+id/stats_blockAmount"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/stats_blockPP"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/stats_blockP"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/stats_blockN"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/stats_blockM"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <View style="@style/DividerVertical" />
-
-                    <TextView
-                        android:id="@+id/stats_blockMM"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

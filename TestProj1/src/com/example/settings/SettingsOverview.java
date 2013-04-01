@@ -52,14 +52,20 @@ public class SettingsOverview extends PreferenceFragment {
 		SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
 		settingsNewMatch.setScoutingService(scoutingService);
 		settingsNewMatch.setViewHelper(viewHelper);
+		settingsNewMatch.setFragmentTag("SettingsNewMatch");
+		settingsNewMatch.setFragmentId(R.id.frameSettingsDetail);
 		
 		SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 		settingsNewTeam.setScoutingService(scoutingService);
 		settingsNewTeam.setViewHelper(viewHelper);
+		settingsNewTeam.setFragmentTag("SettingsNewTeam");
+		settingsNewTeam.setFragmentId(R.id.frameSettingsDetail);
 
 		SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
 		settingsNewPlayer.setScoutingService(scoutingService);
 		settingsNewPlayer.setViewHelper(viewHelper);
+		settingsNewPlayer.setFragmentTag("SettingsNewPlayer");
+		settingsNewPlayer.setFragmentId(R.id.frameSettingsDetail);
 		
 		ListPreference matchList = (ListPreference) findPreference("SelectMatch");
 		
@@ -112,7 +118,8 @@ public class SettingsOverview extends PreferenceFragment {
 				SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
 
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(R.id.frameSettingsDetail, settingsNewMatch, "SettingsNewMatch");
+				transaction.replace(settingsNewMatch.getFragmentId(), settingsNewMatch, settingsNewMatch.getFragmentTag());
+				transaction.addToBackStack(null);
 				transaction.commit();
 				return false;
 			}
@@ -149,7 +156,8 @@ public class SettingsOverview extends PreferenceFragment {
 				SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(R.id.frameSettingsDetail, settingsNewTeam, "SettingsNewTeam");
+				transaction.replace(settingsNewTeam.getFragmentId(), settingsNewTeam, settingsNewTeam.getFragmentTag());
+				transaction.addToBackStack(null);
 				transaction.commit();
 				return false;
 			}
@@ -175,7 +183,8 @@ public class SettingsOverview extends PreferenceFragment {
 				SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
 
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(R.id.frameSettingsDetail, settingsNewPlayer, "SettingsNewPlayer");
+				transaction.replace(settingsNewPlayer.getFragmentId(), settingsNewPlayer, settingsNewPlayer.getFragmentTag());
+				transaction.addToBackStack(null);
 				transaction.commit();
 				return false;
 			}
@@ -201,7 +210,8 @@ public class SettingsOverview extends PreferenceFragment {
 			settingsNewMatch.setMatch(scoutingService.findMatchById(Integer.parseInt(preference.getKey())));
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.frameSettingsDetail, settingsNewMatch, "SettingsNewMatch");
+			transaction.replace(settingsNewMatch.getFragmentId(), settingsNewMatch, settingsNewMatch.getFragmentTag());
+			transaction.addToBackStack(null);
 			transaction.commit();
 			return false;
 		}
@@ -214,7 +224,8 @@ public class SettingsOverview extends PreferenceFragment {
 			settingsNewTeam.setTeam(scoutingService.findTeamById(Integer.parseInt(preference.getKey())));
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.frameSettingsDetail, settingsNewTeam, "SettingsNewTeam");
+			transaction.replace(settingsNewTeam.getFragmentId(), settingsNewTeam, settingsNewTeam.getFragmentTag());
+			transaction.addToBackStack(null);
 			transaction.commit();
 			return false;
 		}
@@ -227,7 +238,8 @@ public class SettingsOverview extends PreferenceFragment {
 			settingsNewPlayer.setPlayer(scoutingService.findPlayerById(Integer.parseInt(preference.getKey())));
 
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.frameSettingsDetail, settingsNewPlayer, "SettingsNewPlayer");
+			transaction.replace(settingsNewPlayer.getFragmentId(), settingsNewPlayer, settingsNewPlayer.getFragmentTag());
+			transaction.addToBackStack(null);
 			transaction.commit();
 			return false;
 		}

@@ -1,9 +1,5 @@
 package com.example.scouting;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,25 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.scouting.server.ScoutingService;
-import com.example.scouting.src.Action;
 import com.example.scouting.src.ActionScore;
 import com.example.scouting.src.ActionType;
-import com.example.scouting.src.Match;
-import com.example.scouting.src.Player;
 import com.example.scouting.src.Stats;
 import com.example.testproj1.R;
 
 public class StatisticsDetail extends Fragment {
-
-	@SuppressWarnings("unused")
 	private OnStatisticsDetailFragmentInteractionListener mListener;
 	private static ViewHelper viewHelper;
 	private static ScoutingService scoutingService;
-	private Stats stats;
+	private static Stats stats;
 
 	public StatisticsDetail() {
 		// Required empty public constructor
@@ -44,9 +34,7 @@ public class StatisticsDetail extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		container.removeAllViews();
-		
-		View V = inflater.inflate(R.layout.fragment_statisticsdetail, container, false);
+		View V = inflater.inflate(R.layout.fragment_statisticsdetail, null);
 		
 		if(stats != null){
             TextView tv;
@@ -79,25 +67,6 @@ public class StatisticsDetail extends Fragment {
             
             tv = (TextView) V.findViewById(R.id.stats_receptionMM);
             tv.setText(Integer.toString(stats.getCount(ActionType.Reception, ActionScore.MinusMinus)));
-            
-            
-            tv = (TextView) V.findViewById(R.id.stats_digAmount);
-            tv.setText(Integer.toString(stats.getCount(ActionType.Dig)));
-            
-            tv = (TextView) V.findViewById(R.id.stats_digPP);
-            tv.setText(Integer.toString(stats.getCount(ActionType.Dig, ActionScore.PlusPlus)));
-            
-            tv = (TextView) V.findViewById(R.id.stats_digP);
-            tv.setText(Integer.toString(stats.getCount(ActionType.Dig, ActionScore.Plus)));
-            
-            tv = (TextView) V.findViewById(R.id.stats_digN);
-            tv.setText(Integer.toString(stats.getCount(ActionType.Dig, ActionScore.Null)));
-            
-            tv = (TextView) V.findViewById(R.id.stats_digM);
-            tv.setText(Integer.toString(stats.getCount(ActionType.Dig, ActionScore.Minus)));
-            
-            tv = (TextView) V.findViewById(R.id.stats_digMM);
-            tv.setText(Integer.toString(stats.getCount(ActionType.Dig, ActionScore.MinusMinus)));
             
             
             tv = (TextView) V.findViewById(R.id.stats_attackAmount);
@@ -191,6 +160,10 @@ public class StatisticsDetail extends Fragment {
 	}
 
 	public void setStats(Stats stats) {
-		this.stats = stats;
+		StatisticsDetail.stats = stats;
+	}
+	
+	public boolean isStatsSet(){
+		return (stats != null);
 	}
 }

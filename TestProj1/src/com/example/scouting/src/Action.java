@@ -40,6 +40,6 @@ public class Action implements Serializable  {
     
     @Override
     public String toString() {
-    	return player.getName() + ": " + actionType.toString() + " - " + actionScore.toString();
+    	return player.getNumber() + ": " + actionType.toString() + "-" + actionScore.toString();
     }
 }

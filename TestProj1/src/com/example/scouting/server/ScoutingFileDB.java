@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import com.example.scouting.ViewHelper;
+
 import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
@@ -89,6 +91,39 @@ public class ScoutingFileDB{
 
 	        if(readObject != null && readObject instanceof ScoutingService) {
 	            return (ScoutingService) readObject;
+	        }
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } catch (ClassNotFoundException e) {
+	        e.printStackTrace();
+	    }
+		
+		return null;
+	}
+
+	public ViewHelper saveView(ViewHelper viewHelper) {
+		try {
+	        FileOutputStream fos = ctx.openFileOutput("viewHelper.txt", Context.MODE_PRIVATE);
+	        ObjectOutputStream oos = new ObjectOutputStream(fos);
+	        oos.writeObject(viewHelper);
+	        oos.close();
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        return null;
+	    }
+		
+		return viewHelper;
+	}
+	
+	public ViewHelper getView(){
+	    try {
+	        FileInputStream fis = ctx.openFileInput("viewHelper.txt");
+	        ObjectInputStream is = new ObjectInputStream(fis);
+	        Object readObject = is.readObject();
+	        is.close();
+
+	        if(readObject != null && readObject instanceof ViewHelper) {
+	            return (ViewHelper) readObject;
 	        }
 	    } catch (IOException e) {
 	        e.printStackTrace();

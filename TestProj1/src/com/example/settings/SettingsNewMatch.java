@@ -28,6 +28,8 @@ public class SettingsNewMatch extends PreferenceFragment {
 	@SuppressWarnings("unused")
 	private OnSettingsNewMatchFragmentInteractionListener mListener;
 	private static ScoutingService scoutingService;
+	private static String tag;
+	private static int fragmentId;
 	private Match match;
 	private static ViewHelper viewHelper;
 
@@ -64,7 +66,9 @@ public class SettingsNewMatch extends PreferenceFragment {
 		teamList.setEntryValues(entryValues);
 		
 		if(match != null){
+			teamList.setTitle(match.getTeam().getName());
 			teamList.setValueIndex(teams.indexOf(match.getTeam()));
+			opponent.setTitle(match.getOpponent());
 			opponent.setText(match.getOpponent());
 			delete.setEnabled(true);
 			visitor.setChecked(match.isVisitor());
@@ -131,6 +135,7 @@ public class SettingsNewMatch extends PreferenceFragment {
 						FragmentTransaction transaction = fragMan.beginTransaction();
 						transaction.remove(fragMan.findFragmentByTag("SettingsNewMatch"));
 						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
+						transaction.addToBackStack(null);
 						transaction.commit();
 					}
 				});
@@ -157,6 +162,7 @@ public class SettingsNewMatch extends PreferenceFragment {
 	public void onDetach() {
 		super.onDetach();
 		mListener = null;
+		viewHelper.setSelectedFragment(null);
 	}
 
 	public interface OnSettingsNewMatchFragmentInteractionListener {
@@ -174,5 +180,21 @@ public class SettingsNewMatch extends PreferenceFragment {
 
 	public void setViewHelper(ViewHelper viewHelper) {
 		SettingsNewMatch.viewHelper = viewHelper;
+	}
+
+	public void setFragmentTag(String tag) {
+		SettingsNewMatch.tag = tag;
+	}
+	
+	public String getFragmentTag(){
+		return tag;
+	}
+
+	public void setFragmentId(int fragmentId) {
+		SettingsNewMatch.fragmentId = fragmentId;
+	}
+	
+	public int getFragmentId(){
+		return fragmentId;
 	}
 }

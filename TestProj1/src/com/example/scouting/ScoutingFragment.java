@@ -207,13 +207,6 @@ public class ScoutingFragment extends Fragment {
 			button.setEnabled(false);
 		}
         
-        button = (Button) V.findViewById(R.id.btnActionTypeDig);
-        button.setTag(ActionType.Dig);
-        button.setOnClickListener(actionTypeOnClickListener);
-        if(match == null){
-			button.setEnabled(false);
-		}
-        
         button = (Button) V.findViewById(R.id.btnActionTypeAttack);
         button.setTag(ActionType.Attack);
         button.setOnClickListener(actionTypeOnClickListener);
@@ -226,15 +219,7 @@ public class ScoutingFragment extends Fragment {
         button.setOnClickListener(actionTypeOnClickListener);
         if(match == null){
 			button.setEnabled(false);
-		}
-        
-        button = (Button) V.findViewById(R.id.btnActionTypePass);
-        button.setTag(ActionType.Pass);
-        button.setOnClickListener(actionTypeOnClickListener);
-        if(match == null){
-			button.setEnabled(false);
-		}
-        
+		}        
         
         button = (Button) V.findViewById(R.id.btnActionScoreMinusMinus);
         button.setTag(ActionScore.MinusMinus);
@@ -278,18 +263,15 @@ public class ScoutingFragment extends Fragment {
 			button.setEnabled(false);
 		}
         
-        /*
-        button = (Button) V.findViewById(R.id.btnControlsReset);
-        button.setOnClickListener(controlOnClickListener); 
-        if(match == null){
-			button.setEnabled(false);
-		}*/
-        
         button = (Button) V.findViewById(R.id.btnControlsUndo);
         button.setOnClickListener(controlOnClickListener); 
         if(match == null || match.getCurrentSet().getActions().size() == 0){
 			button.setEnabled(false);
 		}
+        else{
+        	TextView txt = (TextView) V.findViewById(R.id.txtUndo);
+        	txt.setText(match.getCurrentSet().getLastAction().toString());
+        }
         
         // Restore previous selections
 		if(viewHelper.getSelectedPlayer() != null){
@@ -306,7 +288,6 @@ public class ScoutingFragment extends Fragment {
 		if(viewHelper.getSelectedActionScore() != null){
 			button = (Button) V.findViewWithTag(viewHelper.getSelectedActionScore());
 			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
-			button.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_light));
 		}
 		
         return V;
@@ -344,12 +325,15 @@ public class ScoutingFragment extends Fragment {
 					viewHelper.resetSelected();
 					
 			        Button button = (Button) getView().findViewById(R.id.btnControlsUndo);
+			        TextView txt = (TextView) getView().findViewById(R.id.txtUndo);
 			        
 			        if(match.getCurrentSet().getActions().size() == 0){
 						button.setEnabled(false);
+						txt.setText("");
 					}
 			        else{
 			        	button.setEnabled(true);
+			        	txt.setText(match.getCurrentSet().getLastAction().toString());
 			        }
 					
 					if(scoutingFileDB != null){
@@ -401,12 +385,15 @@ public class ScoutingFragment extends Fragment {
 				}
 				
 		        Button button = (Button) getView().findViewById(R.id.btnControlsUndo);
+		        TextView txt = (TextView) getView().findViewById(R.id.txtUndo);
 		        
 		        if(match.getCurrentSet().getActions().size() == 0){
+		        	txt.setText("");
 					button.setEnabled(false);
 				}
 		        else{
 		        	button.setEnabled(true);
+		        	txt.setText(match.getCurrentSet().getLastAction().toString());
 		        }
 				break;
 				
@@ -454,7 +441,7 @@ public class ScoutingFragment extends Fragment {
 			final TextView text = (TextView) getView().findViewWithTag((Integer) button.getTag()*10);
     		final Integer position = (Integer) button.getTag();
 
-			// Populate teamList
+			// Populate playerList
 			int i = 0;
 			Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 			final List<Player> players = new ArrayList<Player>(match.getTeam().getPlayers());

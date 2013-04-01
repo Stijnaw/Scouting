@@ -10,8 +10,6 @@ public class Match implements Serializable {
     private Boolean visitor = false;
     
     private ArrayList<Set> sets;
-    
-    private ArrayList<Player> activePlayers;
     private Set currentSet;
 
     public Match(Team team, String opponent, Boolean visitor) {
@@ -19,14 +17,6 @@ public class Match implements Serializable {
         this.opponent = opponent;
         this.visitor = visitor;
         sets = new ArrayList<Set>();
-        
-        activePlayers = new ArrayList<Player>();
-        activePlayers.add(null);
-        activePlayers.add(null);
-        activePlayers.add(null);
-        activePlayers.add(null);
-        activePlayers.add(null);
-        activePlayers.add(null);
 
         // Create first set
         newSet();
@@ -36,12 +26,20 @@ public class Match implements Serializable {
         return team;
     }
     
+    public ArrayList<Set> getSets() {
+		return sets;
+	}
+    
     public Set getSetByNumber(int set){
     	return sets.get(set-1);
     }
     
     public int getSetNumber(Set set){
     	return sets.indexOf(set)+1;
+    }
+    
+    public Set removeSetByNumber(int set){
+    	return sets.remove(set-1);
     }
     
     public int getCurrentSetNumber(){
@@ -83,41 +81,26 @@ public class Match implements Serializable {
         
         return set;
     }
+    
+    public boolean setPlayerActive(Player player, int position){
+    	return currentSet.setPlayerActive(player, position);
+    }
+    
+    public Player getActivePlayerByPosition(Integer position){
+    	return currentSet.getActivePlayerByPosition(position);
+    }
+    
+    public Integer getActivePositionByPlayer(Player player){
+    	return currentSet.getActivePositionByPlayer(player);
+    }
+    
+    public ArrayList<Player> getActivePlayers(){
+    	return currentSet.getActivePlayers();
+    }
 
     public void addAction(Action action){
         // Add action to current set
         sets.get(getCurrentSetNumber()-1).addAction(action);
-    }
-    
-    public boolean setPlayerActive(Player player, int position){
-    	if(position <= 6 && position >= 1){
-    		// remove old player
-    		activePlayers.remove(position-1);
-    		// add new player
-    		activePlayers.add((position-1), player);
-    		
-    		return true;
-    	}
-    	else{
-    		return false;
-    	}
-    }
-    
-    public Player getActivePlayerByPosition(Integer position){
-    	if(position != null){
-    		return activePlayers.get((position-1));
-    	}
-    	else{
-    		return null;
-    	}
-    }
-    
-    public Integer getActivePositionByPlayer(Player player){
-    	return (activePlayers.indexOf(player)+1);
-    }
-    
-    public ArrayList<Player> getActivePlayers(){
-    	return activePlayers;
     }
 
 	public String getOpponent() {
