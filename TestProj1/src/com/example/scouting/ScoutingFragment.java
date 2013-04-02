@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.LightingColorFilter;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -34,11 +34,11 @@ import com.example.testproj1.R;
 
 public class ScoutingFragment extends Fragment {
 
-	@SuppressWarnings("unused")
-	private OnScoutingFragmentInteractionListener mListener;
+	private Vibrator myVib;
 	static private ViewHelper viewHelper;
 	static private ScoutingFileDB scoutingFileDB;
-	static private ScoutingService scoutingService;
+	static ScoutingService scoutingService;
+	private long vibrateTime = 25;
 	
 	public ScoutingFragment() {
 		// Required empty public constructor
@@ -53,6 +53,11 @@ public class ScoutingFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
         View V = inflater.inflate(R.layout.fragment_scouting, container, false);
+        
+        viewHelper = new ViewHelper();
+        
+        getActivity();
+		myVib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
         
         /***********************************
     	 * Get buttons
@@ -296,9 +301,11 @@ public class ScoutingFragment extends Fragment {
 	OnClickListener controlOnClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
+						
 			switch (v.getId()) {	
 			case R.id.btnControlsApply:
 				if(viewHelper.getSelectedPlayer() != null && viewHelper.getSelectedActionType() != null && viewHelper.getSelectedActionScore() != null){
+					myVib.vibrate(vibrateTime);
 					
 					Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 					
@@ -344,40 +351,13 @@ public class ScoutingFragment extends Fragment {
 					Toast.makeText(getActivity(), "Action not applied", Toast.LENGTH_SHORT).show();
 				}
 				break;
-			/*
-			case R.id.btnControlsReset:
-				
-				Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedPlayer());
-		    	
-		    	if(buttonPrev != null){
-		    		buttonPrev.getBackground().clearColorFilter();
-		    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
-		    	}
-		    	
-		    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
-		    	
-		    	if(buttonPrev != null){
-		    		buttonPrev.getBackground().clearColorFilter();
-		    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
-		    	}
-		    	
-		    	buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionScore());
-		    	
-		    	if(buttonPrev != null){
-		    		buttonPrev.getBackground().clearColorFilter();
-		    		//buttonPrev.setTextColor(getActivity().getApplication().getResources().getColor(android.R.color.primary_text_dark));
-		    	}
-		    	
-				viewHelper.resetSelected();
-				
-				break;
-				*/
 				
 			case R.id.btnControlsUndo:
 				Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 				Action action = match.undoAction();
 				
 				if(action != null){
+					myVib.vibrate(vibrateTime);
 					Toast.makeText(getActivity(), action.toString(), Toast.LENGTH_SHORT).show();
 				}
 				else{
@@ -420,14 +400,13 @@ public class ScoutingFragment extends Fragment {
 	    		Player player = (Player) match.getActivePlayerByPosition(position);
 	    		
 	    		if(player != null){
+	    			myVib.vibrate(vibrateTime);
 	    			button.getBackground().setColorFilter(new LightingColorFilter(0x00000000, getActivity().getApplication().getResources().getColor(android.R.color.holo_blue_dark)));
 	    			viewHelper.setSelectedPlayer(position);
 	    		}
-	    		else{
-	    			viewHelper.setSelectedPlayer(null);
-	    		}
 			}
 	    	else{
+	    		myVib.vibrate(vibrateTime);
 	    		viewHelper.setSelectedPlayer(null);
 	    	}
 		}
@@ -436,6 +415,7 @@ public class ScoutingFragment extends Fragment {
 	OnLongClickListener playerOnLongClickListener = new OnLongClickListener() {
 		@Override
 		public boolean onLongClick(View v) {
+			myVib.vibrate(vibrateTime);
 			
 			final ImageButton button = (ImageButton) getActivity().findViewById(v.getId());
 			final TextView text = (TextView) getView().findViewWithTag((Integer) button.getTag()*10);
@@ -502,6 +482,8 @@ public class ScoutingFragment extends Fragment {
 	OnClickListener actionTypeOnClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			myVib.vibrate(vibrateTime);
+			
 	    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionType());
 	    	
 	    	if(buttonPrev != null){
@@ -523,6 +505,8 @@ public class ScoutingFragment extends Fragment {
 	OnClickListener actionScoreOnClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			myVib.vibrate(vibrateTime);
+			
 	    	Button buttonPrev = (Button) getView().findViewWithTag(viewHelper.getSelectedActionScore());
 	    	
 	    	if(buttonPrev != null){
@@ -540,31 +524,6 @@ public class ScoutingFragment extends Fragment {
 	    	}
 		}
 	};
-	
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnScoutingFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
-
-	public interface OnScoutingFragmentInteractionListener {
-		public void onScoutingFragmentInteraction(View v);
-	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		ScoutingFragment.viewHelper = viewHelper;
-	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
 		ScoutingFragment.scoutingService = scoutingService;

@@ -29,8 +29,6 @@ import com.example.testproj1.R;
 
 public class SettingsOverview extends PreferenceFragment {
 
-	@SuppressWarnings("unused")
-	private OnSettingsOverviewFragmentInteractionListener mListener;
 	private static ScoutingService scoutingService;
 	private static ViewHelper viewHelper;
 
@@ -42,6 +40,8 @@ public class SettingsOverview extends PreferenceFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		viewHelper = new ViewHelper();
+		
 		SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 		Editor editor = sharedPrefs.edit();
 		editor.clear();
@@ -51,19 +51,16 @@ public class SettingsOverview extends PreferenceFragment {
 		
 		SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
 		settingsNewMatch.setScoutingService(scoutingService);
-		settingsNewMatch.setViewHelper(viewHelper);
 		settingsNewMatch.setFragmentTag("SettingsNewMatch");
 		settingsNewMatch.setFragmentId(R.id.frameSettingsDetail);
 		
 		SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 		settingsNewTeam.setScoutingService(scoutingService);
-		settingsNewTeam.setViewHelper(viewHelper);
 		settingsNewTeam.setFragmentTag("SettingsNewTeam");
 		settingsNewTeam.setFragmentId(R.id.frameSettingsDetail);
 
 		SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
 		settingsNewPlayer.setScoutingService(scoutingService);
-		settingsNewPlayer.setViewHelper(viewHelper);
 		settingsNewPlayer.setFragmentTag("SettingsNewPlayer");
 		settingsNewPlayer.setFragmentId(R.id.frameSettingsDetail);
 		
@@ -87,7 +84,6 @@ public class SettingsOverview extends PreferenceFragment {
 		Match myMatch = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 		
 		if(myMatch != null){
-			// ------------------- ArrayIndexOutOfBoundsException length=3 index=-1 in ListPreference.setValueIndex
 			if(entries.length > matches.indexOf(myMatch) && matches.indexOf(myMatch) >= 0){
 				matchList.setValueIndex(matches.indexOf(myMatch));
 			}
@@ -250,33 +246,7 @@ public class SettingsOverview extends PreferenceFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnSettingsOverviewFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
-
-	public interface OnSettingsOverviewFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onSettingsOverviewFragmentInteraction();
-	}
-
 	public void setScoutingService(ScoutingService scoutingService) {
 		SettingsOverview.scoutingService = scoutingService;
-	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		SettingsOverview.viewHelper = viewHelper;
 	}
 }

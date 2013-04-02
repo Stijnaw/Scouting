@@ -25,22 +25,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.scouting.SettingsFragment.OnSettingsFragmentInteractionListener;
-import com.example.scouting.StatisticsDetail.OnStatisticsDetailFragmentInteractionListener;
 import com.example.scouting.server.ScoutingFileDB;
 import com.example.scouting.server.ScoutingImpl;
 import com.example.scouting.server.ScoutingLocalDB;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Set;
-import com.example.settings.SettingsNewMatch.OnSettingsNewMatchFragmentInteractionListener;
-import com.example.settings.SettingsNewPlayer.OnSettingsNewPlayerFragmentInteractionListener;
-import com.example.settings.SettingsNewTeam.OnSettingsNewTeamFragmentInteractionListener;
-import com.example.settings.SettingsOverview.OnSettingsOverviewFragmentInteractionListener;
 import com.example.testproj1.R;
 
 
-public class ScoutingApplication extends Activity implements ScoutingFragment.OnScoutingFragmentInteractionListener, StatisticsFragment.OnStatisticsFragmentInteractionListener, OnStatisticsDetailFragmentInteractionListener, OnSettingsFragmentInteractionListener, OnSettingsOverviewFragmentInteractionListener, OnSettingsNewPlayerFragmentInteractionListener, OnSettingsNewTeamFragmentInteractionListener, OnSettingsNewMatchFragmentInteractionListener {
+public class ScoutingApplication extends Activity {
 
 	private ScoutingService scoutingService;
 	private ViewHelper viewHelper;
@@ -72,6 +66,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         	}
         	
         	if(viewHelper == null){
+        		Toast.makeText(getApplication(), "new viewhelper", Toast.LENGTH_SHORT).show(); 
         		viewHelper = new ViewHelper();
         	}
         }
@@ -87,15 +82,16 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         
         ScoutingFragment scoutingFragment = new ScoutingFragment();
         scoutingFragment.setScoutingService(scoutingService);
-        scoutingFragment.setViewHelper(viewHelper);
         scoutingFragment.setScoutingFileDB(scoutingFileDB);
         
-        StatisticsFragment statisticsFragment = new StatisticsFragment();
-        statisticsFragment.setScoutingService(scoutingService);
+        StatisticsPager statisticsPager = new StatisticsPager();
+        statisticsPager.setScoutingService(scoutingService);
+        
+        //StatisticsFragment statisticsFragment = new StatisticsFragment();
+        //statisticsFragment.setScoutingService(scoutingService);
         
         SettingsFragment settingsFragment = new SettingsFragment();
         settingsFragment.setScoutingService(scoutingService);
-        settingsFragment.setViewHelper(viewHelper);
 
         ActionBar.Tab scoutingTab = actionBar.newTab()
                 .setText(R.string.TabScouting)
@@ -103,7 +99,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
         
         ActionBar.Tab statisticsTab = actionBar.newTab()
                 .setText(R.string.TabStatistics)
-                .setTabListener(new MyTabListener(statisticsFragment, "Statistics"));        
+                .setTabListener(new MyTabListener(statisticsPager, "Statistics"));        
         
         ActionBar.Tab settingsTab = actionBar.newTab()
                 .setText(R.string.TabSettings)
@@ -124,7 +120,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 		scoutingFileDB.saveView(viewHelper);
 		super.onPause();
 	}
-
+	
 	@Override
 	public void onBackPressed() {
 		
@@ -148,6 +144,14 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 		    alertDialog.show();
 		}
 		else{
+			if(findViewById(R.id.stats_pager) != null){
+            	FragmentManager fragMan = getFragmentManager();
+				FragmentTransaction transaction = fragMan.beginTransaction();
+		        StatisticsPager fragment = new StatisticsPager();
+				transaction.replace(android.R.id.content, fragment);
+				transaction.commit();
+        	}
+			
 			super.onBackPressed();
 		}
 	}
@@ -177,7 +181,7 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
     	final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
     	if(match != null){
 	        setList = new ArrayList<String>();
-	        for(Set set : match.getSetList()) {
+	        for(Set set : match.getSets()) {
 				setList.add("Set " + match.getSetNumber(set));
 			}
 
@@ -193,18 +197,11 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 
 	            	match.setCurrentSet(match.getSetByNumber(position+1));
 
-	            	if(findViewById(R.id.stats_fragment) != null){
-		            	FragmentManager fragMan = getFragmentManager();
-						FragmentTransaction transaction = fragMan.beginTransaction();
-				        StatisticsFragment statisticsFragment = new StatisticsFragment();
-						transaction.replace(android.R.id.content, statisticsFragment, "Statistics");
-						transaction.commit();
-	            	}
-	            	else if(findViewById(R.id.scouting_fragment) != null){
+	            	if(findViewById(R.id.scouting_fragment) != null){
 		            	FragmentManager fragMan = getFragmentManager();
 						FragmentTransaction transaction = fragMan.beginTransaction();
 				        ScoutingFragment scoutingFragment = new ScoutingFragment();
-						transaction.replace(android.R.id.content, scoutingFragment, "Statistics");
+						transaction.replace(android.R.id.content, scoutingFragment, "Scouting");
 						transaction.commit();
 	            	}
 	            }
@@ -258,7 +255,6 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
 	    alertDialog.setMessage("Wil je deze set verwijderen?");
 	    alertDialog.setTitle("Verwijderen?");
 	    alertDialog.show();
-	    Toast.makeText(getApplication(), getApplication().toString(), Toast.LENGTH_SHORT).show(); 
     }
     
     @Override
@@ -327,64 +323,10 @@ public class ScoutingApplication extends Activity implements ScoutingFragment.On
             ft.remove(mFragment);
         }
 
-        public void onTabReselected(Tab tab, FragmentTransaction ft) {
-            // User selected the already selected tab. Usually do nothing.
-        }
+		@Override
+		public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
+			// TODO Auto-generated method stub
+			
+		}
     }
-
-    /*
-     * Use to communicate with scouting fragment
-     */
-	@Override
-	public void onScoutingFragmentInteraction(View v) {
-
-	}
-
-	/*
-     * Use to communicate with statistics fragment
-     */
-	@Override
-	public void onStatisticsFragmentInteraction() {
-		// TODO Auto-generated method stub
-
-	}
-
-
-	/*
-     * Use to communicate with settings fragment
-     */
-	@Override
-	public void onSettingsFragmentInteraction() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onSettingsOverviewFragmentInteraction() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onSettingsNewPlayerFragmentInteraction() {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void onSettingsNewTeamFragmentInteraction() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onSettingsNewMatchFragmentInteraction() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onStatisticsDetailFragmentInteraction() {
-		// TODO Auto-generated method stub
-
-	}
 }

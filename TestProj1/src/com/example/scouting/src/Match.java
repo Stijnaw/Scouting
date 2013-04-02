@@ -65,10 +65,6 @@ public class Match implements Serializable {
     public void setOpponent(String opponent) {
 		this.opponent = opponent;
 	}
-    
-    public ArrayList<Set> getSetList(){
-    	return sets;
-    }
 
     public Set newSet(){
         Set set = new Set();

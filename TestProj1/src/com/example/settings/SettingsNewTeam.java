@@ -2,7 +2,6 @@ package com.example.settings;
 
 import java.util.List;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -24,10 +23,7 @@ import com.example.testproj1.R;
 
 public class SettingsNewTeam extends PreferenceFragment {
 
-	@SuppressWarnings("unused")
-	private OnSettingsNewTeamFragmentInteractionListener mListener;
 	private static ScoutingService scoutingService;
-	private static ViewHelper viewHelper;
 	private static String tag;
 	private static int fragmentId;
 	private Team team = null;
@@ -183,28 +179,6 @@ public class SettingsNewTeam extends PreferenceFragment {
 		}
 	};
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnSettingsNewTeamFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
-
-	public interface OnSettingsNewTeamFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onSettingsNewTeamFragmentInteraction();
-	}
-
 	public void setScoutingService(ScoutingService scoutingService) {
 		SettingsNewTeam.scoutingService = scoutingService;
 	}
@@ -217,10 +191,6 @@ public class SettingsNewTeam extends PreferenceFragment {
 	public void setTeam(Team team, Team teamCopy) {
 		this.teamCopy = teamCopy;
 		this.team = team;
-	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		SettingsNewTeam.viewHelper = viewHelper;
 	}
 	
 	public void setFragmentTag(String tag) {

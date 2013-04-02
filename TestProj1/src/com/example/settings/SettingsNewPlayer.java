@@ -16,18 +16,14 @@ import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.provider.MediaStore;
 
-import com.example.scouting.ViewHelper;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Player;
 import com.example.testproj1.R;
 
 public class SettingsNewPlayer extends PreferenceFragment {
 
-	@SuppressWarnings("unused")
-	private OnSettingsNewPlayerFragmentInteractionListener mListener;
 	private static ScoutingService scoutingService;
 	private Player player = null;
-	private static ViewHelper viewHelper;
 	private static final int SELECT_PHOTO = 100;
 	private String picture = null;
 	private static String tag;
@@ -160,38 +156,12 @@ public class SettingsNewPlayer extends PreferenceFragment {
 	    }
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnSettingsNewPlayerFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
-
-	public interface OnSettingsNewPlayerFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onSettingsNewPlayerFragmentInteraction();
-	}
-
 	public void setScoutingService(ScoutingService scoutingService) {
 		SettingsNewPlayer.scoutingService = scoutingService;
 	}
 
 	public void setPlayer(Player player) {
 		this.player  = player;
-	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		SettingsNewPlayer.viewHelper = viewHelper;
 	}
 	
 	public void setFragmentTag(String tag) {

@@ -1,6 +1,5 @@
 package com.example.scouting;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -14,10 +13,7 @@ import com.example.testproj1.R;
 
 public class SettingsFragment extends Fragment {
 
-	@SuppressWarnings("unused")
-	private OnSettingsFragmentInteractionListener mListener;
 	private static ScoutingService scoutingService;
-	private static ViewHelper viewHelper;
 
 	public SettingsFragment() {
 		// Required empty public constructor
@@ -34,7 +30,6 @@ public class SettingsFragment extends Fragment {
 		
 		SettingsOverview settingsOverview = new SettingsOverview();
 		settingsOverview.setScoutingService(scoutingService);
-		settingsOverview.setViewHelper(viewHelper);
 
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
@@ -42,34 +37,8 @@ public class SettingsFragment extends Fragment {
 		
 		return V;
 	}
-
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnSettingsFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
 	
 	public void setScoutingService(ScoutingService scoutingService) {
 		SettingsFragment.scoutingService = scoutingService;
-	}
-	
-	public interface OnSettingsFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onSettingsFragmentInteraction();
-	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		SettingsFragment.viewHelper = viewHelper;
 	}
 }

@@ -1,6 +1,5 @@
 package com.example.scouting;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -17,10 +16,8 @@ import com.example.scouting.src.Stats;
 import com.example.testproj1.R;
 
 public class StatisticsDetail extends Fragment {
-	private OnStatisticsDetailFragmentInteractionListener mListener;
-	private static ViewHelper viewHelper;
 	private static ScoutingService scoutingService;
-	private static Stats stats;
+	private Stats stats;
 
 	public StatisticsDetail() {
 		// Required empty public constructor
@@ -34,7 +31,7 @@ public class StatisticsDetail extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		View V = inflater.inflate(R.layout.fragment_statisticsdetail, null);
+		View V = inflater.inflate(R.layout.fragment_statisticsdetail, container, false);
 		
 		if(stats != null){
             TextView tv;
@@ -129,38 +126,12 @@ public class StatisticsDetail extends Fragment {
 		return V;
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnStatisticsDetailFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnStatisticsDetailFragmentInteractionListener");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-	}
-
-	public interface OnStatisticsDetailFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onStatisticsDetailFragmentInteraction();
-	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		StatisticsDetail.viewHelper = viewHelper;
-	}
-
 	public void setScoutingService(ScoutingService scoutingService) {
 		StatisticsDetail.scoutingService = scoutingService;
 	}
 
 	public void setStats(Stats stats) {
-		StatisticsDetail.stats = stats;
+		this.stats = stats;
 	}
 	
 	public boolean isStatsSet(){

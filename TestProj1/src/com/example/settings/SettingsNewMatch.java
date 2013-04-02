@@ -3,7 +3,6 @@ package com.example.settings;
 import java.util.List;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -25,8 +24,6 @@ import com.example.testproj1.R;
 
 public class SettingsNewMatch extends PreferenceFragment {
 
-	@SuppressWarnings("unused")
-	private OnSettingsNewMatchFragmentInteractionListener mListener;
 	private static ScoutingService scoutingService;
 	private static String tag;
 	private static int fragmentId;
@@ -42,6 +39,8 @@ public class SettingsNewMatch extends PreferenceFragment {
 		super.onCreate(savedInstanceState);
 		
 		addPreferencesFromResource(R.xml.settings_match);
+		
+		viewHelper = new ViewHelper();
 		
 		Preference save = findPreference("Save");
 		Preference delete = findPreference("Delete");
@@ -147,39 +146,12 @@ public class SettingsNewMatch extends PreferenceFragment {
         });
 	}
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		try {
-			mListener = (OnSettingsNewMatchFragmentInteractionListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement OnFragmentInteractionListener");
-		}
-	}
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		mListener = null;
-		viewHelper.setSelectedFragment(null);
-	}
-
-	public interface OnSettingsNewMatchFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onSettingsNewMatchFragmentInteraction();
-	}
-
 	public void setScoutingService(ScoutingService scoutingService) {
 		SettingsNewMatch.scoutingService = scoutingService;
 	}
 	
 	public void setMatch(Match match){
 		this.match = match;
-	}
-
-	public void setViewHelper(ViewHelper viewHelper) {
-		SettingsNewMatch.viewHelper = viewHelper;
 	}
 
 	public void setFragmentTag(String tag) {
