@@ -2,6 +2,8 @@ package com.example.scouting.src;
 
 import java.io.Serializable;
 
+import android.os.Environment;
+
 public class Player implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String name;
@@ -58,7 +60,7 @@ public class Player implements Serializable {
      * @return the picture
      */
     public String getPicture() {
-        return picture;
+        return Environment.getExternalStorageDirectory() + "/scouting/players/" + picture;
     }
     
     @Override

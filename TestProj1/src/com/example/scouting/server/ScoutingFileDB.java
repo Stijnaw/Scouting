@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import com.example.scouting.ViewHelper;
+import com.example.scouting.helpers.ViewHelper;
 
 import android.content.Context;
 import android.os.Environment;

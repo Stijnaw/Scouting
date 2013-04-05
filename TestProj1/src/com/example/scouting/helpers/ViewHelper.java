@@ -1,4 +1,4 @@
-package com.example.scouting;
+package com.example.scouting.helpers;
 
 import java.io.Serializable;
 

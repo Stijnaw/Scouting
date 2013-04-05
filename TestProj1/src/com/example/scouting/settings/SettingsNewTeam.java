@@ -1,8 +1,9 @@
-package com.example.settings;
+package com.example.scouting.settings;
 
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -15,7 +16,6 @@ import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 
-import com.example.scouting.ViewHelper;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Player;
 import com.example.scouting.src.Team;
@@ -24,8 +24,6 @@ import com.example.testproj1.R;
 public class SettingsNewTeam extends PreferenceFragment {
 
 	private static ScoutingService scoutingService;
-	private static String tag;
-	private static int fragmentId;
 	private Team team = null;
 	private Team teamCopy = null;
 
@@ -99,12 +97,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 				// Refresh the settings overview after edit
 				SettingsOverview settingsOverview = new SettingsOverview();
 				
-				FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-				transaction.remove(fragMan.findFragmentByTag("SettingsNewTeam"));
-				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.addToBackStack(null);
-				transaction.commit();
+				showFragment(settingsOverview);
 				
 				return false;
 			}
@@ -129,12 +122,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 						// Refresh the settings overview after edit
 						SettingsOverview settingsOverview = new SettingsOverview();
 						
-						FragmentManager fragMan = getFragmentManager();
-						FragmentTransaction transaction = fragMan.beginTransaction();
-						transaction.remove(fragMan.findFragmentByTag("SettingsNewTeam"));
-						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-						transaction.addToBackStack(null);
-						transaction.commit();
+						showFragment(settingsOverview);
 					}
 				});
 
@@ -154,10 +142,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 			SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 			settingsNewTeam.setTeam(team, teamCopy);
 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.frameSettingsDetail, settingsNewTeam, "SettingsNewTeam");
-			transaction.addToBackStack(null);
-			transaction.commit();
+			showDetailsFragment(settingsNewTeam);
 			return false;
 		}
 	};
@@ -171,10 +156,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 			SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 			settingsNewTeam.setTeam(team, teamCopy);
 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.frameSettingsDetail, settingsNewTeam, "SettingsNewTeam");
-			transaction.addToBackStack(null);
-			transaction.commit();
+			showDetailsFragment(settingsNewTeam);
 			return false;
 		}
 	};
@@ -193,19 +175,29 @@ public class SettingsNewTeam extends PreferenceFragment {
 		this.team = team;
 	}
 	
-	public void setFragmentTag(String tag) {
-		SettingsNewTeam.tag = tag;
-	}
-	
-	public String getFragmentTag(){
-		return tag;
+	private void showDetailsFragment(Fragment fragment){
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		
+		if(getActivity().findViewById(R.id.frameSettingsDetail) != null){
+			transaction.replace(R.id.frameSettingsDetail, fragment);
+		}
+		else{
+			transaction.replace(R.id.SettingsLayout, fragment);
+		}
+		
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
-	public void setFragmentId(int fragmentId) {
-		SettingsNewTeam.fragmentId = fragmentId;
-	}
-	
-	public int getFragmentId(){
-		return fragmentId;
+	private void showFragment(Fragment fragment){
+		FragmentManager fragMan = getFragmentManager();
+		FragmentTransaction transaction = fragMan.beginTransaction();
+		
+		if(getActivity().findViewById(R.id.frameSettingsDetail) != null){
+			transaction.remove(this);
+		}
+
+		transaction.replace(R.id.frameSettingsOverview, fragment, "SettingsOverview");
+		transaction.commit();
 	}
 }

@@ -5,25 +5,14 @@
     android:layout_height="match_parent"
     android:baselineAligned="false"
     android:orientation="horizontal"
-    tools:context=".SettingsFragment"
-    android:weightSum="1.0" >
+    android:weightSum="1.0"
+    tools:context=".SettingsFragment" >
 
     <LinearLayout
         android:id="@+id/frameSettingsOverview"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:paddingLeft="0dp" >
-    </LinearLayout>
-    
-    <View style="@style/DividerVertical"/>
-
-    <LinearLayout
-        android:id="@+id/frameSettingsDetail"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="0.5"
-        android:orientation="horizontal"
+        android:layout_weight="1"
         android:paddingLeft="0dp" >
     </LinearLayout>
 

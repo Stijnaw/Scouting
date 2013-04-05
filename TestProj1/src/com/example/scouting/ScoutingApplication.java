@@ -25,12 +25,15 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.scouting.helpers.ViewHelper;
 import com.example.scouting.server.ScoutingFileDB;
 import com.example.scouting.server.ScoutingImpl;
 import com.example.scouting.server.ScoutingLocalDB;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Set;
+import com.example.scouting.statistics.StatisticsDetailPager;
+import com.example.scouting.statistics.StatisticsPager;
 import com.example.testproj1.R;
 
 
@@ -38,8 +41,6 @@ public class ScoutingApplication extends Activity {
 
 	private ScoutingService scoutingService;
 	private ViewHelper viewHelper;
-
-	private ArrayList<String> setList;
 	private ScoutingFileDB scoutingFileDB;
 
 	private static final int SELECT_TEXT_DIALOG = 1;
@@ -59,16 +60,15 @@ public class ScoutingApplication extends Activity {
         }
         else{
         	scoutingService = scoutingFileDB.getScouting();
-        	viewHelper = scoutingFileDB.getView();
+        	//viewHelper = scoutingFileDB.getView();
         	
         	if(scoutingService == null){
         		scoutingService = new ScoutingImpl(new ScoutingLocalDB());
         	}
         	
-        	if(viewHelper == null){
-        		Toast.makeText(getApplication(), "new viewhelper", Toast.LENGTH_SHORT).show(); 
+        	//if(viewHelper == null){
         		viewHelper = new ViewHelper();
-        	}
+        	//}
         }
         
     	/***********************************
@@ -87,9 +87,6 @@ public class ScoutingApplication extends Activity {
         StatisticsPager statisticsPager = new StatisticsPager();
         statisticsPager.setScoutingService(scoutingService);
         
-        //StatisticsFragment statisticsFragment = new StatisticsFragment();
-        //statisticsFragment.setScoutingService(scoutingService);
-        
         SettingsFragment settingsFragment = new SettingsFragment();
         settingsFragment.setScoutingService(scoutingService);
 
@@ -99,7 +96,7 @@ public class ScoutingApplication extends Activity {
         
         ActionBar.Tab statisticsTab = actionBar.newTab()
                 .setText(R.string.TabStatistics)
-                .setTabListener(new MyTabListener(statisticsPager, "Statistics"));        
+                .setTabListener(new MyStatsTabListener(statisticsPager, "Statistics"));        
         
         ActionBar.Tab settingsTab = actionBar.newTab()
                 .setText(R.string.TabSettings)
@@ -124,9 +121,14 @@ public class ScoutingApplication extends Activity {
 	@Override
 	public void onBackPressed() {
 		
-		viewHelper.setSelectedFragment(null);
-		
-		if(getFragmentManager().getBackStackEntryCount() == 0){
+		if(findViewById(R.id.stats_details_pager) != null && viewHelper.getSelectedFragment() != null){
+				viewHelper.setSelectedFragment(null);
+				StatisticsDetailPager.setSelectedSet(null);
+				getFragmentManager().popBackStackImmediate();
+				ActionBar actionBar = getActionBar();
+				actionBar.getSelectedTab().select();
+		}
+		else if(getFragmentManager().getBackStackEntryCount() == 0){
 		    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 	
 		    alertDialog.setPositiveButton("Ja", new OnClickListener() {
@@ -144,14 +146,7 @@ public class ScoutingApplication extends Activity {
 		    alertDialog.show();
 		}
 		else{
-			if(findViewById(R.id.stats_pager) != null){
-            	FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-		        StatisticsPager fragment = new StatisticsPager();
-				transaction.replace(android.R.id.content, fragment);
-				transaction.commit();
-        	}
-			
+			StatisticsPager.setSelectedSet(null);
 			super.onBackPressed();
 		}
 	}
@@ -173,58 +168,10 @@ public class ScoutingApplication extends Activity {
     	getMenuInflater().inflate(R.menu.main, menu);
     	getMenuInflater().inflate(R.menu.menu, menu);
     	
-    	MenuItem menuSpinner = (MenuItem) menu.findItem(R.id.set_spinner);
-    	Spinner spinner = (Spinner) menuSpinner.getActionView();
-    	MenuItem newSet = (MenuItem) menu.findItem(R.id.menu_new_set);
     	TextView text;
     	
     	final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
     	if(match != null){
-	        setList = new ArrayList<String>();
-	        for(Set set : match.getSets()) {
-				setList.add("Set " + match.getSetNumber(set));
-			}
-
-	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item, setList);
-
-	        spinner.setAdapter(adapter);
-	        spinner.setSelection(match.getCurrentSetNumber()-1);
-
-	        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-	            @Override
-	            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-	            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
-
-	            	match.setCurrentSet(match.getSetByNumber(position+1));
-
-	            	if(findViewById(R.id.scouting_fragment) != null){
-		            	FragmentManager fragMan = getFragmentManager();
-						FragmentTransaction transaction = fragMan.beginTransaction();
-				        ScoutingFragment scoutingFragment = new ScoutingFragment();
-						transaction.replace(android.R.id.content, scoutingFragment, "Scouting");
-						transaction.commit();
-	            	}
-	            }
-
-	            @Override
-	            public void onNothingSelected(AdapterView<?> parentView) {
-	            }
-
-	        });
-	        
-	        spinner.setOnLongClickListener(new OnLongClickListener() {
-				@Override
-				public boolean onLongClick(View v) {
-
-					dialog();
-				    
-					return false;
-				}
-			});
-
-	        menuSpinner.setVisible(true);
-	        newSet.setVisible(true);
-
 	        text = (TextView) menu.findItem(R.id.selected_match).getActionView();
 	        text.setText(match.toString());
     	}
@@ -236,37 +183,10 @@ public class ScoutingApplication extends Activity {
         return true;
     }
     
-    public void dialog(){
-    	final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
-    	
-	    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-	    alertDialog.setPositiveButton("Ja", new OnClickListener() {
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-	            match.removeSetByNumber(match.getCurrentSetNumber());
-	            invalidateOptionsMenu();
-			}
-		});
-
-	    alertDialog.setNegativeButton("Nee", null);
-
-	    alertDialog.setMessage("Wil je deze set verwijderen?");
-	    alertDialog.setTitle("Verwijderen?");
-	    alertDialog.show();
-    }
-    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.menu_new_set:
-            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
-            	setList.add("Set " + match.getSetNumber(match.newSet()));
-            	Spinner spinner = (Spinner) findViewById(R.id.set_spinner);
-            	spinner.setSelection(match.getCurrentSetNumber()-1);
-                return true;
             case R.id.menu_export_file:
             	scoutingFileDB.saveScoutingExtern(scoutingService);
             	return true;
@@ -324,9 +244,49 @@ public class ScoutingApplication extends Activity {
         }
 
 		@Override
-		public void onTabReselected(Tab tab, android.app.FragmentTransaction ft) {
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
 			// TODO Auto-generated method stub
 			
+		}
+    }
+    
+    public class MyStatsTabListener implements ActionBar.TabListener {
+        private Fragment mFragment;
+        private final String mTag;
+        
+        public MyStatsTabListener(Fragment fragment, String tag){
+        	this.mFragment = fragment;
+        	this.mTag = tag;
+        }
+
+        /* The following are each of the ActionBar.TabListener callbacks */
+
+        public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        	if(viewHelper.getSelectedFragment() != null){
+        		mFragment = new StatisticsDetailPager();
+        	}
+        	else{
+        		mFragment = new StatisticsPager();
+        	}
+        	ft.replace(android.R.id.content, mFragment, mTag);
+        }
+
+        public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+            ft.remove(mFragment);
+            viewHelper.setSelectedFragment(null);
+            StatisticsPager.setSelectedSet(null);
+            StatisticsDetailPager.setSelectedSet(null);
+        }
+
+		@Override
+		public void onTabReselected(Tab tab, FragmentTransaction ft) {
+        	if(viewHelper.getSelectedFragment() != null){
+        		mFragment = new StatisticsDetailPager();
+        	}
+        	else{
+        		mFragment = new StatisticsPager();
+        	}
+        	ft.replace(android.R.id.content, mFragment, mTag);
 		}
     }
 }

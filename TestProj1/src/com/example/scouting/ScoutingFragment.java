@@ -6,7 +6,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.LightingColorFilter;
@@ -14,15 +17,23 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.scouting.helpers.ViewHelper;
 import com.example.scouting.server.ScoutingFileDB;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Action;
@@ -30,15 +41,18 @@ import com.example.scouting.src.ActionScore;
 import com.example.scouting.src.ActionType;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
+import com.example.scouting.src.Set;
 import com.example.testproj1.R;
 
 public class ScoutingFragment extends Fragment {
 
+	private static final int NEW_SET = 0;
 	private Vibrator myVib;
 	static private ViewHelper viewHelper;
 	static private ScoutingFileDB scoutingFileDB;
 	static ScoutingService scoutingService;
 	private long vibrateTime = 25;
+	private ArrayList<String> setList;
 	
 	public ScoutingFragment() {
 		// Required empty public constructor
@@ -47,7 +61,114 @@ public class ScoutingFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
 	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		
+    	final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+    	if(match != null){
+			inflater.inflate(R.menu.scouting_menu, menu);
+	    	
+			MenuItem menuSpinner = menu.findItem(R.id.set_spinner);
+	    	Spinner spinner = (Spinner) menuSpinner.getActionView();
+	    	
+	    	menu.add(0, NEW_SET, 0, "Nieuwe set");
+
+	        setList = new ArrayList<String>();
+	        
+	        
+	        for(Set set : match.getSets()) {
+				setList.add("Set " + match.getSetNumber(set));
+			}
+
+	        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, setList);
+
+	        spinner.setAdapter(adapter);
+	        spinner.setSelection(match.getCurrentSetNumber()-1);
+
+	        spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+	            @Override
+	            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+	            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+
+			        ScoutingFragment scoutingFragment = new ScoutingFragment();
+					
+			        if(match.getCurrentSetNumber() != position+1){
+			        	match.setCurrentSet(match.getSetByNumber(position+1));
+			        	showFragment(scoutingFragment);
+			        }
+	            }
+
+	            @Override
+	            public void onNothingSelected(AdapterView<?> parentView) {
+	            }
+
+	        });
+	        
+	        spinner.setOnLongClickListener(new OnLongClickListener() {
+				@Override
+				public boolean onLongClick(View v) {
+
+					dialog();
+				    
+					return false;
+				}
+			});
+    	}
+    	
+    	super.onCreateOptionsMenu(menu, inflater);
+	}
+	
+	private void showFragment(Fragment fragment){
+		FragmentManager fragMan = getFragmentManager();
+		FragmentTransaction transaction = fragMan.beginTransaction();
+		transaction.replace(android.R.id.content, fragment, "Scouting");
+		transaction.commit();
+	}
+	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case NEW_SET:
+            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+            	setList.add("Set " + match.getSetNumber(match.newSet()));
+            	Spinner spinner = (Spinner) getActivity().findViewById(R.id.set_spinner);
+            	spinner.setSelection(match.getCurrentSetNumber()-1);
+            	
+	            getActivity().invalidateOptionsMenu();
+	            ScoutingFragment scoutingFragment = new ScoutingFragment();
+	        	showFragment(scoutingFragment);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+	
+    private void dialog(){
+    	final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
+    	
+	    AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+
+	    alertDialog.setPositiveButton("Ja", new Dialog.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+	            match.removeSetByNumber(match.getCurrentSetNumber());
+	            getActivity().invalidateOptionsMenu();
+	            ScoutingFragment scoutingFragment = new ScoutingFragment();
+	        	showFragment(scoutingFragment);
+			}
+		});
+
+	    alertDialog.setNegativeButton("Nee", null);
+
+	    alertDialog.setMessage("Wil je deze set verwijderen?");
+	    alertDialog.setTitle("Verwijderen?");
+	    alertDialog.show();
+    }
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

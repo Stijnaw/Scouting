@@ -1,13 +1,9 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item 
-    android:id="@+id/selected_match"
-    android:showAsAction="always"
-    android:actionViewClass="android.widget.TextView"
-    android:title="@string/test" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
     <item
-    android:id="@+id/set_spinner"
-    android:showAsAction="always"
-    android:actionViewClass="android.widget.Spinner"
-    android:title="@string/test"
-    android:visible="false" />
+        android:id="@+id/selected_match"
+        android:actionViewClass="android.widget.TextView"
+        android:showAsAction="always"
+        android:title="@string/test"/>
+
 </menu>

@@ -1,9 +1,10 @@
-package com.example.settings;
+package com.example.scouting.settings;
 
 import java.util.List;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -16,7 +17,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 
-import com.example.scouting.ViewHelper;
+import com.example.scouting.helpers.ViewHelper;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Team;
@@ -25,8 +26,6 @@ import com.example.testproj1.R;
 public class SettingsNewMatch extends PreferenceFragment {
 
 	private static ScoutingService scoutingService;
-	private static String tag;
-	private static int fragmentId;
 	private Match match;
 	private static ViewHelper viewHelper;
 
@@ -130,12 +129,7 @@ public class SettingsNewMatch extends PreferenceFragment {
 						// Refresh the settings overview after edit
 						SettingsOverview settingsOverview = new SettingsOverview();
 						
-						FragmentManager fragMan = getFragmentManager();
-						FragmentTransaction transaction = fragMan.beginTransaction();
-						transaction.remove(fragMan.findFragmentByTag("SettingsNewMatch"));
-						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-						transaction.addToBackStack(null);
-						transaction.commit();
+						showFragment(settingsOverview);
 					}
 				});
 
@@ -153,20 +147,16 @@ public class SettingsNewMatch extends PreferenceFragment {
 	public void setMatch(Match match){
 		this.match = match;
 	}
-
-	public void setFragmentTag(String tag) {
-		SettingsNewMatch.tag = tag;
-	}
 	
-	public String getFragmentTag(){
-		return tag;
-	}
+	private void showFragment(Fragment fragment){
+		FragmentManager fragMan = getFragmentManager();
+		FragmentTransaction transaction = fragMan.beginTransaction();
+		
+		if(getActivity().findViewById(R.id.frameSettingsDetail) != null){
+			transaction.remove(this);
+		}
 
-	public void setFragmentId(int fragmentId) {
-		SettingsNewMatch.fragmentId = fragmentId;
-	}
-	
-	public int getFragmentId(){
-		return fragmentId;
+		transaction.replace(R.id.frameSettingsOverview, fragment, "SettingsOverview");
+		transaction.commit();
 	}
 }

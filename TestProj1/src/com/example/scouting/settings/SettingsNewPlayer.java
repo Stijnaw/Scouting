@@ -1,7 +1,8 @@
-package com.example.settings;
+package com.example.scouting.settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -26,8 +27,6 @@ public class SettingsNewPlayer extends PreferenceFragment {
 	private Player player = null;
 	private static final int SELECT_PHOTO = 100;
 	private String picture = null;
-	private static String tag;
-	private static int fragmentId;
 
 	public SettingsNewPlayer() {
 		// Required empty public constructor
@@ -87,13 +86,7 @@ public class SettingsNewPlayer extends PreferenceFragment {
 				
 				// Refresh the settings overview after edit
 				SettingsOverview settingsOverview = new SettingsOverview();
-				
-				FragmentManager fragMan = getFragmentManager();
-				FragmentTransaction transaction = fragMan.beginTransaction();
-				transaction.remove(fragMan.findFragmentByTag("SettingsNewPlayer"));
-				transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-				transaction.addToBackStack(null);
-				transaction.commit();
+				showFragment(settingsOverview);
 				
 				return false;
 			}
@@ -117,13 +110,7 @@ public class SettingsNewPlayer extends PreferenceFragment {
 						
 						// Refresh the settings overview after edit
 						SettingsOverview settingsOverview = new SettingsOverview();
-						
-						FragmentManager fragMan = getFragmentManager();
-						FragmentTransaction transaction = fragMan.beginTransaction();
-						transaction.remove(fragMan.findFragmentByTag("SettingsNewPlayer"));
-						transaction.replace(R.id.frameSettingsOverview, settingsOverview, "SettingsOverview");
-						transaction.addToBackStack(null);
-						transaction.commit();
+						showFragment(settingsOverview);
 					}
 				});
 
@@ -132,6 +119,18 @@ public class SettingsNewPlayer extends PreferenceFragment {
 				return false;
 			}
         });
+	}
+	
+	private void showFragment(Fragment fragment){
+		FragmentManager fragMan = getFragmentManager();
+		FragmentTransaction transaction = fragMan.beginTransaction();
+		
+		if(getActivity().findViewById(R.id.frameSettingsDetail) != null){
+			transaction.remove(this);
+		}
+
+		transaction.replace(R.id.frameSettingsOverview, fragment, "SettingsOverview");
+		transaction.commit();
 	}
 	
 	@Override
@@ -148,8 +147,10 @@ public class SettingsNewPlayer extends PreferenceFragment {
 	            cursor.moveToFirst();
 
 	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-
-	            picture = cursor.getString(columnIndex);
+	            
+	            String[] fullPath = cursor.getString(columnIndex).split("/");
+	            
+	            picture = fullPath[fullPath.length-1];
 	            
 	            cursor.close();
 	        }
@@ -162,21 +163,5 @@ public class SettingsNewPlayer extends PreferenceFragment {
 
 	public void setPlayer(Player player) {
 		this.player  = player;
-	}
-	
-	public void setFragmentTag(String tag) {
-		SettingsNewPlayer.tag = tag;
-	}
-	
-	public String getFragmentTag(){
-		return tag;
-	}
-
-	public void setFragmentId(int fragmentId) {
-		SettingsNewPlayer.fragmentId = fragmentId;
-	}
-	
-	public int getFragmentId(){
-		return fragmentId;
 	}
 }

@@ -1,4 +1,4 @@
-package com.example.scouting;
+package com.example.scouting.statistics;
 
 import android.app.Fragment;
 import android.graphics.drawable.BitmapDrawable;

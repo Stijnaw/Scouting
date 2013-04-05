@@ -1,9 +1,10 @@
-package com.example.settings;
+package com.example.scouting.settings;
 
 import java.util.List;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -20,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.scouting.ViewHelper;
+import com.example.scouting.helpers.ViewHelper;
 import com.example.scouting.server.ScoutingService;
 import com.example.scouting.src.Match;
 import com.example.scouting.src.Player;
@@ -51,18 +52,12 @@ public class SettingsOverview extends PreferenceFragment {
 		
 		SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
 		settingsNewMatch.setScoutingService(scoutingService);
-		settingsNewMatch.setFragmentTag("SettingsNewMatch");
-		settingsNewMatch.setFragmentId(R.id.frameSettingsDetail);
 		
 		SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 		settingsNewTeam.setScoutingService(scoutingService);
-		settingsNewTeam.setFragmentTag("SettingsNewTeam");
-		settingsNewTeam.setFragmentId(R.id.frameSettingsDetail);
 
 		SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
 		settingsNewPlayer.setScoutingService(scoutingService);
-		settingsNewPlayer.setFragmentTag("SettingsNewPlayer");
-		settingsNewPlayer.setFragmentId(R.id.frameSettingsDetail);
 		
 		ListPreference matchList = (ListPreference) findPreference("SelectMatch");
 		
@@ -113,10 +108,7 @@ public class SettingsOverview extends PreferenceFragment {
 			public boolean onPreferenceClick(Preference preference) {
 				SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
 
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(settingsNewMatch.getFragmentId(), settingsNewMatch, settingsNewMatch.getFragmentTag());
-				transaction.addToBackStack(null);
-				transaction.commit();
+				showDetailsFragment(settingsNewMatch);
 				return false;
 			}
         });
@@ -151,10 +143,7 @@ public class SettingsOverview extends PreferenceFragment {
 			public boolean onPreferenceClick(Preference preference) {
 				SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(settingsNewTeam.getFragmentId(), settingsNewTeam, settingsNewTeam.getFragmentTag());
-				transaction.addToBackStack(null);
-				transaction.commit();
+				showDetailsFragment(settingsNewTeam);
 				return false;
 			}
         });
@@ -178,10 +167,7 @@ public class SettingsOverview extends PreferenceFragment {
 			public boolean onPreferenceClick(Preference preference) {
 				SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
 
-				FragmentTransaction transaction = getFragmentManager().beginTransaction();
-				transaction.replace(settingsNewPlayer.getFragmentId(), settingsNewPlayer, settingsNewPlayer.getFragmentTag());
-				transaction.addToBackStack(null);
-				transaction.commit();
+				showDetailsFragment(settingsNewPlayer);
 				return false;
 			}
         });
@@ -205,10 +191,7 @@ public class SettingsOverview extends PreferenceFragment {
 			SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
 			settingsNewMatch.setMatch(scoutingService.findMatchById(Integer.parseInt(preference.getKey())));
 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(settingsNewMatch.getFragmentId(), settingsNewMatch, settingsNewMatch.getFragmentTag());
-			transaction.addToBackStack(null);
-			transaction.commit();
+			showDetailsFragment(settingsNewMatch);
 			return false;
 		}
 	};
@@ -219,10 +202,7 @@ public class SettingsOverview extends PreferenceFragment {
 			SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
 			settingsNewTeam.setTeam(scoutingService.findTeamById(Integer.parseInt(preference.getKey())));
 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(settingsNewTeam.getFragmentId(), settingsNewTeam, settingsNewTeam.getFragmentTag());
-			transaction.addToBackStack(null);
-			transaction.commit();
+			showDetailsFragment(settingsNewTeam);
 			return false;
 		}
 	};
@@ -233,17 +213,23 @@ public class SettingsOverview extends PreferenceFragment {
 			SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
 			settingsNewPlayer.setPlayer(scoutingService.findPlayerById(Integer.parseInt(preference.getKey())));
 
-			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(settingsNewPlayer.getFragmentId(), settingsNewPlayer, settingsNewPlayer.getFragmentTag());
-			transaction.addToBackStack(null);
-			transaction.commit();
+			showDetailsFragment(settingsNewPlayer);
 			return false;
 		}
 	};
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+	
+	private void showDetailsFragment(Fragment fragment){
+		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		
+		if(getActivity().findViewById(R.id.frameSettingsDetail) != null){
+			transaction.replace(R.id.frameSettingsDetail, fragment);
+		}
+		else{
+			transaction.replace(R.id.frameSettingsOverview, fragment);
+		}
+		
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {

@@ -3,5 +3,6 @@
     <issue id="NewApi">
         <ignore path="src\com\example\scouting\FragmentPagerAdapter.java" />
         <ignore path="src\com\example\scouting\FragmentStatePagerAdapter.java" />
+        <ignore path="src\com\example\scouting\StatisticsPager.java" />
     </issue>
 </lint>

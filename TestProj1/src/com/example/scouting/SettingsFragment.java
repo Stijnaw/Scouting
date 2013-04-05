@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.scouting.server.ScoutingService;
-import com.example.settings.SettingsOverview;
+import com.example.scouting.settings.SettingsOverview;
 import com.example.testproj1.R;
 
 public class SettingsFragment extends Fragment {

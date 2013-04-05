@@ -1,4 +1,4 @@
-package com.example.scouting;
+package com.example.scouting.statistics;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,7 @@ public class StatisticsArrayAdapter extends ArrayAdapter<Stats> {
             }
             
         	Stats stat = stats.get(position);
-        	v.setTag(position);
+        	v.setTag(stat.getPlayer());
         
             TextView tv;
             tv = (TextView) v.findViewById(R.id.stats_number);

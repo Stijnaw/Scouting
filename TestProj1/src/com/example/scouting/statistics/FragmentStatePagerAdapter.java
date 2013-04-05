@@ -1,4 +1,4 @@
-package com.example.scouting;
+package com.example.scouting.statistics;
 /*
  * Copyright (C) 2011 The Android Open Source Project
  *
