@@ -25,12 +25,13 @@
         <item>Set 1</item>
         <item>Set 2</item>
         <item>Set 3</item>
-        <item >Set 4</item>
-        <item >Set 5</item>
+        <item>Set 4</item>
+        <item>Set 5</item>
     </string-array>
 
     <string name="TabSettings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="NewSet">Nieuwe set</string>
+    <string name="TabDirections">Directions</string>
 
 </resources>

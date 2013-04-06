@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.testproj1"
+    package="com.awouters.scouting"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -18,7 +18,7 @@
         android:theme="@android:style/Theme.Holo.Light"
         android:screenOrientation="landscape" >
         <activity
-            android:name="com.example.scouting.ScoutingApplication"
+            android:name="com.awouters.scouting.ScoutingApplication"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

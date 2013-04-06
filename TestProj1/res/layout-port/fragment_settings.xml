@@ -8,12 +8,12 @@
     android:weightSum="1.0"
     tools:context=".SettingsFragment" >
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/frameSettingsOverview"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:paddingLeft="0dp" >
-    </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>
