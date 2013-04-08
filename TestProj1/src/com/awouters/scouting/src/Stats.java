@@ -1,5 +1,7 @@
 package com.awouters.scouting.src;
 
+import android.util.Log;
+
 public class Stats {
 	Player player;
 	Integer stats[][];
@@ -21,12 +23,37 @@ public class Stats {
 		statsTotal++;
 	}
 	
-	public Integer getPoints(){
+	/*public Integer getPoints(){
 		int attack = stats[ActionType.Attack.ordinal()][ActionScore.PlusPlus.ordinal()]-stats[ActionType.Attack.ordinal()][ActionScore.MinusMinus.ordinal()];
 		int service = stats[ActionType.Service.ordinal()][ActionScore.PlusPlus.ordinal()]-stats[ActionType.Service.ordinal()][ActionScore.MinusMinus.ordinal()];
 		int block = stats[ActionType.Block.ordinal()][ActionScore.PlusPlus.ordinal()]-stats[ActionType.Block.ordinal()][ActionScore.MinusMinus.ordinal()];
 		int reception = stats[ActionType.Reception.ordinal()][ActionScore.PlusPlus.ordinal()]-stats[ActionType.Reception.ordinal()][ActionScore.MinusMinus.ordinal()];
 		return attack+service+block+reception;
+	}*/
+	
+	public Integer getPoints(){
+		int points = 0, count = 0;
+		
+		for(int i = 0; i < ActionType.values().length; i++){
+			points += stats[i][ActionScore.MinusMinus.ordinal()]*-2;
+			points += stats[i][ActionScore.Minus.ordinal()]*-1;
+			points += stats[i][ActionScore.Plus.ordinal()];
+			points += stats[i][ActionScore.PlusPlus.ordinal()]*2;
+			
+			count += stats[i][ActionScore.MinusMinus.ordinal()];
+			count += stats[i][ActionScore.Minus.ordinal()];
+			count += stats[i][ActionScore.Null.ordinal()];
+			count += stats[i][ActionScore.Plus.ordinal()];
+			count += stats[i][ActionScore.PlusPlus.ordinal()];
+		}
+		
+		if(count > 0){
+			float score = ((float) (points+count*2))/((float) (4*count));
+			return (int) (score*100);
+		}
+		else{
+			return 0;
+		}
 	}
 	
 	public Integer getComparePoints(){
@@ -34,7 +61,7 @@ public class Stats {
 			return getPoints();
 		}
 		else{
-			return -999;
+			return -1;
 		}
 	}
 

@@ -52,14 +52,14 @@ public class SettingsOverview extends PreferenceFragment {
 		
 		addPreferencesFromResource(R.xml.settings_overview);
 		
-		SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
-		settingsNewMatch.setScoutingService(scoutingService);
+		SettingsMatch settingsMatch = new SettingsMatch();
+		settingsMatch.setScoutingService(scoutingService);
 		
-		SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
-		settingsNewTeam.setScoutingService(scoutingService);
+		SettingsTeam settingsTeam = new SettingsTeam();
+		settingsTeam.setScoutingService(scoutingService);
 
-		SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
-		settingsNewPlayer.setScoutingService(scoutingService);
+		SettingsPlayer settingsPlayer = new SettingsPlayer();
+		settingsPlayer.setScoutingService(scoutingService);
 		
 		ListPreference matchList = (ListPreference) findPreference("SelectMatch");
 		
@@ -108,9 +108,9 @@ public class SettingsOverview extends PreferenceFragment {
 		pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
+				SettingsMatch settingsMatch = new SettingsMatch();
 
-				showDetailsFragment(settingsNewMatch, "FragmentNewMatch");
+				showDetailsFragment(settingsMatch, "FragmentNewMatch");
 				return false;
 			}
         });
@@ -143,9 +143,9 @@ public class SettingsOverview extends PreferenceFragment {
 		pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
+				SettingsTeam settingsTeam = new SettingsTeam();
 
-				showDetailsFragment(settingsNewTeam, "FragmentNewTeam");
+				showDetailsFragment(settingsTeam, "FragmentNewTeam");
 				return false;
 			}
         });
@@ -167,9 +167,9 @@ public class SettingsOverview extends PreferenceFragment {
 		pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
+				SettingsPlayer settingsPlayer = new SettingsPlayer();
 
-				showDetailsFragment(settingsNewPlayer, "FragmentNewPlayer");
+				showDetailsFragment(settingsPlayer, "FragmentNewPlayer");
 				return false;
 			}
         });
@@ -190,10 +190,10 @@ public class SettingsOverview extends PreferenceFragment {
 	private OnPreferenceClickListener myMatchListener = new OnPreferenceClickListener(){
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
-			SettingsNewMatch settingsNewMatch = new SettingsNewMatch();
-			settingsNewMatch.setMatch(scoutingService.findMatchById(Integer.parseInt(preference.getKey())));
+			SettingsMatch settingsMatch = new SettingsMatch();
+			settingsMatch.setMatch(scoutingService.findMatchById(Integer.parseInt(preference.getKey())));
 
-			showDetailsFragment(settingsNewMatch, "FragmentNewMatch");
+			showDetailsFragment(settingsMatch, "FragmentNewMatch");
 			return false;
 		}
 	};
@@ -201,10 +201,10 @@ public class SettingsOverview extends PreferenceFragment {
 	private OnPreferenceClickListener myTeamListener = new OnPreferenceClickListener(){
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
-			SettingsNewTeam settingsNewTeam = new SettingsNewTeam();
-			settingsNewTeam.setTeam(scoutingService.findTeamById(Integer.parseInt(preference.getKey())));
+			SettingsTeam settingsTeam = new SettingsTeam();
+			settingsTeam.setTeam(scoutingService.findTeamById(Integer.parseInt(preference.getKey())));
 
-			showDetailsFragment(settingsNewTeam, "FragmentNewTeam");
+			showDetailsFragment(settingsTeam, "FragmentNewTeam");
 			return false;
 		}
 	};
@@ -212,10 +212,10 @@ public class SettingsOverview extends PreferenceFragment {
 	private OnPreferenceClickListener myPlayerListener = new OnPreferenceClickListener(){
 		@Override
 		public boolean onPreferenceClick(Preference preference) {
-			SettingsNewPlayer settingsNewPlayer = new SettingsNewPlayer();
-			settingsNewPlayer.setPlayer(scoutingService.findPlayerById(Integer.parseInt(preference.getKey())));
+			SettingsPlayer settingsPlayer = new SettingsPlayer();
+			settingsPlayer.setPlayer(scoutingService.findPlayerById(Integer.parseInt(preference.getKey())));
 
-			showDetailsFragment(settingsNewPlayer, "FragmentNewPlayer");
+			showDetailsFragment(settingsPlayer, "FragmentNewPlayer");
 			return false;
 		}
 	};

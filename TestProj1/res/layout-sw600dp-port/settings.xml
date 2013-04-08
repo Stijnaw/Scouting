@@ -6,14 +6,23 @@
     android:baselineAligned="false"
     android:orientation="horizontal"
     android:weightSum="1.0"
-    tools:context=".SettingsFragment" >
+    tools:context=".Settings" >
 
     <FrameLayout
         android:id="@+id/frameSettingsOverview"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:paddingLeft="0dp" >
+        android:layout_weight="0.35" >
+    </FrameLayout>
+
+    <View style="@style/DividerVertical" />
+
+    <FrameLayout
+        android:id="@+id/frameSettingsDetail"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.65"
+        android:orientation="horizontal" >
     </FrameLayout>
 
 </LinearLayout>

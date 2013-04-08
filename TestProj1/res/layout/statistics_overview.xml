@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".StatisticsFragment" >
+    tools:context=".StatisticsOverview" >
 
     <include
         android:id="@+id/stats_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.10"
-        layout="@layout/statistics_listheader" />
-    
+        layout="@layout/statistics_list_header" />
+
     <ListView
         android:id="@+id/stats_listview"
         android:layout_width="match_parent"
@@ -24,7 +23,6 @@
         android:id="@+id/stats_footer"
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_weight="0.02"
-        layout="@layout/statistics_listtotal" />
-    
+        layout="@layout/statistics_list_total" />
+
 </LinearLayout>

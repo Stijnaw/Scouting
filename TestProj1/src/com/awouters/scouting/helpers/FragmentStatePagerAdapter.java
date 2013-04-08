@@ -1,4 +1,4 @@
-package com.awouters.scouting.statistics;
+package com.awouters.scouting.helpers;
 /*
  * Copyright (C) 2011 The Android Open Source Project
  *

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/volleybalcourt_v"
     android:orientation="vertical"
-    tools:context=".ScoutingFragmentField" >
+    android:tag="1"
+    tools:context=".ScoutingField" >
 
 </LinearLayout>

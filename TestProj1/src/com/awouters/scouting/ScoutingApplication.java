@@ -19,16 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.awouters.scouting.R;
-import com.awouters.scouting.directions.DirectionsFragment;
+import com.awouters.scouting.directions.Directions;
 import com.awouters.scouting.helpers.ViewHelper;
-import com.awouters.scouting.scouting.ScoutingFragment;
+import com.awouters.scouting.scouting.Scouting;
 import com.awouters.scouting.server.ScoutingFileDB;
 import com.awouters.scouting.server.ScoutingImpl;
 import com.awouters.scouting.server.ScoutingLocalDB;
 import com.awouters.scouting.server.ScoutingService;
-import com.awouters.scouting.settings.SettingsFragment;
+import com.awouters.scouting.settings.Settings;
 import com.awouters.scouting.src.Match;
-import com.awouters.scouting.statistics.StatisticsDetailPager;
+import com.awouters.scouting.statistics.StatisticsPlayerDetailPager;
 import com.awouters.scouting.statistics.StatisticsPager;
 
 
@@ -83,22 +83,22 @@ public class ScoutingApplication extends Activity {
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
         
-        ScoutingFragment scoutingFragment = new ScoutingFragment();
-        scoutingFragment.setScoutingService(scoutingService);
-        scoutingFragment.setScoutingFileDB(scoutingFileDB);
+        Scouting scouting = new Scouting();
+        scouting.setScoutingService(scoutingService);
+        scouting.setScoutingFileDB(scoutingFileDB);
         
         StatisticsPager statisticsPager = new StatisticsPager();
         statisticsPager.setScoutingService(scoutingService);
         
-        DirectionsFragment directionsFragment = new DirectionsFragment();
-        directionsFragment.setScoutingService(scoutingService);
+        Directions directions = new Directions();
+        directions.setScoutingService(scoutingService);
         
-        SettingsFragment settingsFragment = new SettingsFragment();
-        settingsFragment.setScoutingService(scoutingService);
+        Settings settings = new Settings();
+        settings.setScoutingService(scoutingService);
 
         ActionBar.Tab scoutingTab = actionBar.newTab()
                 .setText(R.string.TabScouting)
-                .setTabListener(new MyTabListener(scoutingFragment, "Scouting"));
+                .setTabListener(new MyTabListener(scouting, "Scouting"));
         
         ActionBar.Tab statisticsTab = actionBar.newTab()
                 .setText(R.string.TabStatistics)
@@ -106,11 +106,11 @@ public class ScoutingApplication extends Activity {
         
         ActionBar.Tab directionsTab = actionBar.newTab()
                 .setText(R.string.TabDirections)
-                .setTabListener(new MyTabListener(directionsFragment, "Directions"));    
+                .setTabListener(new MyTabListener(directions, "Directions"));    
         
         ActionBar.Tab settingsTab = actionBar.newTab()
                 .setText(R.string.TabSettings)
-                .setTabListener(new MyTabListener(settingsFragment, "Settings"));
+                .setTabListener(new MyTabListener(settings, "Settings"));
         
         actionBar.addTab(scoutingTab);
         actionBar.addTab(statisticsTab);
@@ -132,9 +132,11 @@ public class ScoutingApplication extends Activity {
 	@Override
 	public void onBackPressed() {
 		
+		Toast.makeText(this, "Back", Toast.LENGTH_SHORT).show();
+		
 		if(findViewById(R.id.stats_details_pager) != null && viewHelper.getSelectedFragment() != null){
 				viewHelper.setSelectedFragment(null);
-				StatisticsDetailPager.setSelectedSet(null);
+				StatisticsPlayerDetailPager.setSelectedSet(null);
 				getFragmentManager().popBackStackImmediate();
 				ActionBar actionBar = getActionBar();
 				actionBar.getSelectedTab().select();
@@ -274,7 +276,7 @@ public class ScoutingApplication extends Activity {
 
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
         	if(viewHelper.getSelectedFragment() != null){
-        		mFragment = new StatisticsDetailPager();
+        		mFragment = new StatisticsPlayerDetailPager();
         	}
         	else{
         		mFragment = new StatisticsPager();
@@ -286,13 +288,13 @@ public class ScoutingApplication extends Activity {
             ft.remove(mFragment);
             viewHelper.setSelectedFragment(null);
             StatisticsPager.setSelectedSet(null);
-            StatisticsDetailPager.setSelectedSet(null);
+            StatisticsPlayerDetailPager.setSelectedSet(null);
         }
 
 		@Override
 		public void onTabReselected(Tab tab, FragmentTransaction ft) {
         	if(viewHelper.getSelectedFragment() != null){
-        		mFragment = new StatisticsDetailPager();
+        		mFragment = new StatisticsPlayerDetailPager();
         	}
         	else{
         		mFragment = new StatisticsPager();

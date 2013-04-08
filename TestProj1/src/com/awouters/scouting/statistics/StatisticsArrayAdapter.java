@@ -20,7 +20,7 @@ public class StatisticsArrayAdapter extends ArrayAdapter<Stats> {
 	private ArrayList<Stats> stats;
 
 	public StatisticsArrayAdapter(Context context, ArrayList<Stats> stats) {
-		super(context, R.layout.statistics_listrow, stats);
+		super(context, R.layout.statistics_list_row, stats);
 		
 		mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.stats = stats;
@@ -30,7 +30,7 @@ public class StatisticsArrayAdapter extends ArrayAdapter<Stats> {
     public View getView(int position, View convertView, ViewGroup parent) {
             View v = convertView;
             if (v == null) {
-                v = mInflater.inflate(R.layout.statistics_listrow, null);
+                v = mInflater.inflate(R.layout.statistics_list_row, null);
             }
             
         	Stats stat = stats.get(position);

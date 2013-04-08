@@ -15,11 +15,11 @@ import com.awouters.scouting.src.ActionScore;
 import com.awouters.scouting.src.ActionType;
 import com.awouters.scouting.src.Stats;
 
-public class StatisticsDetail extends Fragment {
+public class StatisticsPlayerDetail extends Fragment {
 	private static ScoutingService scoutingService;
 	private Stats stats;
 
-	public StatisticsDetail() {
+	public StatisticsPlayerDetail() {
 		// Required empty public constructor
 	}
 
@@ -31,7 +31,7 @@ public class StatisticsDetail extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		
-		View V = inflater.inflate(R.layout.fragment_statisticsdetail, container, false);
+		View V = inflater.inflate(R.layout.statistics_player_detail, container, false);
 		
 		if(stats != null){
             TextView tv;
@@ -127,14 +127,10 @@ public class StatisticsDetail extends Fragment {
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		StatisticsDetail.scoutingService = scoutingService;
+		StatisticsPlayerDetail.scoutingService = scoutingService;
 	}
 
 	public void setStats(Stats stats) {
 		this.stats = stats;
-	}
-	
-	public boolean isStatsSet(){
-		return (stats != null);
 	}
 }

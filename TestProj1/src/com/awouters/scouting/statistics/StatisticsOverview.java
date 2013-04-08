@@ -21,14 +21,14 @@ import com.awouters.scouting.src.ActionType;
 import com.awouters.scouting.src.Player;
 import com.awouters.scouting.src.Stats;
 
-public class StatisticsFragment extends Fragment {
+public class StatisticsOverview extends Fragment {
 
 	private ArrayList<Stats> stats;
 	private Stats total;
 	private static ViewHelper viewHelper;
 	private static ScoutingService scoutingService;
 
-	public StatisticsFragment() {
+	public StatisticsOverview() {
 		// Required empty public constructor
 	}
 
@@ -41,7 +41,7 @@ public class StatisticsFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View V = inflater.inflate(R.layout.fragment_statistics, container, false);
+		View V = inflater.inflate(R.layout.statistics_overview, container, false);
 			
 		ListView listView = (ListView) V.findViewById(R.id.stats_listview);
 		
@@ -98,7 +98,7 @@ public class StatisticsFragment extends Fragment {
 				
 				viewHelper.setSelectedFragment(1);
 				
-	    		StatisticsDetailPager fragment = new StatisticsDetailPager();
+	    		StatisticsPlayerDetailPager fragment = new StatisticsPlayerDetailPager();
 	    		fragment.setPlayer((Player) v.getTag());
 				FragmentTransaction transaction = getFragmentManager().beginTransaction();
 				transaction.replace(android.R.id.content, fragment, "FragmentSatisticsDetail");
@@ -116,7 +116,7 @@ public class StatisticsFragment extends Fragment {
 	}
 	
 	public void setScoutingService(ScoutingService scoutingService) {
-		StatisticsFragment.scoutingService = scoutingService;
+		StatisticsOverview.scoutingService = scoutingService;
 	}
 
 }

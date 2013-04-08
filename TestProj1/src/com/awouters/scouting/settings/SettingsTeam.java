@@ -24,13 +24,13 @@ import com.awouters.scouting.server.ScoutingService;
 import com.awouters.scouting.src.Player;
 import com.awouters.scouting.src.Team;
 
-public class SettingsNewTeam extends PreferenceFragment {
+public class SettingsTeam extends PreferenceFragment {
 
 	private static ScoutingService scoutingService;
 	private Team team = null;
 	private Team teamCopy = null;
 
-	public SettingsNewTeam() {
+	public SettingsTeam() {
 		// Required empty public constructor
 	}
 	
@@ -155,7 +155,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 	};
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		SettingsNewTeam.scoutingService = scoutingService;
+		SettingsTeam.scoutingService = scoutingService;
 	}
 
 	public void setTeam(Team team) {
@@ -169,7 +169,7 @@ public class SettingsNewTeam extends PreferenceFragment {
 	}
 	
 	private void showDetailsFragment(){
-		SettingsNewTeam fragment = new SettingsNewTeam();
+		SettingsTeam fragment = new SettingsTeam();
 		fragment.setTeam(team, teamCopy);
 		
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();

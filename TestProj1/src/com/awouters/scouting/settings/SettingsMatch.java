@@ -26,13 +26,13 @@ import com.awouters.scouting.server.ScoutingService;
 import com.awouters.scouting.src.Match;
 import com.awouters.scouting.src.Team;
 
-public class SettingsNewMatch extends PreferenceFragment {
+public class SettingsMatch extends PreferenceFragment {
 
 	private static ScoutingService scoutingService;
 	private Match match;
 	private static ViewHelper viewHelper;
 
-	public SettingsNewMatch() {
+	public SettingsMatch() {
 		// Required empty public constructor
 	}
 
@@ -145,7 +145,7 @@ public class SettingsNewMatch extends PreferenceFragment {
 	}
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		SettingsNewMatch.scoutingService = scoutingService;
+		SettingsMatch.scoutingService = scoutingService;
 	}
 	
 	public void setMatch(Match match){

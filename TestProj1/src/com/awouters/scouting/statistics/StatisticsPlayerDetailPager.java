@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.awouters.scouting.R;
+import com.awouters.scouting.helpers.FragmentStatePagerAdapter;
 import com.awouters.scouting.helpers.ViewHelper;
 import com.awouters.scouting.server.ScoutingService;
 import com.awouters.scouting.src.Action;
@@ -20,14 +21,14 @@ import com.awouters.scouting.src.Player;
 import com.awouters.scouting.src.Set;
 import com.awouters.scouting.src.Stats;
 
-public class StatisticsDetailPager extends Fragment {
+public class StatisticsPlayerDetailPager extends Fragment {
 	
 	private static ScoutingService scoutingService;
 	private static ViewHelper viewHelper;
 	private static Integer selectedSet = null;
 	private static Player selectedPlayer = null;
 
-	public StatisticsDetailPager() {
+	public StatisticsPlayerDetailPager() {
 		// Required empty public constructor
 	}
 	
@@ -49,7 +50,7 @@ public class StatisticsDetailPager extends Fragment {
 		View V;
 		
 		if(match != null){
-	    	V = inflater.inflate(R.layout.fragment_statistics_details_pager, container, false);
+	    	V = inflater.inflate(R.layout.statistics_details, container, false);
 	    	
 	        SetCollectionPagerAdapter mSetCollectionPagerAdapter = new SetCollectionPagerAdapter(getFragmentManager());
 	        
@@ -117,7 +118,7 @@ public class StatisticsDetailPager extends Fragment {
 
         @Override
         public Fragment getItem(int i) {
-    		StatisticsDetail fragment = new StatisticsDetail();
+    		StatisticsPlayerDetail fragment = new StatisticsPlayerDetail();
     		fragment.setStats(stats.get(i));
             return fragment;
         }
@@ -145,14 +146,14 @@ public class StatisticsDetailPager extends Fragment {
     }
     
 	public void setScoutingService(ScoutingService scoutingService) {
-		StatisticsDetailPager.scoutingService = scoutingService;
+		StatisticsPlayerDetailPager.scoutingService = scoutingService;
 	}
 
 	public void setPlayer(Player player) {
-		StatisticsDetailPager.selectedPlayer = player;
+		StatisticsPlayerDetailPager.selectedPlayer = player;
 	}
 
 	public static void setSelectedSet(Integer selectedSet) {
-		StatisticsDetailPager.selectedSet = selectedSet;
+		StatisticsPlayerDetailPager.selectedSet = selectedSet;
 	}
 }

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.awouters.scouting.R;
+import com.awouters.scouting.helpers.FragmentStatePagerAdapter;
 import com.awouters.scouting.helpers.ViewHelper;
 import com.awouters.scouting.server.ScoutingService;
 import com.awouters.scouting.src.Action;
@@ -34,15 +35,11 @@ public class StatisticsPager extends Fragment {
 		// Required empty public constructor
 	}
 	
-    /**
-     * The {@link android.support.v4.view.ViewPager} that will display the object collection.
-     */
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewHelper = new ViewHelper();
         
-		StatisticsDetailPager fragment = new StatisticsDetailPager();
+		StatisticsPlayerDetailPager fragment = new StatisticsPlayerDetailPager();
 		fragment.setScoutingService(scoutingService);
     }
     
@@ -54,7 +51,7 @@ public class StatisticsPager extends Fragment {
 		getActivity().invalidateOptionsMenu();
 		
 		if(match != null){
-	    	V = inflater.inflate(R.layout.fragment_statistics_pager, null);
+	    	V = inflater.inflate(R.layout.statistics_pager, null);
 	    	
 	        SetCollectionPagerAdapter mSetCollectionPagerAdapter = new SetCollectionPagerAdapter(getFragmentManager());
 	        ViewPager mViewPager = (ViewPager) V.findViewById(R.id.stats_pager);
@@ -102,8 +99,6 @@ public class StatisticsPager extends Fragment {
 		public SetCollectionPagerAdapter(FragmentManager fm) {
             super(fm);
             
-            Log.i("Scouting", "pageAdapter");
-            
         	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
         	
         	ArrayList<Player> players = match.getTeam().getPlayers();
@@ -128,14 +123,11 @@ public class StatisticsPager extends Fragment {
 					total.get(match.getSets().indexOf(set)).add(action.getActionType(), action.getActionScore());
 					total.get(match.getSets().size()).add(action.getActionType(), action.getActionScore());
 	        	}
-	        	
 			}
 			
 			for(int i = 0; i <= match.getSets().size(); i++){
 				Collections.sort(stats.get(i), new mySort());
 			}
-			
-			Collections.sort(total, new mySort());
         }
 		
         public class mySort implements Comparator<Stats>{
@@ -153,7 +145,7 @@ public class StatisticsPager extends Fragment {
 
         @Override
         public Fragment getItem(int i) {
-            StatisticsFragment fragment = new StatisticsFragment();
+            StatisticsOverview fragment = new StatisticsOverview();
             fragment.setStats(stats.get(i), total.get(i));
             return fragment;
         }

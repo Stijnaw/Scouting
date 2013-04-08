@@ -1,7 +1,6 @@
 package com.awouters.scouting.settings;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,11 +11,11 @@ import android.widget.Toast;
 import com.awouters.scouting.R;
 import com.awouters.scouting.server.ScoutingService;
 
-public class SettingsFragment extends Fragment {
+public class Settings extends Fragment {
 
 	private static ScoutingService scoutingService;
 
-	public SettingsFragment() {
+	public Settings() {
 		// Required empty public constructor
 	}
 
@@ -27,7 +26,7 @@ public class SettingsFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View V = inflater.inflate(R.layout.fragment_settings, container, false);
+		View V = inflater.inflate(R.layout.settings, container, false);
 		
 		getActivity().invalidateOptionsMenu();
 		
@@ -47,6 +46,6 @@ public class SettingsFragment extends Fragment {
 	}
 	
 	public void setScoutingService(ScoutingService scoutingService) {
-		SettingsFragment.scoutingService = scoutingService;
+		Settings.scoutingService = scoutingService;
 	}
 }

@@ -44,7 +44,7 @@ import com.awouters.scouting.src.Match;
 import com.awouters.scouting.src.Player;
 import com.awouters.scouting.src.Set;
 
-public class ScoutingFragmentButtons extends Fragment {
+public class ScoutingButtons extends Fragment {
 
 	private static final int NEW_SET = 0;
 	private Vibrator myVib;
@@ -54,7 +54,7 @@ public class ScoutingFragmentButtons extends Fragment {
 	private long vibrateTime = 25;
 	private ArrayList<String> setList;
 	
-	public ScoutingFragmentButtons() {
+	public ScoutingButtons() {
 		// Required empty public constructor
 	}
 	
@@ -68,7 +68,7 @@ public class ScoutingFragmentButtons extends Fragment {
 		
 		setHasOptionsMenu(true);
 		
-        View V = inflater.inflate(R.layout.fragment_scouting_buttons, container, false);
+        View V = inflater.inflate(R.layout.scouting_buttons, container, false);
         
         viewHelper = new ViewHelper();
         
@@ -328,7 +328,7 @@ public class ScoutingFragmentButtons extends Fragment {
 					
 					if(viewHelper.getSelectedActionType() == ActionType.Attack || viewHelper.getSelectedActionType() == ActionType.Service){
 						match.addAction(new Action(match.getActivePlayerByPosition(viewHelper.getSelectedPlayer()), viewHelper.getSelectedActionType(), viewHelper.getSelectedActionScore(), viewHelper.getDirectionStartX(), viewHelper.getDirectionStartY(), viewHelper.getDirectionEndX(), viewHelper.getDirectionEndY(), viewHelper.getDirectionOrientation()));
-						ScoutingFragmentField.resetDirection();
+						ScoutingField.resetDirection();
 					}
 					else{
 						match.addAction(new Action(match.getActivePlayerByPosition(viewHelper.getSelectedPlayer()), viewHelper.getSelectedActionType(), viewHelper.getSelectedActionScore()));
@@ -582,11 +582,11 @@ public class ScoutingFragmentButtons extends Fragment {
 		            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
 		            	Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 	
-				        ScoutingFragmentButtons scoutingFragmentButtons = new ScoutingFragmentButtons();
+				        ScoutingButtons scoutingButtons = new ScoutingButtons();
 						
 				        if(match.getCurrentSetNumber() != position+1){
 				        	match.setCurrentSet(match.getSetByNumber(position+1));
-				        	showFragment(scoutingFragmentButtons);
+				        	showFragment(scoutingButtons);
 				        }
 		            }
 	
@@ -619,7 +619,7 @@ public class ScoutingFragmentButtons extends Fragment {
 	}
 	
 	private void showFieldFragment(boolean clicked){
-		ScoutingFragmentField fragment = new ScoutingFragmentField();
+		ScoutingField fragment = new ScoutingField();
 		
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		
@@ -645,8 +645,8 @@ public class ScoutingFragmentButtons extends Fragment {
             	spinner.setSelection(match.getCurrentSetNumber()-1);
             	
 	            getActivity().invalidateOptionsMenu();
-	            ScoutingFragmentButtons scoutingFragmentButtons = new ScoutingFragmentButtons();
-	        	showFragment(scoutingFragmentButtons);
+	            ScoutingButtons scoutingButtons = new ScoutingButtons();
+	        	showFragment(scoutingButtons);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -664,8 +664,8 @@ public class ScoutingFragmentButtons extends Fragment {
 			public void onClick(DialogInterface dialog, int which) {
 	            match.removeSetByNumber(match.getCurrentSetNumber());
 	            getActivity().invalidateOptionsMenu();
-	            ScoutingFragmentButtons scoutingFragmentButtons = new ScoutingFragmentButtons();
-	        	showFragment(scoutingFragmentButtons);
+	            ScoutingButtons scoutingButtons = new ScoutingButtons();
+	        	showFragment(scoutingButtons);
 			}
 		});
 	    
@@ -677,10 +677,10 @@ public class ScoutingFragmentButtons extends Fragment {
     }
 
 	public void setScoutingService(ScoutingService scoutingService) {
-		ScoutingFragmentButtons.scoutingService = scoutingService;
+		ScoutingButtons.scoutingService = scoutingService;
 	}
 	
 	public void setScoutingFileDB(ScoutingFileDB scoutingFileDB) {
-		ScoutingFragmentButtons.scoutingFileDB = scoutingFileDB;
+		ScoutingButtons.scoutingFileDB = scoutingFileDB;
 	}
 }

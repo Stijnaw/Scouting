@@ -16,12 +16,12 @@ import com.awouters.scouting.server.ScoutingService;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  * 
  */
-public class ScoutingFragment extends Fragment {
+public class Scouting extends Fragment {
 
 	private static ScoutingService scoutingService;
 	private static ScoutingFileDB scoutingFileDB;
 
-	public ScoutingFragment() {
+	public Scouting() {
 		// Required empty public constructor
 	}
 	
@@ -35,14 +35,14 @@ public class ScoutingFragment extends Fragment {
 		
 		getActivity().invalidateOptionsMenu();
 		
-        ScoutingFragmentField scoutingFragmentField = new ScoutingFragmentField();
-        scoutingFragmentField.setScoutingService(scoutingService);
+        ScoutingField scoutingField = new ScoutingField();
+        scoutingField.setScoutingService(scoutingService);
         
-		ScoutingFragmentButtons scoutingFragmentButtons = new ScoutingFragmentButtons();
-        scoutingFragmentButtons.setScoutingService(scoutingService);
-        scoutingFragmentButtons.setScoutingFileDB(scoutingFileDB);
+		ScoutingButtons scoutingButtons = new ScoutingButtons();
+        scoutingButtons.setScoutingService(scoutingService);
+        scoutingButtons.setScoutingFileDB(scoutingFileDB);
 		
-		View V = inflater.inflate(R.layout.fragment_scouting, container, false);
+		View V = inflater.inflate(R.layout.scouting, container, false);
 		
 		return V;
 	}
@@ -51,20 +51,20 @@ public class ScoutingFragment extends Fragment {
 	public void onStart() {
 		super.onStart();
 		
-		ScoutingFragmentButtons scoutingFragmentButtons = new ScoutingFragmentButtons();
+		ScoutingButtons scoutingButtons = new ScoutingButtons();
         
         if(getActivity().findViewById(R.id.frameScoutingButtons) != null){
 			FragmentTransaction transaction = getFragmentManager().beginTransaction();
-			transaction.replace(R.id.frameScoutingButtons, scoutingFragmentButtons, "FragmentScoutingButtons");
+			transaction.replace(R.id.frameScoutingButtons, scoutingButtons, "FragmentScoutingButtons");
 			transaction.commit();
         }
 	}
 	
 	public void setScoutingService(ScoutingService scoutingService) {
-		ScoutingFragment.scoutingService = scoutingService;
+		Scouting.scoutingService = scoutingService;
 	}
 	
 	public void setScoutingFileDB(ScoutingFileDB scoutingFileDB) {
-		ScoutingFragment.scoutingFileDB = scoutingFileDB;
+		Scouting.scoutingFileDB = scoutingFileDB;
 	}
 }

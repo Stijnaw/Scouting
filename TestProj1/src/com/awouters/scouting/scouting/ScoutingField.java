@@ -20,7 +20,7 @@ import com.awouters.scouting.helpers.ViewHelper;
 import com.awouters.scouting.server.ScoutingService;
 import com.awouters.scouting.src.Match;
 
-public class ScoutingFragmentField extends Fragment {
+public class ScoutingField extends Fragment {
 	private static float startX = 0;
 	private static float startY = 0;
 	private static float endX = 0;
@@ -29,7 +29,7 @@ public class ScoutingFragmentField extends Fragment {
 	private static ViewHelper viewHelper;
 	private static ScoutingService scoutingService;
 
-	public ScoutingFragmentField() {
+	public ScoutingField() {
 		// Required empty public constructor
 	}
 	
@@ -47,9 +47,9 @@ public class ScoutingFragmentField extends Fragment {
 		final Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 		
     	if(match != null){
-			V = inflater.inflate(R.layout.fragment_scouting_field, container, false);
+			V = inflater.inflate(R.layout.scouting_field, container, false);
 			
-			LinearLayout frameScoutingField = (LinearLayout) V.findViewById(R.id.fragment_scouting_field);
+			final LinearLayout frameScoutingField = (LinearLayout) V.findViewById(R.id.fragment_scouting_field);
 	        canvasView = new CanvasView(getActivity());
 	        frameScoutingField.addView(canvasView);
 	        
@@ -66,14 +66,14 @@ public class ScoutingFragmentField extends Fragment {
 					case MotionEvent.ACTION_MOVE:
 						endX = event.getX();
 						endY = event.getY();
-						viewHelper.setDirection(canvasView.getWidth()/startX, canvasView.getWidth()/startY, canvasView.getHeight()/endX, canvasView.getHeight()/endY, getResources().getConfiguration().orientation);
+						viewHelper.setDirection(startX/canvasView.getWidth(), startY/canvasView.getHeight(), endX/canvasView.getWidth(), endY/canvasView.getHeight(), Integer.parseInt((String) frameScoutingField.getTag()));
 						canvasView.paintLine(startX, startY, endX, endY);
 						break;
 						
 					case MotionEvent.ACTION_UP:
 						endX = event.getX();
 						endY = event.getY();
-						viewHelper.setDirection(canvasView.getWidth()/startX, canvasView.getWidth()/startY, canvasView.getHeight()/endX, canvasView.getHeight()/endY, getResources().getConfiguration().orientation);
+						viewHelper.setDirection(startX/canvasView.getWidth(), startY/canvasView.getHeight(), endX/canvasView.getWidth(), endY/canvasView.getHeight(), Integer.parseInt((String) frameScoutingField.getTag()));
 						canvasView.paintLine(startX, startY, endX, endY);
 						
 						hideFragment();
@@ -96,7 +96,7 @@ public class ScoutingFragmentField extends Fragment {
 		FragmentTransaction transaction = fragMan.beginTransaction();
 		
 		if(getActivity().findViewById(R.id.frameScoutingField) == null){
-			Fragment fragment = new ScoutingFragmentButtons();
+			Fragment fragment = new ScoutingButtons();
 			transaction.replace(R.id.frameScoutingButtons, fragment, "FragmentScoutingButtons");
 		}
 		
@@ -147,6 +147,6 @@ public class ScoutingFragmentField extends Fragment {
 	}
 	
 	public void setScoutingService(ScoutingService scoutingService) {
-		ScoutingFragmentField.scoutingService = scoutingService;
+		ScoutingField.scoutingService = scoutingService;
 	}
 }
