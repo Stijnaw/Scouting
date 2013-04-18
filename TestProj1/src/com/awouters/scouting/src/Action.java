@@ -39,6 +39,26 @@ public class Action implements Serializable  {
 		return orientation;
 	}
 
+	public void setStartX(float startX) {
+		this.startX = startX;
+	}
+
+	public void setStartY(float startY) {
+		this.startY = startY;
+	}
+
+	public void setEndX(float endX) {
+		this.endX = endX;
+	}
+
+	public void setEndY(float endY) {
+		this.endY = endY;
+	}
+
+	public void setOrientation(int orientation) {
+		this.orientation = orientation;
+	}
+
 	public Action(Player player, ActionType actionType, ActionScore actionScore, float startX, float startY, float endX, float endY, int orientation) {
 		this.player = player;
 		this.actionType = actionType;
