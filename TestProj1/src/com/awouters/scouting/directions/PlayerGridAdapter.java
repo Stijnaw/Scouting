@@ -12,13 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PlayerGridAdapter extends BaseAdapter {
     private Context mContext;
 	private ArrayList<Player> mPlayers;
+	private int width;
 
-    public PlayerGridAdapter(Context context, ArrayList<Player> players) {
+    public PlayerGridAdapter(Context context, ArrayList<Player> players, int width) {
         this.mContext = context;
         this.mPlayers = players;
     }
@@ -49,9 +51,10 @@ public class PlayerGridAdapter extends BaseAdapter {
 			
 			Player player = mPlayers.get(position);
  
-			gridView = new View(mContext);
- 
 			gridView = inflater.inflate(R.layout.directions_grid_item, null);
+			
+			RelativeLayout rel = (RelativeLayout) gridView.findViewById(R.id.directions_rel_layout);
+			rel.setMinimumHeight(width/3);
  
 			TextView textView = (TextView) gridView.findViewById(R.id.imageTextPlayer);
 			textView.setText(player.getNumber() + ". " + player.getName());

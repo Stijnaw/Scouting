@@ -168,7 +168,7 @@ public class SettingsOverview extends PreferenceFragment {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
 				SettingsPlayer settingsPlayer = new SettingsPlayer();
-
+				settingsPlayer.setPlayer(null);
 				showDetailsFragment(settingsPlayer, "FragmentNewPlayer");
 				return false;
 			}

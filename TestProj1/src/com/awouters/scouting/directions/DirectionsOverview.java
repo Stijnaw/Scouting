@@ -36,7 +36,7 @@ public class DirectionsOverview extends Fragment {
 		Match match = scoutingService.findMatchById(viewHelper.getSelectedMatch());
 		
 	    GridView gridview = (GridView) V.findViewById(R.id.fragmentDirectionsGridview);
-	    gridview.setAdapter(new PlayerGridAdapter(getActivity(), match.getTeam().getPlayers()));
+	    gridview.setAdapter(new PlayerGridAdapter(getActivity(), match.getTeam().getPlayers(), V.getWidth()));
 
 	    gridview.setOnItemClickListener(new OnItemClickListener() {
 	        public void onItemClick(AdapterView<?> parent, View v, int position, long id) {

@@ -249,6 +249,7 @@ public class ScoutingApplication extends Activity {
         /* The following are each of the ActionBar.TabListener callbacks */
 
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        	getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             ft.replace(android.R.id.content, mFragment, mTag);
         }
 
@@ -275,6 +276,7 @@ public class ScoutingApplication extends Activity {
         /* The following are each of the ActionBar.TabListener callbacks */
 
         public void onTabSelected(Tab tab, FragmentTransaction ft) {
+        	getFragmentManager().popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         	if(viewHelper.getSelectedFragment() != null){
         		mFragment = new StatisticsPlayerDetailPager();
         	}

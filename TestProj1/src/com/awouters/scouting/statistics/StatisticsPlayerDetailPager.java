@@ -110,8 +110,10 @@ public class StatisticsPlayerDetailPager extends Fragment {
 			
 			for(Set set: match.getSets()){
 				for(Action action: set.getActions()){
-					stats.get(match.getSets().indexOf(set)).add(action.getActionType(), action.getActionScore());
-					stats.get(match.getSets().size()).add(action.getActionType(), action.getActionScore());
+					if(action.getPlayer() == selectedPlayer){
+						stats.get(match.getSets().indexOf(set)).add(action.getActionType(), action.getActionScore());
+						stats.get(match.getSets().size()).add(action.getActionType(), action.getActionScore());
+					}
 	        	}
 			}
         }
